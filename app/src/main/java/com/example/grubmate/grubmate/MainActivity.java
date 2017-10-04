@@ -1,6 +1,7 @@
 package com.example.grubmate.grubmate;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
             this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        //noinspection deprecation
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -118,6 +120,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(String feedItemData) {
         Context context = this;
-        Toast.makeText(context, feedItemData, Toast.LENGTH_SHORT).show();
+        Class destinationActivity = FeedDetailActivity.class;
+
+        // construct the intent
+        Intent startDetailActivityIntent = new Intent(context, destinationActivity);
+
+        // put extra data into this intent
+        startDetailActivityIntent.putExtra(Intent.EXTRA_TEXT, feedItemData);
+
+        // start the intent
+        startActivity(startDetailActivityIntent);
     }
 }
