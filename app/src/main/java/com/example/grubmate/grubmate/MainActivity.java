@@ -2,6 +2,7 @@ package com.example.grubmate.grubmate;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,8 +21,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.grubmate.grubmate.utilities.GrubMatePreference;
+import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.MockData;
+import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
@@ -55,8 +60,8 @@ public class MainActivity extends AppCompatActivity
         mFeedAdapter = new FeedAdapter(this);
 
         mFeedView.setAdapter(mFeedAdapter);
-
-        mFeedAdapter.setFeedData(MockData.mockFeedData);
+        new FetchFeedListTask().execute(GrubMatePreference.feedUrl);
+//        mFeedAdapter.setFeedData(MockData.mockFeedData);
         Log.d(TAG, Arrays.toString(MockData.mockFeedData));
     }
 
@@ -131,4 +136,34 @@ public class MainActivity extends AppCompatActivity
         // start the intent
         startActivity(startDetailActivityIntent);
     }
+
+    public class FetchFeedListTask extends AsyncTask<String, Integer, String[]> {
+
+        @Override
+        protected String[] doInBackground(String... params) {
+            if (params.length == 0) {
+                return null;
+            }
+
+            String baseUrl = params[0];
+
+            try {
+                String response = NetworkUtilities.get(baseUrl);
+                return JsonUtilities.getFeedItems(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String[] feedItems) {
+            if (feedItems != null) {
+                mFeedAdapter.setFeedData(feedItems);
+            }
+        }
+    }
+
+
 }
