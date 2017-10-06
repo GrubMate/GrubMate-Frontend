@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.grubmate.grubmate.PostActionActivity"
+    tools:showIn="@layout/activity_post_action">
+    <TextView
+        android:id="@+id/tv_post_action_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/post_action_title"/>
+        <EditText
+            android:id="@+id/et_post_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/post_action_item_name_hint"
+            android:inputType="text"/>
+
+        <Spinner
+            android:id="@+id/spinner_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/et_post_item_tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/post_action_tags_hint"
+            android:inputType="text"
+        />
+        <EditText
+            android:id="@+id/et_post_item_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/post_action_description_hint"/>
+        <EditText
+            android:id="@+id/et_post_item_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/post_action_quantity_hint"
+            android:inputType="number"
+            android:lines="3"
+            />
+
+        <Spinner
+            android:id="@+id/spinner_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/et_post_item_allergy"
+            android:hint="@string/post_action_allergy_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+</LinearLayout>
