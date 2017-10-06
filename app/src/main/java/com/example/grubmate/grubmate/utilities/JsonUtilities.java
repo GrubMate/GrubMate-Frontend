@@ -29,6 +29,14 @@ public class JsonUtilities {
         }
     }
 
+    private class post {
+        public int postID;
+        public int posterID;
+        public String[] posterPhoto;
+        public String[] tags;
+
+    }
+
     public static String[] getFeedItems(String jsonString) {
         FeedList feedList = gson.fromJson(jsonString, FeedList.class);
         return feedList.getItemList();

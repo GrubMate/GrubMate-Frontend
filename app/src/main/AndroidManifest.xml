@@ -12,11 +12,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- change mode prevent activity to spawn-->
+        <!-- change mode prevent activity to spawn -->
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".FeedDetailActivity" />
+        <activity
+            android:name=".PostActionActivity"
+            android:label="@string/title_activity_post_action"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FeedDetailActivity" />
     </application>
 
 </manifest>
