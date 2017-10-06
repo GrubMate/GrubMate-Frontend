@@ -1,5 +1,6 @@
 package com.example.grubmate.grubmate;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,8 +11,15 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class PostActionActivity extends AppCompatActivity {
+import com.example.grubmate.grubmate.utilities.GrubMatePreference;
+import com.example.grubmate.grubmate.utilities.JsonUtilities;
+import com.example.grubmate.grubmate.utilities.NetworkUtilities;
+
+import java.io.IOException;
+
+public class PostActionActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText postItemNameText;
     private EditText postItemTagsText;
     private EditText postItemDescriptionText;
@@ -27,13 +35,7 @@ public class PostActionActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_post);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(this);
 
         postItemNameText = (EditText) findViewById(R.id.et_post_item_name);
         postItemTagsText = (EditText) findViewById(R.id.et_post_item_tags);
@@ -58,6 +60,59 @@ public class PostActionActivity extends AppCompatActivity {
         postItemTimeSpinner.setAdapter(timeAdapter);
     }
 
+    public void showShortToast(String msg) {
+       Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    public boolean validateForm() {
+        if (postItemNameText.getText().length() == 0) {
+            return false;
+        } else if (postItemQuantityText.getText().length() == 0) {
+            return false;
+        } else if (postItemTagsText.getText().length() == 0) {
+            return false;
+        }
+        return true;
+    };
+
+    @Override
+    public void onClick(View view) {
+        if(validateForm()) {
+            new PostActionTask().execute(GrubMatePreference.postActionURl);
+
+            } else {
+            showShortToast("Please fill out all necessary fields before posting");
+        }
+    }
+
+    public class PostActionTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length == 0) {
+                return null;
+            }
+
+            String baseUrl = params[0];
+
+            try {
+                String body = "";
+                String response = NetworkUtilities.post(baseUrl, body);
+                return response;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String postActionResponse) {
+            if (postActionResponse != null) {
+                showShortToast("Succeed");
+            }
+        }
+    }
 }
 
 /*

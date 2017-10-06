@@ -12,48 +12,63 @@
         android:id="@+id/tv_post_action_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="32sp"
         android:textAlignment="center"
         android:text="@string/post_action_title"/>
-        <EditText
-            android:id="@+id/et_post_item_name"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:showDividers="middle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/post_action_item_name_hint"
-            android:inputType="text"/>
+            android:padding="16dp"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/et_post_item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/post_action_item_name_hint"
+                android:inputType="text"/>
 
-        <Spinner
-            android:id="@+id/spinner_category"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:id="@+id/et_post_item_tags"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/post_action_tags_hint"
-            android:inputType="text"
-        />
-        <EditText
-            android:id="@+id/et_post_item_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/post_action_description_hint"/>
-        <EditText
-            android:id="@+id/et_post_item_quantity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/post_action_quantity_hint"
-            android:inputType="number"
-            android:lines="3"
-            />
+            <Spinner
+                android:id="@+id/spinner_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/et_post_item_tags"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/post_action_tags_hint"
+                android:inputType="text"
+                />
+            <EditText
+                android:id="@+id/et_post_item_description"
+                android:lines="2"
+                android:maxLines="4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/post_action_description_hint"/>
+            <EditText
+                android:id="@+id/et_post_item_quantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/post_action_quantity_hint"
+                android:inputType="number"
+                android:lines="3"
+                />
 
-        <Spinner
-            android:id="@+id/spinner_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:id="@+id/et_post_item_allergy"
-            android:hint="@string/post_action_allergy_hint"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/spinner_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/et_post_item_allergy"
+                android:hint="@string/post_action_allergy_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
