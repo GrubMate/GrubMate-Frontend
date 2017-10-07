@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.MockData;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
+import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -34,6 +36,9 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG = "MainActivity";
     private RecyclerView mFeedView;
     private FeedAdapter mFeedAdapter;
+    private Button mPostButton;
+    private Button mSubscribeButton;
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,16 +58,51 @@ public class MainActivity extends AppCompatActivity
 
         // Setting up feed
         mFeedView = (RecyclerView) findViewById(R.id.rv_feed);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mFeedView.setLayoutManager(layoutManager);
-
         mFeedAdapter = new FeedAdapter(this);
-
         mFeedView.setAdapter(mFeedAdapter);
         new FetchFeedListTask().execute(GrubMatePreference.feedUrl);
 //        mFeedAdapter.setFeedData(MockData.mockFeedData);
-        Log.d(TAG, Arrays.toString(MockData.mockFeedData));
+
+        mPostButton = (Button) findViewById(R.id.b_home_post);
+        mSubscribeButton = (Button) findViewById(R.id.b_home_subscribe);
+
+        context = this;
+
+        mPostButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Class destinationActivity = PostActionActivity.class;
+
+                // construct the intent
+                Intent startDetailActivityIntent = new Intent(context, destinationActivity);
+
+                // put extra data into this intent
+                startDetailActivityIntent.putExtra(Intent.EXTRA_TEXT, PersistantDataManager.getUserID());
+
+                // start the intent
+                startActivity(startDetailActivityIntent);
+
+            }
+        });
+
+        mSubscribeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Class destinationActivity = PostActionActivity.class;
+
+                // construct the intent
+                Intent startDetailActivityIntent = new Intent(context, destinationActivity);
+
+                // put extra data into this intent
+                startDetailActivityIntent.putExtra(Intent.EXTRA_TEXT, PersistantDataManager.getUserID());
+
+                // start the intent
+                startActivity(startDetailActivityIntent);
+
+            }
+        });
     }
 
     @Override
@@ -90,7 +130,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_search) {
             return true;
         }
 
@@ -103,17 +143,19 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_home) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_subscriptions) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_posts) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_orders) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_profile) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_notification_settings) {
+
+        } else if (id==R.id.nav_application_settings) {
 
         }
 
@@ -124,7 +166,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(String feedItemData) {
-        Context context = this;
         Class destinationActivity = FeedDetailActivity.class;
 
         // construct the intent
