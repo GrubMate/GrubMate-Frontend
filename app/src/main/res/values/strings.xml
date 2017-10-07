@@ -13,6 +13,9 @@
     <string name="post_action_allergy_hint">What in your item will cause allergy?</string>
     <string name="post_action_description_hint">Description:</string>
     <string name="post_action_quantity_hint">How many portions do you have?</string>
+    <string name="action_search">Search</string>
+    <string name="button_post">Post</string>
+    <string name="button_subscribe">Subscribe</string>
     <string-array name="food_category">
         <item>Asian</item>å
         <item>Mexican</item>

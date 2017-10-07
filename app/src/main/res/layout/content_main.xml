@@ -9,6 +9,23 @@
     tools:showIn="@layout/app_bar_main"
     android:orientation="vertical"
     tools:context="com.example.grubmate.grubmate.MainActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+        <Button
+            android:layout_width="0dp"
+            android:id="@+id/b_home_post"
+            android:layout_height="wrap_content"
+            android:text="@string/button_post"
+            android:layout_weight="1"/>
+        <Button
+            android:layout_width="0dp"
+            android:id="@+id/b_home_subscribe"
+            android:layout_height="wrap_content"
+            android:text="@string/button_subscribe"
+            android:layout_weight="1"/>
+    </LinearLayout>
     <TextView
         android:id="@+id/tv_feed_title"
         android:padding="16dp"
