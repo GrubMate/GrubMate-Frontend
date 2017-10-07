@@ -22,7 +22,7 @@
         <activity android:name=".FeedDetailActivity" />
         <activity
             android:name=".PostActionActivity"
-            android:label="@string/title_activity_post_action"
+            android:label="Post"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
