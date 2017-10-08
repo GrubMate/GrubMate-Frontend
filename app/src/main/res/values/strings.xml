@@ -6,7 +6,7 @@
     <string name="feed_title">Latest Feed</string>
     <string name="action_settings">Settings</string>
     <string name="default_text">This is default text, Hopefully it changes</string>
-    <string name="title_activity_post_action">PostActionActivity</string>
+    <string name="title_activity_post_action">Post</string>
     <string name="post_action_title">Post</string>
     <string name="post_action_item_name_hint">What is your item?</string>
     <string name="post_action_tags_hint">Tags</string>
@@ -27,4 +27,7 @@
         <item>Lunch</item>
         <item>Dinner</item>
     </string-array>
+    <string name="title_activity_subscribe_action">Subscribe</string>
+    <string name="subscribe_action_title">Subscribe</string>
+    <string name="post_action_address_hint">Enter you address for picking up</string>
 </resources>

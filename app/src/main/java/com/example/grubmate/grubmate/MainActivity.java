@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         mSubscribeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Class destinationActivity = PostActionActivity.class;
+                Class destinationActivity = SubscribeActionActivity.class;
 
                 // construct the intent
                 Intent startDetailActivityIntent = new Intent(context, destinationActivity);
