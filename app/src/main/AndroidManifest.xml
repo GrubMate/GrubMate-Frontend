@@ -28,8 +28,11 @@
         <activity
             android:name=".PostActionActivity"
             android:label="Post"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".SubscribeActionActivity"
+            android:label="@string/title_activity_subscribe_action"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
