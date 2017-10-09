@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GrubMate.iml" filepath="$PROJECT_DIR$/GrubMate.iml" />
+      <module fileurl="file://$PROJECT_DIR$/GrubMate-Frontend.iml" filepath="$PROJECT_DIR$/GrubMate-Frontend.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

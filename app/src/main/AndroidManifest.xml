@@ -3,7 +3,7 @@
     package="com.example.grubmate.grubmate">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,10 +29,14 @@
             android:name=".PostActionActivity"
             android:label="Post"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+
         <activity
             android:name=".SubscribeActionActivity"
             android:label="@string/title_activity_subscribe_action"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB6PhYrMZ87grlmTAu42-G32N7PKAb0Bs4" />
     </application>
 
 </manifest>

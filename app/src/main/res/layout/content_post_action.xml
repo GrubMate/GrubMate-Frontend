@@ -68,7 +68,15 @@
                 android:hint="@string/post_action_allergy_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-
+            <Button
+                android:id="@+id/et_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Location"/>
+            <TextView
+                android:id="@+id/et_location_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
