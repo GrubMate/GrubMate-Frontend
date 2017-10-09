@@ -10,7 +10,7 @@
     <string name="post_action_title">Post</string>
     <string name="post_action_item_name_hint">What is your item?</string>
     <string name="post_action_tags_hint">Tags</string>
-    <string name="post_action_allergy_hint">What in your item will cause allergy?</string>
+    <string name="post_action_allergy_hint">What ingredients may cause allergy?</string>
     <string name="post_action_description_hint">Description:</string>
     <string name="post_action_quantity_hint">How many portions do you have?</string>
     <string name="action_search">Search</string>
@@ -30,4 +30,7 @@
     <string name="title_activity_subscribe_action">Subscribe</string>
     <string name="subscribe_action_title">Subscribe</string>
     <string name="post_action_address_hint">Enter you address for picking up</string>
+    <string name="serach_activity_title">Search</string>
+    <string name="serach_item_name_hint">What food do you want?</string>
+    <string name="search_button_text">Search</string>
 </resources>
