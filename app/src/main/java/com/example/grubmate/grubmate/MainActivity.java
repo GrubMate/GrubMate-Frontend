@@ -131,6 +131,17 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
+            Class destinationActivity = SearchActivity.class;
+
+            // construct the intent
+            Intent startDetailActivityIntent = new Intent(context, destinationActivity);
+
+            // put extra data into this intent
+            startDetailActivityIntent.putExtra(Intent.EXTRA_TEXT, PersistantDataManager.getUserID());
+
+            // start the intent
+            startActivity(startDetailActivityIntent);
+
             return true;
         }
 

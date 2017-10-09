@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -28,15 +29,19 @@
         <activity
             android:name=".PostActionActivity"
             android:label="Post"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SubscribeActionActivity"
             android:label="@string/title_activity_subscribe_action"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB6PhYrMZ87grlmTAu42-G32N7PKAb0Bs4" />
+
+        <activity
+            android:name=".SearchActivity"
+            android:label="Search" />
     </application>
 
 </manifest>
