@@ -43,10 +43,11 @@
         <activity
             android:name=".SearchActivity"
             android:label="Search" />
-        <activity android:name=".SubscriptionsActivity"
-            android:launchMode="singleTop"
-            android:label="Subscriptions"/>
-        </application>
-
+        <activity
+            android:name=".SubscriptionsActivity"
+            android:label="Subscriptions"
+            android:launchMode="singleTop" />
+        <activity android:name=".SubscriptionDetailActivity"></activity>
+    </application>
 
 </manifest>
