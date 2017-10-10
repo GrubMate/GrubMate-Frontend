@@ -153,11 +153,11 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Class destinationActivity = MainActivity.class;
         if (id == R.id.nav_home) {
             // Handle the camera action
         } else if (id == R.id.nav_subscriptions) {
-
+            destinationActivity = SubscriptionsActivity.class;
         } else if (id == R.id.nav_posts) {
 
         } else if (id == R.id.nav_orders) {
@@ -169,9 +169,17 @@ public class MainActivity extends AppCompatActivity
         } else if (id==R.id.nav_application_settings) {
 
         }
-
+        // construct the intent
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        Intent startDetailActivityIntent = new Intent(context, destinationActivity);
+
+        // put extra data into this intent
+        startDetailActivityIntent.putExtra(Intent.EXTRA_TEXT, PersistantDataManager.getUserID());
+
+        // start the intent
+        startActivity(startDetailActivityIntent);
+
         return true;
     }
 

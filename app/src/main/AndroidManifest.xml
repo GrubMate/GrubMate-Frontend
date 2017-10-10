@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.grubmate.grubmate">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -42,6 +43,10 @@
         <activity
             android:name=".SearchActivity"
             android:label="Search" />
-    </application>
+        <activity android:name=".SubscriptionsActivity"
+            android:launchMode="singleTop"
+            android:label="Subscriptions"/>
+        </application>
+
 
 </manifest>
