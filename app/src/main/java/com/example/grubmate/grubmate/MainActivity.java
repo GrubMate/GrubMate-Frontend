@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_orders) {
 
         } else if (id == R.id.nav_profile) {
-
+            destinationActivity = ProfileActivity.class;
         } else if (id == R.id.nav_notification_settings) {
 
         } else if (id==R.id.nav_application_settings) {

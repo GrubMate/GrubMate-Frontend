@@ -47,7 +47,11 @@
             android:name=".SubscriptionsActivity"
             android:label="Subscriptions"
             android:launchMode="singleTop" />
-        <activity android:name=".SubscriptionDetailActivity"></activity>
+        <activity
+            android:name=".ProfileActivity"
+            android:label="Profile"
+            android:launchMode="singleTop" />
+        <activity android:name=".SubscriptionDetailActivity" />
     </application>
 
 </manifest>
