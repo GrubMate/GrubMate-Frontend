@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
@@ -30,8 +31,11 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class PostActionActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private EditText postItemNameText;
@@ -44,6 +48,11 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private Button postItemLocation;
     private TextView postItemLocationText;
     private GoogleApiClient mGoogleApiClient;
+    private String postItemName, postItemDescription,postItemCategory,postItemTime;
+    private ArrayList<String> postItemTags;
+    private boolean[] postItemAllergy;
+    private Integer postItemQuantity;
+    private Double[] postItemAddress;
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private double Lat;
     private double Lng;
@@ -148,9 +157,19 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View view) {
         if(validateForm()) {
-            new PostActionTask().execute(GrubMatePreference.postActionURl);
 
-            } else {
+            postItemTags = new ArrayList<String>();
+            postItemName = postItemNameText.getText().toString();
+            postItemDescription = postItemDescriptionText.getText().toString();
+            postItemQuantity = Integer.parseInt(postItemQuantityText.getText().toString());
+            postItemTags.add(postItemNameText.getText().toString());
+            postItemAllergy = new boolean[3];
+            postItemAddress = new Double[2];
+            postItemAddress[0] = Lat;
+            postItemAddress[1] = Lng;
+            postItemCategory = postItemCategorySpinner.getSelectedItem().toString();
+            new PostActionTask().execute(GrubMatePreference.getPostActionURl());
+        } else {
             showShortToast("Please fill out all necessary fields before posting");
         }
     }
@@ -168,12 +187,27 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
                 return null;
             }
 
-            String baseUrl = params[0];
+            Post newPost = new Post();
+            String [] postItemTagsArray = postItemTags.toArray(new String[postItemTags.size()]);
+            newPost.tags = postItemTagsArray;
+            newPost.category = postItemCategory;
+            newPost.description = postItemDescription;
+            newPost.address = postItemAddress;
+            newPost.totalQuantity = postItemQuantity;
+            newPost.leftQuantity = postItemQuantity;
+            newPost.isActive = true;
 
+            newPost.allergyInfo = null;
+            newPost.posterID = null;
+            newPost.postID = null;
+            newPost.postPhotos =null;
+            newPost.timePeriod = null;
+            newPost.requestsIDs = null;
+
+            Gson gson = new Gson();
+            String postJson = gson.toJson(newPost);
             try {
-                String body = "";
-                String response = NetworkUtilities.post(baseUrl, body);
-                return response;
+               return NetworkUtilities.post(GrubMatePreference.getPostActionURl(),postJson);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -183,9 +217,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            if (postActionResponse != null) {
-                showShortToast("Succeed");
-            }
+            showShortToast("result" + postActionResponse);
         }
     }
 
