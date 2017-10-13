@@ -15,8 +15,8 @@ public class FeedDetailActivity extends AppCompatActivity {
         Intent callIntent = getIntent();
 
         // If intent has extra text message extrave it and display it.
-        if(callIntent.hasExtra(Intent.EXTRA_TEXT)) {
-            String extraText = callIntent.getStringExtra(Intent.EXTRA_TEXT);
+        if(callIntent.hasExtra("post_data")) {
+            String extraText = callIntent.getStringExtra("post_data");
             mDetailNameDisplay.setText(extraText);
         }
     }

@@ -22,13 +22,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.MockData;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
@@ -62,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         mFeedView.setLayoutManager(layoutManager);
         mFeedAdapter = new FeedAdapter(this);
         mFeedView.setAdapter(mFeedAdapter);
-        new FetchFeedListTask().execute(GrubMatePreference.feedUrl);
+        new FetchFeedListTask().execute(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
 //        mFeedAdapter.setFeedData(MockData.mockFeedData);
 
         mPostButton = (Button) findViewById(R.id.b_home_post);
@@ -184,23 +187,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onClick(String feedItemData) {
+    public void onClick(Post feedItemData) {
         Class destinationActivity = FeedDetailActivity.class;
 
         // construct the intent
         Intent startDetailActivityIntent = new Intent(context, destinationActivity);
 
         // put extra data into this intent
-        startDetailActivityIntent.putExtra(Intent.EXTRA_TEXT, feedItemData);
+        startDetailActivityIntent.putExtra("post_data", new Gson().toJson(feedItemData));
 
         // start the intent
         startActivity(startDetailActivityIntent);
+
     }
 
-    public class FetchFeedListTask extends AsyncTask<String, Integer, String[]> {
+    public class FetchFeedListTask extends AsyncTask<String, Integer, ArrayList<Post>> {
 
         @Override
-        protected String[] doInBackground(String... params) {
+        protected ArrayList<Post> doInBackground(String... params) {
             if (params.length == 0) {
                 return null;
             }
@@ -210,6 +214,7 @@ public class MainActivity extends AppCompatActivity
             try {
                 String response = NetworkUtilities.get(baseUrl);
                 return JsonUtilities.getFeedItems(response);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -218,7 +223,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         @Override
-        protected void onPostExecute(String[] feedItems) {
+        protected void onPostExecute(ArrayList<Post> feedItems) {
             if (feedItems != null) {
                 mFeedAdapter.setFeedData(feedItems);
             }

@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.grubmate.grubmate.dataClass.Post;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -20,12 +23,12 @@ import java.util.Arrays;
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder>{
     public final static String TAG = "FeedAdapter";
     // Will be changed to an array of FeedListItem in future versions
-    private String[] mFeedData;
+    private ArrayList<Post> mFeedData;
     // Allows Activity to interact with this adapter
     private final FeedAdapterOnClickHandler mClickHandler;
 
     public interface FeedAdapterOnClickHandler {
-        void onClick(String feedItemData);
+        void onClick(Post feedItemData);
     }
 
     public class FeedViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -40,7 +43,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         @Override
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
-            String feedItemData = mFeedData[adapterPosition];
+            Post feedItemData = mFeedData.get(adapterPosition);
             mClickHandler.onClick(feedItemData);
         }
     }
@@ -63,20 +66,20 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
     @Override
     public void onBindViewHolder(FeedViewHolder holder, int position) {
-        String feedItemData = mFeedData[position];
+        Post feedItemData = mFeedData.get(position);
 //        Log.d(TAG, "onBind"+Arrays.toString(mFeedData));
-        holder.mFeedNameTextView.setText(String.valueOf(feedItemData));
+        holder.mFeedNameTextView.setText(feedItemData.title);
     }
 
     @Override
     public int getItemCount() {
 //        Log.d(TAG, "itemCount:" + Arrays.toString(mFeedData));
         if (null == mFeedData) return 0;
-        return mFeedData.length;
+        return mFeedData.size();
     }
 
     // Allows data to be refreshed without creating new adapter
-    public void setFeedData(String[] feedData) {
+    public void setFeedData(ArrayList<Post> feedData) {
         mFeedData = feedData;
 //        Log.d(TAG, Arrays.toString(feedData));
         notifyDataSetChanged();

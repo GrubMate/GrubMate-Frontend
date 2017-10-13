@@ -5,10 +5,19 @@ package com.example.grubmate.grubmate.utilities;
  */
 
 public class GrubMatePreference {
-    public static final String feedUrl = "http://10.120.75.43:8080/feed/user/1024";
-    public static String getPostActionURl() {
-        return "http://10.120.65.91:8080/post/1024";
+    public static final String domain = "http://10.120.78.167:8080";
+    public static final String subscribeActionURL = "/subscription";
+    public static final String postURL = "/post";
+    public static String getSubscribeActionURL(int ID) {
+        return domain + subscribeActionURL + "/" + ID;
     }
-    public static final String subscribeActionURL = "";
+    public static String getPostActionURl(int ID)
+    {
+        return domain + postURL + "/" + ID;
+    }
+    public static String getFeedUrl(int ID) {
+        return domain + postURL + "/" + ID;
+    }
+
     public static final String searchURL = "";
 }
