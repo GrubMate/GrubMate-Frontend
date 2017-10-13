@@ -1,5 +1,7 @@
 package com.example.grubmate.grubmate.utilities;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -22,6 +24,9 @@ public class NetworkUtilities {
 
     // Send a GET request to address specified by url, return raw response text
     public static String get(String url) throws IOException {
+        if(url==null||url.length() == 0) {
+            return null;
+        }
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -32,6 +37,9 @@ public class NetworkUtilities {
 
     // Send a POST request to address specified by url, return raw response text
     public static String post(String url, String jsonBody) throws IOException {
+        if(url==null||url.length() == 0) {
+            return null;
+        }
         RequestBody body = RequestBody.create(JSON, jsonBody);
         Request request = new Request.Builder()
                 .url(url)
@@ -44,6 +52,9 @@ public class NetworkUtilities {
 
     // Send a PUT request to address specified by url, return raw response text
     public static String put(String url, String jsonBody) throws  IOException {
+        if(url==null||url.length() == 0) {
+            return null;
+        }
         RequestBody body = RequestBody.create(JSON, jsonBody);
         Request request = new Request.Builder()
                 .url(url)
@@ -55,6 +66,9 @@ public class NetworkUtilities {
 
     // Send a DELETE request to address specified by url, return raw response text
     public static String delete(String url, String jsonBody) throws  IOException {
+        if(url==null||url.length() == 0) {
+            return null;
+        }
         RequestBody body = jsonBody == null?null:RequestBody.create(JSON, jsonBody);
         Request request = new Request.Builder()
                 .url(url)
