@@ -1,4 +1,4 @@
-package dataClass;
+package com.example.grubmate.grubmate.dataClass;
 
 public class Subscription {
     public Integer subscriptionID;

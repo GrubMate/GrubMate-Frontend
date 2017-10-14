@@ -1,9 +1,14 @@
 package com.example.grubmate.grubmate;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,18 +43,42 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FeedAdapter.FeedAdapterOnClickHandler {
     public static final String TAG = "MainActivity";
+    private Context context;
+
+    // used for recyclerview
     private RecyclerView mFeedView;
     private FeedAdapter mFeedAdapter;
+
     private Button mPostButton;
     private Button mSubscribeButton;
-    private Context context;
+
+    // used for better user experience when loading
     private ProgressBar mFeedProgressBar;
+
+    // used for service
+    private BroadcastReceiver notificationReceiver;
+    public final static String BROADCAST_ACTION = "com.example.grubmate.grubmate.notification";
+    private NotificationService.NotificationBinder notificationBinder;
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            notificationBinder = (NotificationService.NotificationBinder) service;
+            notificationBinder.startPolling();;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        context = this;
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,14 +96,10 @@ public class MainActivity extends AppCompatActivity
         mFeedView.setLayoutManager(layoutManager);
         mFeedAdapter = new FeedAdapter(this);
         mFeedView.setAdapter(mFeedAdapter);
-        new FetchFeedListTask().execute(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
 //        mFeedAdapter.setFeedData(MockData.mockFeedData);
 
         mPostButton = (Button) findViewById(R.id.b_home_post);
         mSubscribeButton = (Button) findViewById(R.id.b_home_subscribe);
-
-        context = this;
-        mFeedProgressBar = (ProgressBar) findViewById(R.id.pb_feed);
 
         mPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +134,26 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+        mFeedProgressBar = (ProgressBar) findViewById(R.id.pb_feed);
+
+        notificationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Toast.makeText(context, "received notification", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BROADCAST_ACTION);
+        registerReceiver(notificationReceiver, intentFilter);
+
+        new FetchFeedListTask().execute(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+        // start the service for notification
+
+        Intent bindIntent = new Intent(context, NotificationService.class);
+        bindService(bindIntent, connection, BIND_AUTO_CREATE);
+        Intent startIntent = new Intent(this, NotificationService.class);
+        startService(startIntent);
     }
 
     @Override
@@ -206,6 +251,14 @@ public class MainActivity extends AppCompatActivity
 
     public class FetchFeedListTask extends AsyncTask<String, Integer, ArrayList<Post>> {
         @Override
+        protected void onPreExecute() {
+            mFeedView.setVisibility(View.INVISIBLE);
+            mFeedProgressBar.getLayoutParams().height = (int)getResources().getDimension(R.dimen.pb_height);
+            mFeedProgressBar.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
         protected ArrayList<Post> doInBackground(String... params) {
             if (params.length == 0) {
                 return null;
@@ -235,5 +288,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(notificationReceiver);
+    }
 }
