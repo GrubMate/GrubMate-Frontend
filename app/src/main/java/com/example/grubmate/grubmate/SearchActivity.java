@@ -1,10 +1,12 @@
 package com.example.grubmate.grubmate;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,6 +16,8 @@ import android.widget.Toast;
 
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
+import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 
@@ -24,6 +28,20 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private Spinner searchItemCategorySpinner;
     private Spinner searchItemTimeSpinner;
     private Button searchButton;
+    private String title;
+    private String[] tags;
+    private String category;
+    private String[] timePeriod;
+    private Boolean[] allergyInfo;
+    private Gson gson;
+    class SearchFields{
+        public String title;
+        public String[] tags;
+        public String category;
+        public String[] timePeriod;
+        public Boolean[] allergyInfo;
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +66,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         searchItemTimeSpinner.setAdapter(timeAdapter);
         searchButton = (Button) findViewById(R.id.b_search_button);
         searchButton.setOnClickListener(this);
+        gson = new Gson();
     }
 
     public void showShortToast(String msg) {
@@ -55,20 +74,27 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public boolean validateForm() {
-//        if (searchItemNameText.getText().length() == 0) {
-//            return false;
-//        } else if (searchItemTagsText.getText().length() == 0) {
-//            return false;
-//        }
-        return true;
+        if(title != null) return true;
+//        tags = null;
+//        if(category !=null) return true;
+//        timePeriod = new String[2];
+//        timePeriod[0] = searchItemTimeSpinner.getSelectedItem().toString();
+//        allergyInfo = new Boolean[3];
+        return false;
     };
 
     @Override
     public void onClick(View view) {
+        title = searchItemNameText.getText().toString();
+        tags = null;
+        category = searchItemCategorySpinner.getSelectedItem().toString();
+        timePeriod = new String[2];
+        timePeriod[0] = searchItemTimeSpinner.getSelectedItem().toString();
+        allergyInfo = new Boolean[3];
         if(validateForm()) {
-            new SearchActivity.SearchTask().execute(GrubMatePreference.searchURL);
+            new SearchActivity.SearchTask().execute("post");
         } else {
-            showShortToast("Please fill out all necessary fields before searching");
+            new SearchActivity.SearchTask().execute("get");
         }
     }
 
@@ -79,17 +105,31 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             if (params.length == 0) {
                 return null;
             }
+            if(params[0] == "get") {
+                try {
+                    String baseUrl = GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID());
+                    String response = NetworkUtilities.get(baseUrl);
+                    Log.d("Search",response);
+                    return response;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (params[0] == "post") {
+                SearchFields searchFields = new SearchFields();
+                searchFields.title = title;
+                searchFields.category = category;
+                searchFields.tags = tags;
+                searchFields.timePeriod = timePeriod;
+                searchFields.allergyInfo = allergyInfo;
 
-            String baseUrl = params[0];
-
-            try {
-                String body = "";
-                String response = NetworkUtilities.post(baseUrl, body);
-                return response;
-            } catch (IOException e) {
-                e.printStackTrace();
+                String response = null;
+                try {
+                    response = NetworkUtilities.post(GrubMatePreference.getSearchURL(PersistantDataManager.getUserID()), gson.toJson(searchFields));
+                    return response;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
             return null;
         }
 
@@ -97,6 +137,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         protected void onPostExecute(String searchResponse) {
             if (searchResponse != null) {
                 showShortToast("Succeed");
+                Intent intent = new Intent();
+                Log.d("SearchActivity",searchResponse);
+                intent.putExtra("data_return", searchResponse);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         }
     }
