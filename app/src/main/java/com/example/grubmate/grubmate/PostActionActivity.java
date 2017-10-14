@@ -23,6 +23,7 @@ import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
+import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -53,9 +54,11 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private boolean[] postItemAllergy;
     private Integer postItemQuantity;
     private Double[] postItemAddress;
+    private Integer userID;
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private double Lat;
     private double Lng;
+    private Boolean isHomeMade;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,7 +171,10 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             postItemAddress[0] = Lat;
             postItemAddress[1] = Lng;
             postItemCategory = postItemCategorySpinner.getSelectedItem().toString();
-            new PostActionTask().execute(GrubMatePreference.getPostActionURl());
+            isHomeMade = true;
+            // TODO: change this to reald user id in production
+            userID = 0;
+            new PostActionTask().execute(GrubMatePreference.getPostActionURl(userID));
         } else {
             showShortToast("Please fill out all necessary fields before posting");
         }
@@ -183,7 +189,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         protected String doInBackground(String... params) {
-            if (params.length == 0) {
+            if (params.length == 0||params[0].length()==0) {
                 return null;
             }
 
@@ -196,9 +202,12 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             newPost.totalQuantity = postItemQuantity;
             newPost.leftQuantity = postItemQuantity;
             newPost.isActive = true;
-
+            newPost.title = postItemName;
             newPost.allergyInfo = null;
-            newPost.posterID = null;
+            newPost.posterID = PersistantDataManager.getUserID();
+            // TODO: change to real groups ids
+            newPost.groupIDs = null;
+            newPost.isHomeMade = isHomeMade;
             newPost.postID = null;
             newPost.postPhotos =null;
             newPost.timePeriod = null;
@@ -207,7 +216,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             Gson gson = new Gson();
             String postJson = gson.toJson(newPost);
             try {
-               return NetworkUtilities.post(GrubMatePreference.getPostActionURl(),postJson);
+               return NetworkUtilities.post(params[0],postJson);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -13,8 +13,13 @@ import android.widget.Toast;
 
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
+import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
+
+import dataClass.Subscription;
 
 public class SubscribeActionActivity extends AppCompatActivity implements View.OnClickListener{
     private EditText subscribeItemNameText;
@@ -22,6 +27,13 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
     private EditText subscribeItemAllergyText;
     private Spinner subscribeItemCategorySpinner;
     private Spinner subscribeItemTimeSpinner;
+    private Integer subscriberID;
+    public ArrayList<String> tags;
+    public String category;
+    public String query;
+    public String[] timePeriod;
+    public Integer[] matchedPostIDs;
+    public Boolean[] allergyInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +82,15 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
     public void onClick(View view) {
         if(validateForm()) {
             new SubscribeActionActivity.subscribeActionTask().execute(GrubMatePreference.subscribeActionURL);
-
+            tags = new ArrayList<String>();
+            query = subscribeItemNameText.getText().toString();
+            allergyInfo = new Boolean[3];
+            category = subscribeItemCategorySpinner.getSelectedItem().toString();
+            timePeriod = new String[2];
+            timePeriod[0] = subscribeItemTimeSpinner.getSelectedItem().toString();
+            // TODO: modify this into users' real id in production
+            subscriberID = 0;
+            new subscribeActionTask().execute(GrubMatePreference.getSubscribeActionURL(subscriberID));
         } else {
             showShortToast("Please fill out all necessary fields before subscribeing");
         }
@@ -80,15 +100,25 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
 
         @Override
         protected String doInBackground(String... params) {
-            if (params.length == 0) {
+            if (params.length == 0||params[0].length()==0) {
                 return null;
             }
-
             String baseUrl = params[0];
+            Subscription newSubscription = new Subscription();
+            newSubscription.tags = tags.toArray(new String[tags.size()]);
+            newSubscription.category = category;
+            newSubscription.allergyInfo = null;
+            newSubscription.subscriberID = subscriberID;
+            newSubscription.timePeriod = timePeriod;
+            newSubscription.query = query;
+            newSubscription.isActive = true;
+            newSubscription.matchedPostIDs = null;
+            newSubscription.subscriberID = PersistantDataManager.getUserID();
 
+            Gson gson = new Gson();
+            String subscriptionJson = gson.toJson(newSubscription);
             try {
-                String body = "";
-                String response = NetworkUtilities.post(baseUrl, body);
+                String response = NetworkUtilities.post(baseUrl, subscriptionJson);
                 return response;
             } catch (IOException e) {
                 e.printStackTrace();
