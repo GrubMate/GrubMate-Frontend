@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     private Button mPostButton;
     private Button mSubscribeButton;
     private Context context;
+    private ProgressBar mFeedProgressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity
         mSubscribeButton = (Button) findViewById(R.id.b_home_subscribe);
 
         context = this;
+        mFeedProgressBar = (ProgressBar) findViewById(R.id.pb_feed);
 
         mPostButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,7 +205,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public class FetchFeedListTask extends AsyncTask<String, Integer, ArrayList<Post>> {
-
         @Override
         protected ArrayList<Post> doInBackground(String... params) {
             if (params.length == 0) {
@@ -226,6 +228,9 @@ public class MainActivity extends AppCompatActivity
         protected void onPostExecute(ArrayList<Post> feedItems) {
             if (feedItems != null) {
                 mFeedAdapter.setFeedData(feedItems);
+                mFeedProgressBar.setVisibility(View.INVISIBLE);
+                mFeedProgressBar.getLayoutParams().height = 0;
+                mFeedView.setVisibility(View.VISIBLE);
             }
         }
     }
