@@ -1,7 +1,9 @@
 package com.example.grubmate.grubmate;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity
     private Button mPostButton;
     private Button mSubscribeButton;
     private Context context;
+    private BroadcastReceiver notificationReceiver;
+    public final static String BROADCAST_ACTION = "com.example.action";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +72,16 @@ public class MainActivity extends AppCompatActivity
 
         mPostButton = (Button) findViewById(R.id.b_home_post);
         mSubscribeButton = (Button) findViewById(R.id.b_home_subscribe);
+
+        notificationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Toast.makeText(context, "update received", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter(BROADCAST_ACTION);
+        registerReceiver(notificationReceiver, intentFilter);
 
         context = this;
 

@@ -189,6 +189,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 
             Post newPost = new Post();
             String [] postItemTagsArray = postItemTags.toArray(new String[postItemTags.size()]);
+            newPost.postID = null;
             newPost.tags = postItemTagsArray;
             newPost.category = postItemCategory;
             newPost.description = postItemDescription;
@@ -196,7 +197,6 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             newPost.totalQuantity = postItemQuantity;
             newPost.leftQuantity = postItemQuantity;
             newPost.isActive = true;
-
             newPost.allergyInfo = null;
             newPost.posterID = null;
             newPost.postID = null;
