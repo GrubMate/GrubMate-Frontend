@@ -1,4 +1,4 @@
-package dataClass;
+package com.example.grubmate.grubmate.dataClass;
 import java.util.List;
 
 public class User {

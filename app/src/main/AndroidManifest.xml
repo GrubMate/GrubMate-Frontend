@@ -52,6 +52,11 @@
             android:label="Profile"
             android:launchMode="singleTop" />
         <activity android:name=".SubscriptionDetailActivity" />
+
+        <service
+            android:name=".NotificationService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

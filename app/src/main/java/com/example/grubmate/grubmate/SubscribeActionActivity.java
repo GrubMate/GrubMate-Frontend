@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import dataClass.Subscription;
+import com.example.grubmate.grubmate.dataClass.Subscription;
 
 public class SubscribeActionActivity extends AppCompatActivity implements View.OnClickListener{
     private EditText subscribeItemNameText;
