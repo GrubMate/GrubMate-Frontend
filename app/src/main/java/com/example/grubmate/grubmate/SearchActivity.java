@@ -55,11 +55,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public boolean validateForm() {
-        if (searchItemNameText.getText().length() == 0) {
-            return false;
-        } else if (searchItemTagsText.getText().length() == 0) {
-            return false;
-        }
+//        if (searchItemNameText.getText().length() == 0) {
+//            return false;
+//        } else if (searchItemTagsText.getText().length() == 0) {
+//            return false;
+//        }
         return true;
     };
 

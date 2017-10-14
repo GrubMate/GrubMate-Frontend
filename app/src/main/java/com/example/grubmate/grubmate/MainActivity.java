@@ -37,6 +37,7 @@ import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FeedAdapter.FeedAdapterOnClickHandler {
     public static final String TAG = "MainActivity";
     private Context context;
+    private ArrayList<Post> feedData;
 
     // used for recyclerview
     private RecyclerView mFeedView;
@@ -54,9 +56,9 @@ public class MainActivity extends AppCompatActivity
 
     // used for better user experience when loading
     private ProgressBar mFeedProgressBar;
-
     // used for service
     private BroadcastReceiver notificationReceiver;
+
     public final static String BROADCAST_ACTION = "com.example.grubmate.grubmate.notification";
     private NotificationService.NotificationBinder notificationBinder;
     private ServiceConnection connection = new ServiceConnection() {
@@ -280,7 +282,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(ArrayList<Post> feedItems) {
             if (feedItems != null) {
-                mFeedAdapter.setFeedData(feedItems);
+                feedData = feedItems;
+                mFeedAdapter.setFeedData(feedData);
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
                 mFeedView.setVisibility(View.VISIBLE);

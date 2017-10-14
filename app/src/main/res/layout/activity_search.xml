@@ -5,12 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context="com.example.grubmate.grubmate.SearchActivity">
-    <TextView
-        android:id="@+id/tv_search_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/serach_activity_title"/>
     <EditText
         android:id="@+id/et_search_item_name"
         android:layout_width="match_parent"
@@ -41,7 +37,7 @@
     <Button
         android:id="@+id/b_search_button"
         android:text="@string/search_button_text"
-        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>
