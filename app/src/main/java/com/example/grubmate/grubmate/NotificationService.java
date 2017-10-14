@@ -7,6 +7,12 @@ import android.os.IBinder;
 import android.support.annotation.IntDef;
 import android.util.Log;
 
+import com.example.grubmate.grubmate.utilities.GrubMatePreference;
+import com.example.grubmate.grubmate.utilities.NetworkUtilities;
+import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+
+import java.io.IOException;
+
 public class NotificationService extends Service {
     private NotificationBinder mBinder = new NotificationBinder();
     class NotificationBinder extends Binder {
@@ -44,5 +50,20 @@ public class NotificationService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.d("NotificationService", "onDestroyExecuted");
+    }
+
+    private void sendPollingRequst() {
+        new Thread(new Runnable(){
+            @Override
+            public void run() {
+                try {
+                    String response = NetworkUtilities.get(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                sendPollingRequst();
+            }
+        }).start();
     }
 }

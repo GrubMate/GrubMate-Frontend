@@ -8,6 +8,8 @@ public class GrubMatePreference {
     public static final String domain = "http://10.120.68.95:8080";
     public static final String subscribeActionURL = "/subscription";
     public static final String postURL = "/post";
+    public static final String searchURL = "";
+    public static final String notificationURL = "";
     public static String getSubscribeActionURL(int ID) {
         return domain + subscribeActionURL + "/" + ID;
     }
@@ -18,6 +20,9 @@ public class GrubMatePreference {
     public static String getFeedUrl(int ID) {
         return domain + postURL + "/" + ID;
     }
+    public static String getNotificationURL(int ID) {
+        return domain + notificationURL+"/"+ID;
+    }
 
-    public static final String searchURL = "";
+
 }
