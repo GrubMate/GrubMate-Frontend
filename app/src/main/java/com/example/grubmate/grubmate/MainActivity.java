@@ -37,6 +37,7 @@ import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FeedAdapter.FeedAdapterOnClickHandler {
     public static final String TAG = "MainActivity";
     private Context context;
+    private ArrayList<Post> feedData;
+    public static final int SEARCH_IDENTIFICATION_CODE = 91;
 
     // used for recyclerview
     private RecyclerView mFeedView;
@@ -54,9 +57,9 @@ public class MainActivity extends AppCompatActivity
 
     // used for better user experience when loading
     private ProgressBar mFeedProgressBar;
-
     // used for service
     private BroadcastReceiver notificationReceiver;
+
     public final static String BROADCAST_ACTION = "com.example.grubmate.grubmate.notification";
     private NotificationService.NotificationBinder notificationBinder;
     private ServiceConnection connection = new ServiceConnection() {
@@ -185,13 +188,13 @@ public class MainActivity extends AppCompatActivity
             Class destinationActivity = SearchActivity.class;
 
             // construct the intent
-            Intent startDetailActivityIntent = new Intent(context, destinationActivity);
+            Intent startActivityIntent = new Intent(context, destinationActivity);
 
             // put extra data into this intent
-            startDetailActivityIntent.putExtra(Intent.EXTRA_TEXT, PersistantDataManager.getUserID());
+            startActivityIntent.putExtra(Intent.EXTRA_TEXT, PersistantDataManager.getUserID());
 
             // start the intent
-            startActivity(startDetailActivityIntent);
+            startActivityForResult(startActivityIntent, SEARCH_IDENTIFICATION_CODE);
 
             return true;
         }
@@ -269,7 +272,6 @@ public class MainActivity extends AppCompatActivity
             try {
                 String response = NetworkUtilities.get(baseUrl);
                 return JsonUtilities.getFeedItems(response);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -280,10 +282,15 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(ArrayList<Post> feedItems) {
             if (feedItems != null) {
-                mFeedAdapter.setFeedData(feedItems);
+                feedData = feedItems;
+                mFeedAdapter.setFeedData(feedData);
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
                 mFeedView.setVisibility(View.VISIBLE);
+            } else {
+                mFeedProgressBar.setVisibility(View.INVISIBLE);
+                mFeedProgressBar.getLayoutParams().height = 0;
+
             }
         }
     }
@@ -292,5 +299,24 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(notificationReceiver);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case SEARCH_IDENTIFICATION_CODE:
+                if (resultCode == RESULT_OK) {
+                    String returnedData = data.getStringExtra("data_return");
+                    Log.d("MainActivity", returnedData);
+                    if (returnedData == null || returnedData.length()==0) return;
+                    this.feedData = JsonUtilities.getFeedItems(returnedData);
+                    this.mFeedAdapter.setFeedData(feedData);
+                    mFeedProgressBar.setVisibility(View.INVISIBLE);
+                    mFeedProgressBar.getLayoutParams().height = 0;
+                    mFeedView.setVisibility(View.VISIBLE);
+                }
+                break;
+            default:
+        }
     }
 }

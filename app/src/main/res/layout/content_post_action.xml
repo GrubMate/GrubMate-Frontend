@@ -31,6 +31,11 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/post_action_item_name_hint"
                 android:inputType="text"/>
+            <CheckBox
+                android:id="@+id/cb_post_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Homemade"/>
 
             <Spinner
                 android:id="@+id/spinner_category"
@@ -68,6 +73,10 @@
                 android:hint="@string/post_action_allergy_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+            <Spinner
+                android:id="@+id/spinner_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></Spinner>
             <Button
                 android:id="@+id/et_location"
                 android:layout_width="match_parent"

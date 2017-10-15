@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -46,6 +47,8 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private EditText postItemAllergyText;
     private Spinner postItemCategorySpinner;
     private Spinner postItemTimeSpinner;
+    private Spinner postGroupSpinner;
+    private CheckBox postHomeCheckBox;
     private Button postItemLocation;
     private TextView postItemLocationText;
     private GoogleApiClient mGoogleApiClient;
@@ -55,6 +58,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private Integer postItemQuantity;
     private Double[] postItemAddress;
     private Integer userID;
+    private Integer[] groupIDs;
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private double Lat;
     private double Lng;
@@ -106,11 +110,6 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
                 }
             }
         });
-
-
-
-
-
         postItemTimeSpinner = (Spinner) findViewById(R.id.spinner_time);
 // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(this,
@@ -119,6 +118,14 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
         timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 // Apply the adapter to the spinner
         postItemTimeSpinner.setAdapter(timeAdapter);
+
+        postGroupSpinner = (Spinner) findViewById(R.id.spinner_group);
+        ArrayAdapter<CharSequence> groupAdapter = ArrayAdapter.createFromResource(this,R.array.group, android.R.layout.simple_spinner_item);
+        groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        postGroupSpinner.setAdapter(groupAdapter);
+
+        postHomeCheckBox = (CheckBox) findViewById(R.id.cb_post_home);
+        // end of oncreate
     }
 
     //Store the location's Latitude to Lat and Logitude to Lng
@@ -171,7 +178,9 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             postItemAddress[0] = Lat;
             postItemAddress[1] = Lng;
             postItemCategory = postItemCategorySpinner.getSelectedItem().toString();
-            isHomeMade = true;
+            isHomeMade = postHomeCheckBox.isChecked();
+            groupIDs = new Integer[1];
+
             // TODO: change this to reald user id in production
             userID = 0;
             new PostActionTask().execute(GrubMatePreference.getPostActionURl(userID));
@@ -207,13 +216,12 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             newPost.allergyInfo = null;
             newPost.posterID = PersistantDataManager.getUserID();
             // TODO: change to real groups ids
-            newPost.groupIDs = null;
+            newPost.groupIDs = groupIDs;
             newPost.isHomeMade = isHomeMade;
             newPost.postID = null;
             newPost.postPhotos =null;
             newPost.timePeriod = null;
             newPost.requestsIDs = null;
-
             Gson gson = new Gson();
             String postJson = gson.toJson(newPost);
             try {

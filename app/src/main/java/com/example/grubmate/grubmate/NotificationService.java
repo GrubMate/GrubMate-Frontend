@@ -43,6 +43,7 @@ public class NotificationService extends Service {
         Intent local = new Intent();
         local.setAction(MainActivity.BROADCAST_ACTION);
         this.sendBroadcast(local);
+        sendPollingRequst();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -57,7 +58,12 @@ public class NotificationService extends Service {
             @Override
             public void run() {
                 try {
+                    Log.d("NotificationService", "request sent");
                     String response = NetworkUtilities.get(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
+                    Log.d("NotificationService", "onDestroyExecuted");
+                    Intent local = new Intent();
+                    local.setAction(MainActivity.BROADCAST_ACTION);
+                    sendBroadcast(local);
                 } catch (IOException e) {
                     e.printStackTrace();
                     return;
