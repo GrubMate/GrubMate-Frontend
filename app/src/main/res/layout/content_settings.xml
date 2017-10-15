@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="32sp"
+        android:textAlignment="center"
+        android:text="Alergy Settings"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:showDividers="middle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+            <CheckBox
+                android:id="@+id/allergy1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="allergy 1" />
+            <CheckBox
+                android:id="@+id/allergy2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="allergy 2"/>
+            <CheckBox
+                android:id="@+id/allergy3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="allergy 3"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="32sp"
+        android:textAlignment="center"
+        android:text="Group Settings"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/settingsLayout"
+            android:showDividers="middle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
