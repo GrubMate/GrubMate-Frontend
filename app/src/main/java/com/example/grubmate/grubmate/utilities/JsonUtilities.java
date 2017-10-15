@@ -1,6 +1,7 @@
 package com.example.grubmate.grubmate.utilities;
 
 import com.example.grubmate.grubmate.dataClass.Post;
+import com.example.grubmate.grubmate.dataClass.Subscription;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -19,8 +20,18 @@ public class JsonUtilities {
         public ArrayList<Post> itemList;
     }
 
+    private class SubscriptionList {
+        public int id;
+        public ArrayList<Subscription> itemList;
+    }
+
     public static ArrayList<Post> getFeedItems(String jsonString) {
         FeedList feedList = gson.fromJson(jsonString, FeedList.class);
         return feedList.itemList;
+    }
+
+    public static ArrayList<Subscription> getSubscriptionItems(String jsonString) {
+        SubscriptionList subscriptionList = gson.fromJson(jsonString, SubscriptionList.class);
+        return subscriptionList.itemList;
     }
 }
