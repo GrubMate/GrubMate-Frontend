@@ -128,8 +128,7 @@ public class LoginActivity extends AppCompatActivity {
             };
             new GraphRequest(AccessToken.getCurrentAccessToken(),"/me?fields=id,name,gender,email,first_name,last_name", null,HttpMethod.GET, gCallback).executeAsync();
 
-            new LoginActionTask().execute(GrubMatePreference.getPostActionURl(Integer.valueOf(newUser.facebookID)));
-
+            new LoginActionTask().execute(GrubMatePreference.getUserURL());
 
             Intent startMainActivity = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(startMainActivity);
@@ -205,7 +204,7 @@ public class LoginActivity extends AppCompatActivity {
                     };
                     new GraphRequest(AccessToken.getCurrentAccessToken(),"/me?fields=id,name,gender,email,first_name,last_name", null,HttpMethod.GET, gCallback).executeAsync();
 
-                    new LoginActionTask().execute(GrubMatePreference.getPostActionURl(Integer.valueOf(newUser.facebookID)));
+                    new LoginActionTask().execute(GrubMatePreference.getUserURL());
 
                     Intent startMainActivity = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(startMainActivity);
@@ -255,7 +254,7 @@ public class LoginActivity extends AppCompatActivity {
             String userJson = gson.toJson(newUser);
 
             try {
-                return NetworkUtilities.post(params[0],userJson);
+                return NetworkUtilities.post(GrubMatePreference.getUserURL(),userJson);
             } catch (IOException e) {
                 e.printStackTrace();
             }
