@@ -41,4 +41,6 @@
     <string name="profile_name_default">GrubMate</string>
     <string name="feed_empty_message">You currently have no available posts</string>
     <string name="search_advance_search_hint">Advance Search</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="facebook_app_id">1857435091252875</string>
 </resources>
