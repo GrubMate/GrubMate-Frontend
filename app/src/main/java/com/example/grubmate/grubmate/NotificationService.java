@@ -50,7 +50,6 @@ public class NotificationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("NotificationService", "onDestroyExecuted");
     }
 
     private void sendPollingRequst() {

@@ -36,6 +36,8 @@ import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.gson.Gson;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity
 
     // used for better user experience when loading
     private ProgressBar mFeedProgressBar;
+    private TextView mEmptyText;
     // used for service
     private BroadcastReceiver notificationReceiver;
 
@@ -138,6 +141,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
         mFeedProgressBar = (ProgressBar) findViewById(R.id.pb_feed);
+        mEmptyText = (TextView) findViewById(R.id.tv_feed_empty_text);
 
         notificationReceiver = new BroadcastReceiver() {
             @Override
@@ -258,6 +262,7 @@ public class MainActivity extends AppCompatActivity
             mFeedView.setVisibility(View.INVISIBLE);
             mFeedProgressBar.getLayoutParams().height = (int)getResources().getDimension(R.dimen.pb_height);
             mFeedProgressBar.setVisibility(View.VISIBLE);
+            mEmptyText.setVisibility(View.INVISIBLE);
             super.onPreExecute();
         }
 
@@ -271,6 +276,7 @@ public class MainActivity extends AppCompatActivity
 
             try {
                 String response = NetworkUtilities.get(baseUrl);
+                if(response == null || response.length() ==0) return null;
                 return JsonUtilities.getFeedItems(response);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -287,7 +293,9 @@ public class MainActivity extends AppCompatActivity
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
                 mFeedView.setVisibility(View.VISIBLE);
+                if(feedData.size() < 1) mEmptyText.setVisibility(View.VISIBLE);
             } else {
+                mEmptyText.setVisibility(View.VISIBLE);
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
 
@@ -299,6 +307,7 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(notificationReceiver);
+        unbindService(connection);
     }
 
     @Override
