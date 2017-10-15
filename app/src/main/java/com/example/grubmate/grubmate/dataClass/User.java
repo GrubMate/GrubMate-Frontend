@@ -1,4 +1,5 @@
 package com.example.grubmate.grubmate.dataClass;
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -13,4 +14,5 @@ public class User {
     public Integer[] postsID;
     public Integer[] requestsID;
     public Integer[] subscriptionID;
+    public ArrayList<String> friendList;
 }
