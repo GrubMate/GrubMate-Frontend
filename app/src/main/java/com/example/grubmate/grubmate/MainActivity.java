@@ -153,8 +153,8 @@ public class MainActivity extends AppCompatActivity
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_ACTION);
         registerReceiver(notificationReceiver, intentFilter);
-
-        new FetchFeedListTask().execute(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+// TODO: change it back to work
+//        new FetchFeedListTask().execute(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
         // start the service for notification
 
         Intent bindIntent = new Intent(context, NotificationService.class);

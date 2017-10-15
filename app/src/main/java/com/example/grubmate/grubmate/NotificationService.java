@@ -43,7 +43,7 @@ public class NotificationService extends Service {
         Intent local = new Intent();
         local.setAction(MainActivity.BROADCAST_ACTION);
         this.sendBroadcast(local);
-        sendPollingRequst();
+//        sendPollingRequst();
         return super.onStartCommand(intent, flags, startId);
     }
 
