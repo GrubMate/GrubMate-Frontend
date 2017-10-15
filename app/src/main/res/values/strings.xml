@@ -116,4 +116,7 @@
     <string name="pref_ringtone_silent">Silent</string>
 
     <string name="pref_title_vibrate">Vibrate</string>
+    <string name="subscription_empty_text">Oh, you don\'t have subscriptions yet.</string>
+    <string name="tv_feed_quantity_default">0</string>
+    <string name="feed_detail_name_default">lolipop</string>
 </resources>

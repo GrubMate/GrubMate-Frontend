@@ -2,6 +2,7 @@ package com.example.grubmate.grubmate.utilities;
 
 import com.example.grubmate.grubmate.dataClass.Group;
 import com.example.grubmate.grubmate.dataClass.Post;
+import com.example.grubmate.grubmate.dataClass.Subscription;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -20,6 +21,11 @@ public class JsonUtilities {
         public ArrayList<Post> itemList;
     }
 
+    private class SubscriptionList {
+        public int id;
+        public ArrayList<Subscription> itemList;
+    }
+
     public static ArrayList<Post> getFeedItems(String jsonString) {
         FeedList feedList = gson.fromJson(jsonString, FeedList.class);
         return feedList.itemList;
@@ -33,5 +39,13 @@ public class JsonUtilities {
     public static ArrayList<String> getfriendsList(String jsonString){
         ArrayList<String> friendsList = new ArrayList<String>();
         return gson.fromJson(jsonString,friendsList.getClass());
+    public static ArrayList<Subscription> getSubscriptionItems(String jsonString) {
+        try {
+            SubscriptionList subscriptionList = gson.fromJson(jsonString, SubscriptionList.class);
+            return subscriptionList.itemList;
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

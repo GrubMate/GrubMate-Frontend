@@ -4,13 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context="com.example.grubmate.grubmate.FeedDetailActivity">
+
     <TextView
         android:id="@+id/tv_feed_detail_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/default_text"
-        android:padding="16dp"/>
+        android:layout_gravity="center_horizontal"
+        android:text="@string/feed_detail_name_default" />
+    <TextView
+        android:id="@+id/tv_feed_quantitiy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tv_feed_quantity_default"/>
+    <LinearLayout
+        android:id="@+id/poster_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        >
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/requester_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        >
+    </LinearLayout>
 
 </LinearLayout>

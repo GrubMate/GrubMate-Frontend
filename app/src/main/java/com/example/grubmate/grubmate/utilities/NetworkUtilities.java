@@ -3,6 +3,7 @@ package com.example.grubmate.grubmate.utilities;
 import android.util.Log;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.net.URL;
 
 import okhttp3.MediaType;
@@ -27,11 +28,16 @@ public class NetworkUtilities {
         if(url==null||url.length() == 0) {
             return null;
         }
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-        Response response = client.newCall(request).execute();
-        return response.body().string();
+        try {
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            Response response = client.newCall(request).execute();
+            return response.body()==null?null:response.body().string();
+        } catch (SocketException e) {
+            e.printStackTrace();
+            return null;
+        }
 
     }
 
@@ -40,14 +46,18 @@ public class NetworkUtilities {
         if(url==null||url.length() == 0) {
             return null;
         }
-        RequestBody body = RequestBody.create(JSON, jsonBody);
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-        Response response = client.newCall(request).execute();
-        return response.body().string();
-
+        try {
+            RequestBody body = RequestBody.create(JSON, jsonBody);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .post(body)
+                    .build();
+            Response response = client.newCall(request).execute();
+            return response.body()==null?null:response.body().string();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // Send a PUT request to address specified by url, return raw response text
@@ -55,13 +65,18 @@ public class NetworkUtilities {
         if(url==null||url.length() == 0) {
             return null;
         }
-        RequestBody body = RequestBody.create(JSON, jsonBody);
-        Request request = new Request.Builder()
-                .url(url)
-                .put(body)
-                .build();
-        Response response = client.newCall(request).execute();
-        return response.body().string();
+        try {
+            RequestBody body = RequestBody.create(JSON, jsonBody);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .put(body)
+                    .build();
+            Response response = client.newCall(request).execute();
+            return response.body() == null ? null : response.body().string();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // Send a DELETE request to address specified by url, return raw response text
@@ -69,12 +84,17 @@ public class NetworkUtilities {
         if(url==null||url.length() == 0) {
             return null;
         }
-        RequestBody body = jsonBody == null?null:RequestBody.create(JSON, jsonBody);
-        Request request = new Request.Builder()
-                .url(url)
-                .delete(body)
-                .build();
-        Response response = client.newCall(request).execute();
-        return response.body().string();
+        try {
+            RequestBody body = jsonBody == null ? null : RequestBody.create(JSON, jsonBody);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .delete(body)
+                    .build();
+            Response response = client.newCall(request).execute();
+            return response.body() == null ? null : response.body().string();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
