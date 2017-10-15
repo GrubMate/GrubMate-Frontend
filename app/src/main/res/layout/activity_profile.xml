@@ -31,14 +31,7 @@
         android:layout_height="wrap_content"
         android:numStars="5"
         android:rating="5"
+        android:isIndicator="true"
         android:stepSize="1" />
 
-    <EditText
-        android:id="@+id/et_profile_description"
-        android:maxLines="4"
-        android:lines="4"
-        android:gravity="top"
-        android:hint="@string/profile_description_hint"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </LinearLayout>
