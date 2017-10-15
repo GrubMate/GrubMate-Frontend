@@ -131,9 +131,6 @@ public class LoginActivity extends AppCompatActivity {
             };
             new GraphRequest(AccessToken.getCurrentAccessToken(),"/me?fields=id,name,gender,email,first_name,last_name", null,HttpMethod.GET, gCallback).executeAsync();
 
-
-
-
             Intent startMainActivity = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(startMainActivity);
         }else {
@@ -264,6 +261,7 @@ public class LoginActivity extends AppCompatActivity {
             String userJson = gson.toJson(newUser);
             Log.d("Login", userJson);
             try {
+
                 return NetworkUtilities.post(GrubMatePreference.getUserUrl(),userJson);
             } catch (IOException e) {
                 e.printStackTrace();
