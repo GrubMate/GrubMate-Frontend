@@ -47,7 +47,10 @@ public class LoginActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private ArrayList<String> friends;
     private ImageView profileImage;
-    private User newUser;
+    private String facebookID;
+    private String photoURL;
+    private ArrayList<String> friendList;
+    private String facebookUsername;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +62,6 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setReadPermissions("user_friends");
         final AccessToken token;
         token = AccessToken.getCurrentAccessToken();
-        newUser = new User();
         if (token != null) {
             new GraphRequest(
                     token,
@@ -74,12 +76,12 @@ public class LoginActivity extends AppCompatActivity {
                                 JSONArray rawName = response.getJSONObject().getJSONArray("data");
                                 ArrayList<String> friends = new ArrayList<String>();
                                 String userID = token.getUserId();
-                                newUser.facebookID = userID;
+                                facebookID = userID;
                                 Log.i("userid",userID);
                                 for (int l = 0; l < rawName.length(); l++) {
                                     friends.add(rawName.getJSONObject(l).getString("id"));
                                 }
-                                newUser.friendList = friends;
+                                friendList = friends;
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -102,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                                     if (data.has("picture")) {
                                         String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
                                         Log.i("url1",profilePicUrl);
-                                        newUser.profilePhoto = profilePicUrl;
+                                        photoURL = profilePicUrl;
                                        // Picasso.with(LoginActivity.this).load(profilePicUrl).into(profileImage);
                                     }
                                 } catch (Exception e) {
@@ -119,7 +121,8 @@ public class LoginActivity extends AppCompatActivity {
                     if (response != null && response.getJSONObject() != null && response.getJSONObject().has("first_name"))
                     {
                         try {
-                            newUser.userName = response.getJSONObject().getString("name");
+                            facebookUsername = response.getJSONObject().getString("name");
+                            new LoginActionTask().execute(GrubMatePreference.getUserUrl());
                         } catch (JSONException e) {
 
                         }
@@ -128,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
             };
             new GraphRequest(AccessToken.getCurrentAccessToken(),"/me?fields=id,name,gender,email,first_name,last_name", null,HttpMethod.GET, gCallback).executeAsync();
 
-          //  new LoginActionTask().execute(GrubMatePreference.getPostActionURl(Integer.valueOf(newUser.facebookID)));
+
 
 
             Intent startMainActivity = new Intent(LoginActivity.this, MainActivity.class);
@@ -140,7 +143,6 @@ public class LoginActivity extends AppCompatActivity {
 
                     new GraphRequest(
                             token,
-
                             "/me/friends",
                             null,
                             HttpMethod.GET,
@@ -151,12 +153,12 @@ public class LoginActivity extends AppCompatActivity {
                                         JSONArray rawName = response.getJSONObject().getJSONArray("data");
                                         ArrayList<String> friends = new ArrayList<String>();
                                         String userID = token.getUserId();
-                                        newUser.facebookID = userID;
+                                        facebookID = userID;
                                         Log.i("userid",userID);
                                         for (int l = 0; l < rawName.length(); l++) {
                                             friends.add(rawName.getJSONObject(l).getString("id"));
                                         }
-                                        newUser.friendList = friends;
+                                        friendList = friends;
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -179,7 +181,8 @@ public class LoginActivity extends AppCompatActivity {
                                             if (data.has("picture")) {
                                                 String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
                                                 Log.i("url1",profilePicUrl);
-                                                newUser.profilePhoto = profilePicUrl;
+                                                photoURL= profilePicUrl;
+                                                new LoginActionTask().execute(GrubMatePreference.getUserUrl());
                                                 // Picasso.with(LoginActivity.this).load(profilePicUrl).into(profileImage);
                                             }
                                         } catch (Exception e) {
@@ -196,16 +199,17 @@ public class LoginActivity extends AppCompatActivity {
                             if (response != null && response.getJSONObject() != null && response.getJSONObject().has("first_name"))
                             {
                                 try {
-                                    newUser.userName = response.getJSONObject().getString("name");
+                                    facebookUsername = response.getJSONObject().getString("name");
                                 } catch (JSONException e) {
 
                                 }
                             }
                         }
                     };
-                    new GraphRequest(AccessToken.getCurrentAccessToken(),"/me?fields=id,name,gender,email,first_name,last_name", null,HttpMethod.GET, gCallback).executeAsync();
+                    new GraphRequest(AccessToken.getCurrentAccessToken(),
+                            "/me?fields=id,name,gender,email,first_name,last_name", null,HttpMethod.GET, gCallback).executeAsync();
 
-//                    new LoginActionTask().execute(GrubMatePreference.getPostActionURl(Integer.valueOf(newUser.facebookID)));
+                    new LoginActionTask().execute(GrubMatePreference.getUserUrl());
 
                     Intent startMainActivity = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(startMainActivity);
@@ -243,6 +247,11 @@ public class LoginActivity extends AppCompatActivity {
                 return null;
             }
 
+            User newUser = new User();
+            newUser.userName = facebookUsername;
+            newUser.friendList = friendList;
+            newUser.profilePhoto = photoURL;
+            newUser.facebookID = facebookID;
             newUser.userID = null;
             newUser.bio = null;
             newUser.ratings = null;
@@ -253,9 +262,9 @@ public class LoginActivity extends AppCompatActivity {
             newUser.subscriptionID = null;
             Gson gson = new Gson();
             String userJson = gson.toJson(newUser);
-
+            Log.d("Login", userJson);
             try {
-                return NetworkUtilities.post(params[0],userJson);
+                return NetworkUtilities.post(GrubMatePreference.getUserUrl(),userJson);
             } catch (IOException e) {
                 e.printStackTrace();
             }

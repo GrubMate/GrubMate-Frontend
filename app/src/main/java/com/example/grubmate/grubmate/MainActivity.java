@@ -36,6 +36,8 @@ import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.gson.Gson;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity
 
     // used for better user experience when loading
     private ProgressBar mFeedProgressBar;
+    private TextView mEmptyText;
     // used for service
     private BroadcastReceiver notificationReceiver;
 
@@ -66,7 +69,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder service) {
             notificationBinder = (NotificationService.NotificationBinder) service;
-            notificationBinder.startPolling();;
+            notificationBinder.startPolling();
+            ;
         }
 
         @Override
@@ -84,8 +88,8 @@ public class MainActivity extends AppCompatActivity
         context = this;
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-            this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
         //noinspection deprecation
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -99,7 +103,7 @@ public class MainActivity extends AppCompatActivity
         mFeedView.setLayoutManager(layoutManager);
         mFeedAdapter = new FeedAdapter(this);
         mFeedView.setAdapter(mFeedAdapter);
-//        mFeedAdapter.setFeedData(MockData.mockFeedData);
+        //        mFeedAdapter.setFeedData(MockData.mockFeedData);
 
         mPostButton = (Button) findViewById(R.id.b_home_post);
         mSubscribeButton = (Button) findViewById(R.id.b_home_subscribe);
@@ -138,6 +142,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
         mFeedProgressBar = (ProgressBar) findViewById(R.id.pb_feed);
+        mEmptyText = (TextView) findViewById(R.id.tv_feed_empty_text);
 
         notificationReceiver = new BroadcastReceiver() {
             @Override
@@ -149,14 +154,15 @@ public class MainActivity extends AppCompatActivity
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_ACTION);
         registerReceiver(notificationReceiver, intentFilter);
-
-        new FetchFeedListTask().execute(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
         // start the service for notification
 
         Intent bindIntent = new Intent(context, NotificationService.class);
         bindService(bindIntent, connection, BIND_AUTO_CREATE);
         Intent startIntent = new Intent(this, NotificationService.class);
         startService(startIntent);
+
+        // TODO: change it back to work
+        new FetchFeedListTask().execute(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
     }
 
     @Override
@@ -213,14 +219,14 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_subscriptions) {
             destinationActivity = SubscriptionsActivity.class;
         } else if (id == R.id.nav_posts) {
-
+            destinationActivity = PostsActivity.class;
         } else if (id == R.id.nav_orders) {
 
         } else if (id == R.id.nav_profile) {
             destinationActivity = ProfileActivity.class;
         } else if (id == R.id.nav_notification_settings) {
 
-        } else if (id==R.id.nav_application_settings) {
+        } else if (id == R.id.nav_application_settings) {
 
         }
         // construct the intent
@@ -256,8 +262,9 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             mFeedView.setVisibility(View.INVISIBLE);
-            mFeedProgressBar.getLayoutParams().height = (int)getResources().getDimension(R.dimen.pb_height);
+            mFeedProgressBar.getLayoutParams().height = (int) getResources().getDimension(R.dimen.pb_height);
             mFeedProgressBar.setVisibility(View.VISIBLE);
+            mEmptyText.setVisibility(View.INVISIBLE);
             super.onPreExecute();
         }
 
@@ -271,6 +278,8 @@ public class MainActivity extends AppCompatActivity
 
             try {
                 String response = NetworkUtilities.get(baseUrl);
+                if (response == null || response.length() == 0)
+                    return null;
                 return JsonUtilities.getFeedItems(response);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -287,7 +296,10 @@ public class MainActivity extends AppCompatActivity
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
                 mFeedView.setVisibility(View.VISIBLE);
+                if (feedData.size() < 1)
+                    mEmptyText.setVisibility(View.VISIBLE);
             } else {
+                mEmptyText.setVisibility(View.VISIBLE);
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
 
@@ -299,24 +311,26 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(notificationReceiver);
+        unbindService(connection);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case SEARCH_IDENTIFICATION_CODE:
-                if (resultCode == RESULT_OK) {
-                    String returnedData = data.getStringExtra("data_return");
-                    Log.d("MainActivity", returnedData);
-                    if (returnedData == null || returnedData.length()==0) return;
-                    this.feedData = JsonUtilities.getFeedItems(returnedData);
-                    this.mFeedAdapter.setFeedData(feedData);
-                    mFeedProgressBar.setVisibility(View.INVISIBLE);
-                    mFeedProgressBar.getLayoutParams().height = 0;
-                    mFeedView.setVisibility(View.VISIBLE);
-                }
-                break;
-            default:
+        case SEARCH_IDENTIFICATION_CODE:
+            if (resultCode == RESULT_OK) {
+                String returnedData = data.getStringExtra("data_return");
+                Log.d("MainActivity", returnedData);
+                if (returnedData == null || returnedData.length() == 0)
+                    return;
+                this.feedData = JsonUtilities.getFeedItems(returnedData);
+                this.mFeedAdapter.setFeedData(feedData);
+                mFeedProgressBar.setVisibility(View.INVISIBLE);
+                mFeedProgressBar.getLayoutParams().height = 0;
+                mFeedView.setVisibility(View.VISIBLE);
+            }
+            break;
+        default:
         }
     }
 }

@@ -1,4 +1,5 @@
 package com.example.grubmate.grubmate.dataClass;
+
 import java.util.ArrayList;
 import java.util.List;
 

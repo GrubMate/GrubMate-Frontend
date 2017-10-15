@@ -31,7 +31,12 @@ public class JsonUtilities {
     }
 
     public static ArrayList<Subscription> getSubscriptionItems(String jsonString) {
-        SubscriptionList subscriptionList = gson.fromJson(jsonString, SubscriptionList.class);
-        return subscriptionList.itemList;
+        try {
+            SubscriptionList subscriptionList = gson.fromJson(jsonString, SubscriptionList.class);
+            return subscriptionList.itemList;
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
