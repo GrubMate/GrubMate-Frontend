@@ -5,14 +5,14 @@ package com.example.grubmate.grubmate.utilities;
  */
 
 public class GrubMatePreference {
-    public static final String domain = "http://10.120.78.167:8080";
+    public static final String domain = "http://169.254.51.217:8080";
     public static final String subscribeActionURL = "/subscription";
     public static final String postURL = "/post";
     public static final String searchURL = "/search";
     public static final String userURL = "/user";
     public static final String notificationURL = "/notification";
     public static final String subscriptionURL = "/subscription";
-    public static final String friendListURL = "/friendList";
+    public static final String friendListURL = "/friend";
     public static final String groupURL = "/group";
     public static String getSubscribeActionURL(int ID) {
         return domain + subscribeActionURL + "/" + ID;

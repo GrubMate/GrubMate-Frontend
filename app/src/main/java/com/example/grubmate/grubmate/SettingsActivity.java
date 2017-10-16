@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -28,6 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
     private int groupsNum;
     private LinearLayout ll;
     private LinearLayout.LayoutParams lp;
+    static final int RETURN_REQUEST = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +68,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-        new SettingsTask().execute(GrubMatePreference.getGroupURL(PersistantDataManager.getUserID()));
+        new SettingsTask().execute(GrubMatePreference.getGroupURL(9));
 
 
 
@@ -83,7 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             try {
                 String response = NetworkUtilities.get(baseUrl);
-
+                Log.i("baseUrl",baseUrl);
                 return JsonUtilities.getGroupList(response);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -100,11 +102,12 @@ public class SettingsActivity extends AppCompatActivity {
             }else {
                 groupsNum = groupsList.size();
             }
+            Log.i("groupsNum",String.valueOf(groupsNum));
             final ArrayList<Group> list = groupsList;
             for(int i=0;i<groupsNum;i++){
                 final int groupID = i;
                 Button myButton = new Button(SettingsActivity.this);
-                myButton.setText(String.valueOf(i));
+                myButton.setText(list.get(i).groupName);
                 myButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         Intent intent = new Intent(SettingsActivity.this,GroupSettingsActivity.class);
@@ -118,6 +121,14 @@ public class SettingsActivity extends AppCompatActivity {
 
             showShortToast("groupsNum = " + groupsNum);
         }
+    }
+
+    @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+        //Refresh your stuff here
+        new SettingsTask().execute(GrubMatePreference.getGroupURL(9));
     }
     public void showShortToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

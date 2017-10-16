@@ -1,13 +1,12 @@
 package com.example.grubmate.grubmate.utilities;
 
-import android.support.v4.util.Pair;
+import android.util.Log;
 
+import com.example.grubmate.grubmate.dataClass.Friend;
 import com.example.grubmate.grubmate.dataClass.Group;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.Subscription;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
@@ -28,19 +27,43 @@ public class JsonUtilities {
         public ArrayList<Subscription> itemList;
     }
 
+    private class GroupList{
+        public int id;
+        public ArrayList<Group> itemList;
+    }
+
     public static ArrayList<Post> getFeedItems(String jsonString) {
         FeedList feedList = gson.fromJson(jsonString, FeedList.class);
         return feedList.itemList;
     }
 
+    public class FriendFeed{
+        public int id;
+        public ArrayList<Friend> itemList;
+
+    }
     public static ArrayList<Group> getGroupList(String jsonString){
-        ArrayList<Group> groupsList = new ArrayList<Group>();
-        return gson.fromJson(jsonString,groupsList.getClass());
+        try {
+            GroupList groupList = gson.fromJson(jsonString, GroupList.class);
+            return groupList.itemList;
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public static ArrayList<Pair<Integer,String>> getfriendsList(String jsonString) {
-        ArrayList<Pair<Integer,String>> friendsList = new ArrayList<Pair<Integer,String>>();
-        return gson.fromJson(jsonString, friendsList.getClass());
+    public static ArrayList<Friend> getfriendsList(String jsonString) {
+
+        try {
+            FriendFeed friendList = gson.fromJson(jsonString, FriendFeed.class);
+
+            Log.d("getfriendsList: ", friendList.itemList.toString());
+
+            return friendList.itemList;
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static ArrayList<Subscription> getSubscriptionItems(String jsonString) {
