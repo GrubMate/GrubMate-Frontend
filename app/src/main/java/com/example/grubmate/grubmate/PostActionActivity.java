@@ -53,8 +53,10 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private TextView postItemLocationText;
     private GoogleApiClient mGoogleApiClient;
     private String postItemName, postItemDescription,postItemCategory,postItemTime;
-    private ArrayList<String> postItemTags;
+    private String[] tags;
     private boolean[] postItemAllergy;
+    private String timePeriod;
+    private String category;
     private Integer postItemQuantity;
     private Double[] postItemAddress;
     private Integer userID;
@@ -160,6 +162,10 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             return false;
         } else if (postItemTagsText.getText().length() == 0) {
             return false;
+        } else if (postItemTimeSpinner.getSelectedItem().toString() == "Time Period") {
+            return false;
+        } else if (postItemCategorySpinner.getSelectedItem().toString() == "Category") {
+            return false;
         }
         return true;
     };
@@ -168,19 +174,21 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         if(validateForm()) {
 
-            postItemTags = new ArrayList<String>();
             postItemName = postItemNameText.getText().toString();
             postItemDescription = postItemDescriptionText.getText().toString();
             postItemQuantity = Integer.parseInt(postItemQuantityText.getText().toString());
-            postItemTags.add(postItemNameText.getText().toString());
+            String tagString = postItemTagsText.getText().toString();
+            tags = tagString.split(",");
             postItemAllergy = new boolean[3];
             postItemAddress = new Double[2];
             postItemAddress[0] = Lat;
             postItemAddress[1] = Lng;
             postItemCategory = postItemCategorySpinner.getSelectedItem().toString();
+            if(postItemCategory == "Category") postItemCategory = null;
             isHomeMade = postHomeCheckBox.isChecked();
+            timePeriod = postItemTimeSpinner.getSelectedItem().toString();
+            if(timePeriod == "Time Period") timePeriod = null;
             groupIDs = new Integer[1];
-
             // TODO: change this to reald user id in production
             userID = 0;
             new PostActionTask().execute(GrubMatePreference.getPostActionURl(userID));
@@ -203,9 +211,8 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             }
 
             Post newPost = new Post();
-            String [] postItemTagsArray = postItemTags.toArray(new String[postItemTags.size()]);
-//            newPost.postID = null;
-            newPost.tags = postItemTagsArray;
+//           newPost.postID = null;
+            newPost.tags = tags;
             newPost.category = postItemCategory;
             newPost.description = postItemDescription;
             newPost.address = postItemAddress;
@@ -220,7 +227,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             newPost.isHomeMade = isHomeMade;
 //            newPost.postID = null;
 //            newPost.postPhotos =null;
-//            newPost.timePeriod = null;
+             newPost.timePeriod = null;
 //            newPost.requestsIDs = null;
             Gson gson = new Gson();
             String postJson = gson.toJson(newPost);

@@ -25,7 +25,7 @@ public class GrubMatePreference {
     }
     public static String getUserPostUrl(int ID)
     {
-        return domain + postURL + "/" + ID+"?me=true";
+        return domain + postURL + "/" + ID+"/true";
     }
     public static String getNotificationURL(int ID) {
         return domain + notificationURL+"/"+ID;
