@@ -11,6 +11,7 @@ public class GrubMatePreference {
     public static final String searchURL = "/search";
     public static final String userURL = "/user";
     public static final String notificationURL = "/notification";
+    public static final String requestURL = "/request";
     public static final String subscriptionURL = "/subscription";
     public static String getSubscribeActionURL(int ID) {
         return domain + subscribeActionURL + "/" + ID;
@@ -21,6 +22,10 @@ public class GrubMatePreference {
     }
     public static String getFeedUrl(int ID) {
         return domain + postURL + "/" + ID;
+    }
+    public static String getUserPostUrl(int ID)
+    {
+        return domain + postURL + "/" + ID+"?me=true";
     }
     public static String getNotificationURL(int ID) {
         return domain + notificationURL+"/"+ID;
@@ -36,6 +41,14 @@ public class GrubMatePreference {
     }
     public static String getSubscriptionURL(int ID) {
         return domain + subscriptionURL + "/" + ID;
+    }
+
+    public static String getRequestURL() {
+        return domain + requestURL;
+    }
+
+    public static  String getRequestURL(int ID) {
+        return domain + requestURL+"/" + ID;
     }
 
 }

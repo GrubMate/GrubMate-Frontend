@@ -38,6 +38,7 @@ public class PostsActivity extends AppCompatActivity implements FeedAdapter.Feed
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posts);
+        gson = new Gson();
 
         mPostView = (RecyclerView) findViewById(R.id.rv_post);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -55,7 +56,7 @@ public class PostsActivity extends AppCompatActivity implements FeedAdapter.Feed
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_ACTION);
         registerReceiver(notificationReceiver, intentFilter);
-        new FetchPostListTask().execute(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+        new FetchPostListTask().execute(GrubMatePreference.getUserPostUrl(PersistantDataManager.getUserID()));
     }
 
     @Override

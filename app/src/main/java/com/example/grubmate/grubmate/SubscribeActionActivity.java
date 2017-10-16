@@ -131,6 +131,9 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
         protected void onPostExecute(String subscribeActionResponse) {
             if (subscribeActionResponse != null) {
                 showShortToast("Succeed");
+                finish();
+            } else {
+                showShortToast("Error: please retry");
             }
         }
     }

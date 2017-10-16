@@ -47,21 +47,25 @@
             android:name=".ProfileActivity"
             android:label="Profile"
             android:launchMode="singleTop" />
-        <activity android:name=".SubscriptionDetailActivity" />
+        <activity
+            android:label="Item Detail"
+            android:name=".SubscriptionDetailActivity" />
 
         <service
             android:name=".NotificationService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"
+            android:label="Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PostsActivity"></activity>
+        <activity
+            android:label="Posts"
+            android:name=".PostsActivity" />
     </application>
 
 </manifest>

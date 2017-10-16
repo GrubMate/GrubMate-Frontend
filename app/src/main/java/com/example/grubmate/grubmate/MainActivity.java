@@ -278,6 +278,7 @@ public class MainActivity extends AppCompatActivity
 
             try {
                 String response = NetworkUtilities.get(baseUrl);
+                Log.d(TAG, response);
                 if (response == null || response.length() == 0)
                     return null;
                 return JsonUtilities.getFeedItems(response);
@@ -310,8 +311,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(notificationReceiver);
         unbindService(connection);
+        unregisterReceiver(notificationReceiver);
     }
 
     @Override

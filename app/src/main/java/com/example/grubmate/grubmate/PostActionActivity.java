@@ -204,7 +204,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 
             Post newPost = new Post();
             String [] postItemTagsArray = postItemTags.toArray(new String[postItemTags.size()]);
-            newPost.postID = null;
+//            newPost.postID = null;
             newPost.tags = postItemTagsArray;
             newPost.category = postItemCategory;
             newPost.description = postItemDescription;
@@ -213,15 +213,15 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             newPost.leftQuantity = postItemQuantity;
             newPost.isActive = true;
             newPost.title = postItemName;
-            newPost.allergyInfo = null;
+//            newPost.allergyInfo = null;
             newPost.posterID = PersistantDataManager.getUserID();
             // TODO: change to real groups ids
             newPost.groupIDs = groupIDs;
             newPost.isHomeMade = isHomeMade;
-            newPost.postID = null;
-            newPost.postPhotos =null;
-            newPost.timePeriod = null;
-            newPost.requestsIDs = null;
+//            newPost.postID = null;
+//            newPost.postPhotos =null;
+//            newPost.timePeriod = null;
+//            newPost.requestsIDs = null;
             Gson gson = new Gson();
             String postJson = gson.toJson(newPost);
             try {
@@ -235,7 +235,12 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            showShortToast("result" + postActionResponse);
+            if (postActionResponse != null) {
+                showShortToast("Succeed");
+                finish();
+            } else {
+                showShortToast("Error: please retry");
+            }
         }
     }
 
