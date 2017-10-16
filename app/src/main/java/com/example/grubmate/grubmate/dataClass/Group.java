@@ -1,6 +1,8 @@
 package com.example.grubmate.grubmate.dataClass;
 
-public class Group {
+import java.io.Serializable;
+
+public class Group implements Serializable {
     public Integer groupID;
     public Integer groupOwnerID;
     public String groupName;

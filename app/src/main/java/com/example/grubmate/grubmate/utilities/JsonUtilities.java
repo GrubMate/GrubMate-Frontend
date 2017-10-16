@@ -1,5 +1,7 @@
 package com.example.grubmate.grubmate.utilities;
 
+import android.support.v4.util.Pair;
+
 import com.example.grubmate.grubmate.dataClass.Group;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.Subscription;
@@ -36,9 +38,11 @@ public class JsonUtilities {
         return gson.fromJson(jsonString,groupsList.getClass());
     }
 
-    public static ArrayList<String> getfriendsList(String jsonString){
-        ArrayList<String> friendsList = new ArrayList<String>();
-        return gson.fromJson(jsonString,friendsList.getClass());
+    public static ArrayList<Pair<Integer,String>> getfriendsList(String jsonString) {
+        ArrayList<Pair<Integer,String>> friendsList = new ArrayList<Pair<Integer,String>>();
+        return gson.fromJson(jsonString, friendsList.getClass());
+    }
+
     public static ArrayList<Subscription> getSubscriptionItems(String jsonString) {
         try {
             SubscriptionList subscriptionList = gson.fromJson(jsonString, SubscriptionList.class);

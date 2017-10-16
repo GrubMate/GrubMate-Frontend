@@ -26,6 +26,8 @@ public class SettingsActivity extends AppCompatActivity {
     private CheckBox allergy1, allergy2, allergy3;
     private boolean allergies[];
     private int groupsNum;
+    private LinearLayout ll;
+    private LinearLayout.LayoutParams lp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +44,8 @@ public class SettingsActivity extends AppCompatActivity {
         allergies[1] = allergy2.isChecked();
         allergies[2] = allergy3.isChecked();
 
-        final LinearLayout ll = (LinearLayout)findViewById(R.id.settingsLayout);
-        final LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+         ll = (LinearLayout)findViewById(R.id.settingsLayout);
+         lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
@@ -64,18 +66,9 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-     //   new SettingsTask().execute(groupURl);
-        for(int i=0;i<3;i++){
-            Button myButton = new Button(this);
-            myButton.setText(String.valueOf(i));
-            myButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    Intent intent = new Intent(SettingsActivity.this,GroupSettingsActivity.class);
-                    startActivity(intent);
-                }
-            });
-            ll.addView(myButton, lp);
-        }
+        new SettingsTask().execute(GrubMatePreference.getGroupURL(PersistantDataManager.getUserID()));
+
+
 
     }
     public class SettingsTask extends AsyncTask<String, Integer, ArrayList<Group>> {
@@ -90,6 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             try {
                 String response = NetworkUtilities.get(baseUrl);
+
                 return JsonUtilities.getGroupList(response);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -101,7 +95,27 @@ public class SettingsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<Group> groupsList) {
-            groupsNum = groupsList.size();
+            if(groupsList == null){
+                groupsNum = 0;
+            }else {
+                groupsNum = groupsList.size();
+            }
+            final ArrayList<Group> list = groupsList;
+            for(int i=0;i<groupsNum;i++){
+                final int groupID = i;
+                Button myButton = new Button(SettingsActivity.this);
+                myButton.setText(String.valueOf(i));
+                myButton.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        Intent intent = new Intent(SettingsActivity.this,GroupSettingsActivity.class);
+                        intent.putExtra("groupsList", list);
+                        intent.putExtra("groupID",groupID);
+                        startActivity(intent);
+                    }
+                });
+                ll.addView(myButton, lp);
+            }
+
             showShortToast("groupsNum = " + groupsNum);
         }
     }

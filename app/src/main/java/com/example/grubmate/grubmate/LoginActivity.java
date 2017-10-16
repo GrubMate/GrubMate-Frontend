@@ -65,7 +65,6 @@ public class LoginActivity extends AppCompatActivity {
         if (token != null) {
             new GraphRequest(
                     token,
-
                     "/me/friends",
                     null,
                     HttpMethod.GET,
