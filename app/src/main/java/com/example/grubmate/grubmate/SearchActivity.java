@@ -72,11 +72,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     public boolean validateForm() {
         if(title != null) return true;
-//        tags = null;
-//        if(category !=null) return true;
-//        timePeriod = new String[2];
-//        timePeriod[0] = searchItemTimeSpinner.getSelectedItem().toString();
-//        allergyInfo = new Boolean[3];
+        if(category != "Category") return true;
+        if(timePeriod != "Time Period") return true;
         return false;
     };
 

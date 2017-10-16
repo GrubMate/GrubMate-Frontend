@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.UserRequest;
+import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -63,6 +64,7 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
         mDeleteButton = (Button) findViewById(R.id.b_delete);
         mEditButton = (Button) findViewById(R.id.b_edit);
         mRequestButton = (Button) findViewById(R.id.b_request);
+        mRequestButton.setOnClickListener(new RequestButtonListener());
         requesterLayout = (LinearLayout) findViewById(R.id.requester_layout);
         posterLayout = (LinearLayout) findViewById(R.id.poster_layout);
         Intent callIntent = getIntent();
@@ -107,7 +109,7 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
     class EditButtonListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
-
+            
         }
     }
 
@@ -155,6 +157,7 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
 
                 Lat = place.getLatLng().latitude;
                 Lng = place.getLatLng().longitude;
+                new RequestTask().execute(GrubMatePreference.getRequestURL(PersistantDataManager.getUserID()));
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 // TODO: Handle the error.
@@ -183,8 +186,9 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
             newRequest.targetPostID = targetPostID;
             Gson gson = new Gson();
             String postJson = gson.toJson(newRequest);
+            Log.d("Detail", postJson);
             try {
-                return NetworkUtilities.post(params[0],postJson);
+                return NetworkUtilities.post(GrubMatePreference.getRequestURL(PersistantDataManager.getUserID()),postJson);
             } catch (IOException e) {
                 e.printStackTrace();
             }

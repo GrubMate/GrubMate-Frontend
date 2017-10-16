@@ -69,10 +69,14 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
     }
 
     public boolean validateForm() {
-        if (subscribeItemNameText.getText().length() == 0) {
-            return false;
-        } else if (subscribeItemTagsText.getText().length() == 0) {
-            return false;
+        if (subscribeItemNameText.getText().length() >0) {
+            return true;
+        } else if (subscribeItemTagsText.getText().length() > 0) {
+            return true;
+        } else if (subscribeItemCategorySpinner.getSelectedItem().toString() != "Category") {
+            return true;
+        } else if (subscribeItemTimeSpinner.getSelectedItem().toString() != "Time Period") {
+            return true;
         }
         return true;
     };
@@ -80,7 +84,6 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
     @Override
     public void onClick(View view) {
         if(validateForm()) {
-            new SubscribeActionActivity.subscribeActionTask().execute(GrubMatePreference.subscribeActionURL);
             query = subscribeItemNameText.getText().toString();
             allergyInfo = new Boolean[3];
             category = subscribeItemCategorySpinner.getSelectedItem().toString();
