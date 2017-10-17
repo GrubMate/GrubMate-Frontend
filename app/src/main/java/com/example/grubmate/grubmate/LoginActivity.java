@@ -65,9 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         final AccessToken token;
         token = AccessToken.getCurrentAccessToken();
         if (token != null) {
-
             getFriendList(token);
-
         } else {
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
@@ -228,6 +226,7 @@ public class LoginActivity extends AppCompatActivity {
             String userJson = gson.toJson(newUser);
             Log.d("Login", userJson);
             try {
+
                 return NetworkUtilities.post(GrubMatePreference.getUserUrl(),userJson);
             } catch (IOException e) {
                 e.printStackTrace();

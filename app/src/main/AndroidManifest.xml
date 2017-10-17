@@ -71,6 +71,14 @@
             android:label="Posts"
             android:launchMode="singleTop" />
         <activity android:name=".NotificationCenterActivity"></activity>
+        <activity android:name=".SettingsActivity">
+
+        </activity>
+
+        <activity android:name=".GroupSettingsActivity">
+
+        </activity>
+        <activity android:name=".PostsActivity"></activity>
     </application>
 
 </manifest>
