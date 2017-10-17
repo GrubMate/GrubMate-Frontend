@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity
             destinationActivity = SubscriptionsActivity.class;
         } else if (id == R.id.nav_posts) {
             destinationActivity = PostsActivity.class;
-        } else if (id == R.id.nav_orders) {
+        } else if (id == R.id.nav_notification) {
 
         } else if (id == R.id.nav_profile) {
             destinationActivity = ProfileActivity.class;
@@ -315,7 +315,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onPause() {
-        unregisterReceiver(mNotificationReceiver);
         super.onPause();
     }
 

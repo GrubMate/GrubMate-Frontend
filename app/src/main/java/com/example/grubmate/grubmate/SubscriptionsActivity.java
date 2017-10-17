@@ -62,6 +62,7 @@ public class SubscriptionsActivity extends AppCompatActivity implements Subscrip
         };
         intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_ACTION);
+        gson = new Gson();
         registerReceiver(mNotificationReceiver, intentFilter);
         new SubscriptionsTask().execute(GrubMatePreference.getSubscriptionURL(PersistantDataManager.getUserID()));
     }
@@ -71,7 +72,7 @@ public class SubscriptionsActivity extends AppCompatActivity implements Subscrip
         String serializedData = gson.toJson(SubscriptionItemData);
         Class destinationActivity = SubscriptionDetailActivity.class;
         Intent destinationIntent = new Intent(this, destinationActivity);
-        destinationIntent.putExtra(Intent.EXTRA_TEXT, destinationActivity);
+        destinationIntent.putExtra(Intent.EXTRA_TEXT, serializedData);
         startActivity(destinationIntent);
     }
 
@@ -84,7 +85,6 @@ public class SubscriptionsActivity extends AppCompatActivity implements Subscrip
 
     @Override
     protected void onPause() {
-        unregisterReceiver(mNotificationReceiver);
         super.onPause();
     }
 

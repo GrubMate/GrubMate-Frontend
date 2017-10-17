@@ -46,7 +46,7 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO: send a polling request for data
         Log.d("NotificationService", "onStartExecuted");
-        new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
+//        new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -64,7 +64,7 @@ public class NotificationService extends Service {
             }
 
             try {
-                return  NetworkUtilities.get(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
+                return  NetworkUtilities.getLong(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -76,25 +76,27 @@ public class NotificationService extends Service {
         protected void onPostExecute(String postActionResponse) {
             if (postActionResponse != null) {
                 Notification notification = gson.fromJson(postActionResponse, Notification.class);
-                Intent local = new Intent();
-                switch (notification.what) {
-                    case Notification.MY_POST_IS_REQUESTED:
-                        local.setAction(PostsActivity.BROADCAST_ACTION);
-                        break;
-                    case Notification.MY_REQUEST_IS_RESPONDED:
-                        //local.setAction()
-                        break;
-                    case Notification.NEW_MATCH_FOR_SUBSCRIPTION:
-                        local.setAction(SubscriptionsActivity.BROADCAST_ACTION);
-                        break;
-                    default:
-                        Log.d("Notification", "What is not defined");
+                if(notification != null) {
+                    Intent local = new Intent();
+                    switch (notification.what) {
+                        case Notification.MY_POST_IS_REQUESTED:
+                            local.setAction(PostsActivity.BROADCAST_ACTION);
+                            break;
+                        case Notification.MY_REQUEST_IS_RESPONDED:
+                            //local.setAction()
+                            break;
+                        case Notification.NEW_MATCH_FOR_SUBSCRIPTION:
+                            local.setAction(SubscriptionsActivity.BROADCAST_ACTION);
+                            break;
+                        default:
+                            Log.d("Notification", "What is not defined");
+                    }
+                    sendBroadcast(local);
                 }
-                sendBroadcast(local);
             } else {
                 Log.d("Notification Service", "Unable to connect");
             }
-//            new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
+//          new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
         }
     }
 }

@@ -6,17 +6,21 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.UserRequest;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
+import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -30,6 +34,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Request;
 
@@ -45,8 +50,11 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
     private Integer requesterID;
     private Integer targetPostID;
     private String status;
+    private RecyclerView mRequestView;
+    private RequestAdapter mRequestAdapter;
     private Double[] address;
     private GoogleApiClient mGoogleApiClient;
+    private ArrayList<UserRequest> mUserRequests;
     private double Lat;
     private double Lng;
 
@@ -69,6 +77,24 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
         mRequestButton.setOnClickListener(new RequestButtonListener());
         requesterLayout = (LinearLayout) findViewById(R.id.requester_layout);
         posterLayout = (LinearLayout) findViewById(R.id.poster_layout);
+
+        mRequestView = (RecyclerView) findViewById(R.id.rv_post_requests);
+        mUserRequests = new ArrayList<UserRequest>();
+        mRequestAdapter = new RequestAdapter(R.id.request_list_item, mUserRequests);
+        mRequestAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        mRequestAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener(){
+
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                Log.d("Request", "Button clicked");
+                // TODO: send accept
+
+            }
+        });
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRequestView.setLayoutManager(layoutManager);
+        mRequestView.setAdapter(mRequestAdapter);
+
         Intent callIntent = getIntent();
         gson = new Gson();
         // If intent has extra text message extrave it and display it.
@@ -237,6 +263,33 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
         protected void onPostExecute(String postActionResponse) {
             if (postActionResponse != null) {
                 finish();
+            } else {
+                Toast.makeText(FeedDetailActivity.this, "Error: Network Error", Toast.LENGTH_SHORT);
+            }
+        }
+    }
+
+    public class GetRequestTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length == 0||params[0].length()==0) {
+                return null;
+            }
+
+            try {
+                return NetworkUtilities.get(GrubMatePreference.getRequestListUrl(PersistantDataManager.getUserID(), mPostData.postID));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String postActionResponse) {
+            if (postActionResponse != null) {
+                mRequestAdapter.setNewData(JsonUtilities.getRequestItems(postActionResponse));
             } else {
                 Toast.makeText(FeedDetailActivity.this, "Error: Network Error", Toast.LENGTH_SHORT);
             }

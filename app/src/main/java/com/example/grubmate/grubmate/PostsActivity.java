@@ -46,6 +46,7 @@ public class PostsActivity extends AppCompatActivity implements FeedAdapter.Feed
         mPostView.setLayoutManager(layoutManager);
         mPostAdapter = new FeedAdapter(this);
         mPostView.setAdapter(mPostAdapter);
+
         mPostProgressBar = (ProgressBar) findViewById(R.id.pb_post);
         mEmptyText = (TextView) findViewById(R.id.tv_post_empty_text);
         mNotificationReceiver = new BroadcastReceiver() {
@@ -61,14 +62,13 @@ public class PostsActivity extends AppCompatActivity implements FeedAdapter.Feed
     }
 
     protected void onRestart() {
-        registerReceiver(mNotificationReceiver, intentFilter);
-        new FetchPostListTask().execute(GrubMatePreference.getSubscriptionURL(PersistantDataManager.getUserID()));
         super.onRestart();
+        registerReceiver(mNotificationReceiver, intentFilter);
+        new FetchPostListTask().execute(GrubMatePreference.getUserPostUrl(PersistantDataManager.getUserID()));
     }
 
     @Override
     protected void onPause() {
-        unregisterReceiver(mNotificationReceiver);
         super.onPause();
     }
 

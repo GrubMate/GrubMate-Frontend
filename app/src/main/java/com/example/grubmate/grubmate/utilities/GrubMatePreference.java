@@ -24,6 +24,11 @@ public class GrubMatePreference {
     public static String getPostDeleteURL(int ID, int postID) {
         return domain + postURL + "/" + ID + "/" + postID;
     }
+
+    public static String getSubscriptionDeleteURL(int ID, int subscriptionID) {
+        return domain + postURL + "/" + ID + "/" + subscriptionID;
+    }
+
     public static String getFeedUrl(int ID) {
         return domain + postURL + "/" + ID;
     }
@@ -54,5 +59,7 @@ public class GrubMatePreference {
     public static  String getRequestURL(int ID) {
         return domain + requestURL+"/" + ID;
     }
-
+    public static String getRequestListUrl(int ID, int postID) {
+        return domain + requestURL + "/" + ID + "/" + postID;
+    }
 }

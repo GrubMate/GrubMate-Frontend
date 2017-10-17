@@ -2,6 +2,7 @@ package com.example.grubmate.grubmate;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,10 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         @Override
         public void onClick(View view) {
             int adapterPosition = getAdapterPosition();
+            Log.d("Subscription", String.valueOf(adapterPosition));
+
             Subscription SubscriptionItemData = mSubscriptionData.get(adapterPosition);
+            Log.d("Subscription", SubscriptionItemData.query);
             mClickHandler.onClick(SubscriptionItemData);
         }
     }

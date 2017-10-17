@@ -65,6 +65,7 @@
         </activity>
         <activity
             android:label="Posts"
+            android:launchMode="singleTop"
             android:name=".PostsActivity" />
     </application>
 
