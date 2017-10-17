@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
         android:layout_width="match_parent"
@@ -10,6 +12,13 @@
         android:textSize="32sp"
         android:textAlignment="center"
         android:text="Alergy Settings"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addAllergyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:srcCompat="@android:drawable/ic_input_get" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -36,6 +45,7 @@
                 android:text="allergy 3"/>
 
         </LinearLayout>
+
     </ScrollView>
 
     <TextView

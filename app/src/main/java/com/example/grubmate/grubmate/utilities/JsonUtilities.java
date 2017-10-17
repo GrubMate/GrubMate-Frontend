@@ -6,6 +6,7 @@ import com.example.grubmate.grubmate.dataClass.Friend;
 import com.example.grubmate.grubmate.dataClass.Group;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.Subscription;
+import com.example.grubmate.grubmate.dataClass.User;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
