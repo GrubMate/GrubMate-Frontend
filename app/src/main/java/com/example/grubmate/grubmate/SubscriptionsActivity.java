@@ -1,6 +1,9 @@
 package com.example.grubmate.grubmate;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.gesture.GestureUtils;
 import android.nfc.Tag;
 import android.os.AsyncTask;
@@ -23,6 +26,7 @@ import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +38,10 @@ public class SubscriptionsActivity extends AppCompatActivity implements Subscrip
     private TextView mEmptyText;
     private ArrayList<Subscription> subscriptionData;
     Context context;
+    private IntentFilter intentFilter;
+    public static final String BROADCAST_ACTION = "com.example.grubmate.grubmate.notification.subscriptions";
+    private BroadcastReceiver mNotificationReceiver;
+    Gson gson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,12 +54,44 @@ public class SubscriptionsActivity extends AppCompatActivity implements Subscrip
         context = this;
         mSubscriptionProgressBar = (ProgressBar) findViewById(R.id.pb_subscription);
         mEmptyText = (TextView) findViewById(R.id.tv_subscription_empty);
+        mNotificationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                new SubscriptionsTask().execute(GrubMatePreference.getUserPostUrl(PersistantDataManager.getUserID()));
+            }
+        };
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(BROADCAST_ACTION);
+        registerReceiver(mNotificationReceiver, intentFilter);
         new SubscriptionsTask().execute(GrubMatePreference.getSubscriptionURL(PersistantDataManager.getUserID()));
     }
 
     @Override
     public void onClick(Subscription SubscriptionItemData) {
+        String serializedData = gson.toJson(SubscriptionItemData);
+        Class destinationActivity = SubscriptionDetailActivity.class;
+        Intent destinationIntent = new Intent(this, destinationActivity);
+        destinationIntent.putExtra(Intent.EXTRA_TEXT, destinationActivity);
+        startActivity(destinationIntent);
+    }
 
+    @Override
+    protected void onRestart() {
+        registerReceiver(mNotificationReceiver, intentFilter);
+        new SubscriptionsTask().execute(GrubMatePreference.getSubscriptionURL(PersistantDataManager.getUserID()));
+        super.onRestart();
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(mNotificationReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mNotificationReceiver);
+        super.onDestroy();
     }
 
     public class SubscriptionsTask extends AsyncTask<String, Integer, ArrayList<Subscription>> {

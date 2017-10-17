@@ -30,8 +30,9 @@ public class PostsActivity extends AppCompatActivity implements FeedAdapter.Feed
     private FeedAdapter mPostAdapter;
     private ProgressBar mPostProgressBar;
     private TextView mEmptyText;
-    private BroadcastReceiver notificationReceiver;
+    private BroadcastReceiver mNotificationReceiver;
     private Gson gson;
+    private IntentFilter intentFilter;
 
     public static final String BROADCAST_ACTION = "com.example.grubmate.grubmate.notification.post";
     @Override
@@ -47,16 +48,34 @@ public class PostsActivity extends AppCompatActivity implements FeedAdapter.Feed
         mPostView.setAdapter(mPostAdapter);
         mPostProgressBar = (ProgressBar) findViewById(R.id.pb_post);
         mEmptyText = (TextView) findViewById(R.id.tv_post_empty_text);
-        notificationReceiver = new BroadcastReceiver() {
+        mNotificationReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                // TODO: change this to incur updates
+                new FetchPostListTask().execute(GrubMatePreference.getUserPostUrl(PersistantDataManager.getUserID()));
             }
         };
-        IntentFilter intentFilter = new IntentFilter();
+        intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_ACTION);
-        registerReceiver(notificationReceiver, intentFilter);
+        registerReceiver(mNotificationReceiver, intentFilter);
         new FetchPostListTask().execute(GrubMatePreference.getUserPostUrl(PersistantDataManager.getUserID()));
+    }
+
+    protected void onRestart() {
+        registerReceiver(mNotificationReceiver, intentFilter);
+        new FetchPostListTask().execute(GrubMatePreference.getSubscriptionURL(PersistantDataManager.getUserID()));
+        super.onRestart();
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(mNotificationReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mNotificationReceiver);
+        super.onDestroy();
     }
 
     @Override

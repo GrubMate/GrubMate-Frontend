@@ -62,7 +62,9 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
         mPosterButton = (Button) findViewById(R.id.b_poster);
         mPosterButton.setOnClickListener(new PosterButtonListener());
         mDeleteButton = (Button) findViewById(R.id.b_delete);
+        mDeleteButton.setOnClickListener(new DeleteButtonListener());
         mEditButton = (Button) findViewById(R.id.b_edit);
+        mEditButton.setOnClickListener(new EditButtonListener());
         mRequestButton = (Button) findViewById(R.id.b_request);
         mRequestButton.setOnClickListener(new RequestButtonListener());
         requesterLayout = (LinearLayout) findViewById(R.id.requester_layout);
@@ -78,6 +80,10 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
             if (mPostData.posterID == PersistantDataManager.getUserID()) {
                posterLayout.setVisibility(View.VISIBLE);
                 requesterLayout.setVisibility(View.INVISIBLE);
+                if(mPostData.leftQuantity != mPostData.totalQuantity) {
+                    mEditButton.setEnabled(false);
+                    mDeleteButton.setEnabled(false);
+                }
             } else {
                 posterLayout.setVisibility(View.INVISIBLE);
                 requesterLayout.setVisibility(View.VISIBLE);
@@ -109,6 +115,9 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
     class EditButtonListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
+            Intent intent = new Intent(FeedDetailActivity.this, PostActionActivity.class);
+            intent.putExtra("post_data", gson.toJson(mPostData));
+            startActivity(intent);
             
         }
     }
@@ -141,10 +150,11 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
         }
     }
 
-    class RequesterButtonListener implements View.OnClickListener {
+    class DeleteButtonListener implements View.OnClickListener {
 
         @Override
         public void onClick(View view) {
+            new DeleteTask().execute(GrubMatePreference.getPostDeleteURL(PersistantDataManager.getUserID(), mPostData.postID));
 
         }
     }
@@ -204,5 +214,32 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
                 Toast.makeText(FeedDetailActivity.this, "Error: Network Error", Toast.LENGTH_SHORT);
             }
         }
-    };
+    }
+
+    public class DeleteTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length == 0||params[0].length()==0) {
+                return null;
+            }
+
+            try {
+                return NetworkUtilities.delete(GrubMatePreference.getPostDeleteURL(PersistantDataManager.getUserID(), mPostData.postID), null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String postActionResponse) {
+            if (postActionResponse != null) {
+                finish();
+            } else {
+                Toast.makeText(FeedDetailActivity.this, "Error: Network Error", Toast.LENGTH_SHORT);
+            }
+        }
+    }
 }

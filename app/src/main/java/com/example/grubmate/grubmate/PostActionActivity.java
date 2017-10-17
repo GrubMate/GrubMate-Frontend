@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.EventLogTags;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -65,6 +66,9 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private double Lat;
     private double Lng;
     private Boolean isHomeMade;
+    private Post mPostData;
+    private Gson gson;
+    private Integer mPostID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,6 +132,24 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 
         postHomeCheckBox = (CheckBox) findViewById(R.id.cb_post_home);
         // end of oncreate
+        Intent callIntent = getIntent();
+        gson = new Gson();
+        mPostData = null;
+        mPostID = null;
+        if(callIntent.hasExtra("post_data")) {
+            String extraText = callIntent.getStringExtra("post_data");
+            mPostData = gson.fromJson(callIntent.getStringExtra("post_data"), Post.class);
+            postItemNameText.setText(mPostData.title);
+            postItemQuantityText.setText(String.valueOf(mPostData.leftQuantity));
+            if(mPostData.isHomeMade) {
+                postHomeCheckBox.setChecked(true);
+            } else {
+                postHomeCheckBox.setChecked(false);
+            }
+            postItemDescriptionText.setText(mPostData.description);
+            mPostID = mPostData.postID;
+        }
+
     }
 
     //Store the location's Latitude to Lat and Logitude to Lng
@@ -210,8 +232,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
                 return null;
             }
 
-            Post newPost = new Post();
-//           newPost.postID = null;
+            Post newPost = mPostData == null?new Post():mPostData;
             newPost.tags = tags;
             newPost.category = postItemCategory;
             newPost.description = postItemDescription;
@@ -225,16 +246,22 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             // TODO: change to real groups ids
             newPost.groupIDs = groupIDs;
             newPost.isHomeMade = isHomeMade;
-//            newPost.postID = null;
-//            newPost.postPhotos =null;
-             newPost.timePeriod = null;
+             newPost.timePeriod = timePeriod;
 //            newPost.requestsIDs = null;
             Gson gson = new Gson();
             String postJson = gson.toJson(newPost);
-            try {
-               return NetworkUtilities.post(params[0],postJson);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(mPostData==null) {
+                try {
+                    return NetworkUtilities.post(params[0],postJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    return NetworkUtilities.put(GrubMatePreference.getPostActionURl(PersistantDataManager.getUserID()), postJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             return null;

@@ -2,19 +2,24 @@ package com.example.grubmate.grubmate;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.grubmate.grubmate.dataClass.Notification;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 
 public class NotificationService extends Service {
     private NotificationBinder mBinder = new NotificationBinder();
+    private Gson gson;
     class NotificationBinder extends Binder {
         public void startPolling() {
             Log.d("NotificationService", "polling started");
@@ -34,16 +39,14 @@ public class NotificationService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d("NotificationService", "onCreateExecuted");
+        gson = new Gson();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO: send a polling request for data
         Log.d("NotificationService", "onStartExecuted");
-        Intent local = new Intent();
-        local.setAction(MainActivity.BROADCAST_ACTION);
-        this.sendBroadcast(local);
-//        sendPollingRequst();
+        new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -52,23 +55,46 @@ public class NotificationService extends Service {
         super.onDestroy();
     }
 
-    private void sendPollingRequst() {
-        new Thread(new Runnable(){
-            @Override
-            public void run() {
-                try {
-                    Log.d("NotificationService", "request sent");
-                    String response = NetworkUtilities.get(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
-                    Log.d("NotificationService", "onDestroyExecuted");
-                    Intent local = new Intent();
-                    local.setAction(MainActivity.BROADCAST_ACTION);
-                    sendBroadcast(local);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                sendPollingRequst();
+    public class NotificationTask extends AsyncTask<String, Integer, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            if (params.length == 0||params[0].length()==0) {
+                return null;
             }
-        }).start();
+
+            try {
+                return  NetworkUtilities.get(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String postActionResponse) {
+            if (postActionResponse != null) {
+                Notification notification = gson.fromJson(postActionResponse, Notification.class);
+                Intent local = new Intent();
+                switch (notification.what) {
+                    case Notification.MY_POST_IS_REQUESTED:
+                        local.setAction(PostsActivity.BROADCAST_ACTION);
+                        break;
+                    case Notification.MY_REQUEST_IS_RESPONDED:
+                        //local.setAction()
+                        break;
+                    case Notification.NEW_MATCH_FOR_SUBSCRIPTION:
+                        local.setAction(SubscriptionsActivity.BROADCAST_ACTION);
+                        break;
+                    default:
+                        Log.d("Notification", "What is not defined");
+                }
+                sendBroadcast(local);
+            } else {
+                Log.d("Notification Service", "Unable to connect");
+            }
+//            new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
+        }
     }
 }
