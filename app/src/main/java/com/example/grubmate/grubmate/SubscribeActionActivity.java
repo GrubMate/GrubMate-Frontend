@@ -28,10 +28,10 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
     private Spinner subscribeItemCategorySpinner;
     private Spinner subscribeItemTimeSpinner;
     private Integer subscriberID;
-    public ArrayList<String> tags;
+    public String[] tags;
     public String category;
     public String query;
-    public String[] timePeriod;
+    public String timePeriod;
     public Integer[] matchedPostIDs;
     public Boolean[] allergyInfo;
     @Override
@@ -46,7 +46,6 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
 
         subscribeItemNameText = (EditText) findViewById(R.id.et_subscribe_item_name);
         subscribeItemTagsText = (EditText) findViewById(R.id.et_subscribe_item_tags);
-        subscribeItemAllergyText = (EditText) findViewById(R.id.et_subscribe_item_allergy);
 
         subscribeItemCategorySpinner = (Spinner) findViewById(R.id.spinner_category);
         ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this,
@@ -70,10 +69,14 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
     }
 
     public boolean validateForm() {
-        if (subscribeItemNameText.getText().length() == 0) {
-            return false;
-        } else if (subscribeItemTagsText.getText().length() == 0) {
-            return false;
+        if (subscribeItemNameText.getText().length() >0) {
+            return true;
+        } else if (subscribeItemTagsText.getText().length() > 0) {
+            return true;
+        } else if (subscribeItemCategorySpinner.getSelectedItem().toString() != "Category") {
+            return true;
+        } else if (subscribeItemTimeSpinner.getSelectedItem().toString() != "Time Period") {
+            return true;
         }
         return true;
     };
@@ -81,14 +84,13 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
     @Override
     public void onClick(View view) {
         if(validateForm()) {
-            new SubscribeActionActivity.subscribeActionTask().execute(GrubMatePreference.subscribeActionURL);
-            tags = new ArrayList<String>();
             query = subscribeItemNameText.getText().toString();
             allergyInfo = new Boolean[3];
             category = subscribeItemCategorySpinner.getSelectedItem().toString();
-            timePeriod = new String[2];
-            timePeriod[0] = subscribeItemTimeSpinner.getSelectedItem().toString();
+            timePeriod = subscribeItemTimeSpinner.getSelectedItem().toString();
             // TODO: modify this into users' real id in production
+            String tagString = subscribeItemTagsText.getText().toString();
+            tags = tagString.split(",");
             subscriberID = 0;
             new subscribeActionTask().execute(GrubMatePreference.getSubscribeActionURL(subscriberID));
         } else {
@@ -105,7 +107,8 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
             }
             String baseUrl = params[0];
             Subscription newSubscription = new Subscription();
-            newSubscription.tags = tags.toArray(new String[tags.size()]);
+
+            newSubscription.tags = tags;
             newSubscription.category = category;
             newSubscription.allergyInfo = null;
             newSubscription.subscriberID = subscriberID;
@@ -118,7 +121,7 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
             Gson gson = new Gson();
             String subscriptionJson = gson.toJson(newSubscription);
             try {
-                String response = NetworkUtilities.post(baseUrl, subscriptionJson);
+                String response = NetworkUtilities.post(GrubMatePreference.getSubscriptionURL(PersistantDataManager.getUserID()), subscriptionJson);
                 return response;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -131,6 +134,9 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
         protected void onPostExecute(String subscribeActionResponse) {
             if (subscribeActionResponse != null) {
                 showShortToast("Succeed");
+                finish();
+            } else {
+                showShortToast("Error: please retry");
             }
         }
     }

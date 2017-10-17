@@ -51,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
     private String photoURL;
     private ArrayList<String> friendList;
     private String facebookUsername;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,77 +65,8 @@ public class LoginActivity extends AppCompatActivity {
         final AccessToken token;
         token = AccessToken.getCurrentAccessToken();
         if (token != null) {
-            new GraphRequest(
-                    token,
-
-                    "/me/friends",
-                    null,
-                    HttpMethod.GET,
-                    new GraphRequest.Callback() {
-                        public void onCompleted(GraphResponse response) {
-                            Log.i("friendlist 1", response.toString());
-                            try {
-                                JSONArray rawName = response.getJSONObject().getJSONArray("data");
-                                ArrayList<String> friends = new ArrayList<String>();
-                                String userID = token.getUserId();
-                                facebookID = userID;
-                                Log.i("userid",userID);
-                                for (int l = 0; l < rawName.length(); l++) {
-                                    friends.add(rawName.getJSONObject(l).getString("id"));
-                                }
-                                friendList = friends;
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-            ).executeAsync();
-
-
-            Bundle params = new Bundle();
-            params.putString("fields", "id,email,picture.type(large)");
-            new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
-                    new GraphRequest.Callback() {
-                        @Override
-                        public void onCompleted(GraphResponse response) {
-                            if (response != null) {
-                                try {
-                                    JSONObject data = response.getJSONObject();
-
-                                    if (data.has("picture")) {
-                                        String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
-                                        Log.i("url1",profilePicUrl);
-                                        photoURL = profilePicUrl;
-                                       // Picasso.with(LoginActivity.this).load(profilePicUrl).into(profileImage);
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }).executeAsync();
-
-            GraphRequest.Callback gCallback = new GraphRequest.Callback() {
-                @Override
-                public void onCompleted(GraphResponse response) {
-
-                    if (response != null && response.getJSONObject() != null && response.getJSONObject().has("first_name"))
-                    {
-                        try {
-                            facebookUsername = response.getJSONObject().getString("name");
-                            new LoginActionTask().execute(GrubMatePreference.getUserUrl());
-                        } catch (JSONException e) {
-
-                        }
-                    }
-                }
-            };
-            new GraphRequest(AccessToken.getCurrentAccessToken(),"/me?fields=id,name,gender,email,first_name,last_name", null,HttpMethod.GET, gCallback).executeAsync();
-
-            Intent startMainActivity = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(startMainActivity);
-        }else {
+            getFriendList(token);
+        } else {
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(final LoginResult login_result) {
@@ -156,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                                             friends.add(rawName.getJSONObject(l).getString("id"));
                                         }
                                         friendList = friends;
+                                        getProfileImage(token);
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -163,55 +97,6 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }
                     ).executeAsync();
-
-
-                    Bundle params = new Bundle();
-                    params.putString("fields", "id,email,picture.type(large)");
-                    new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
-                            new GraphRequest.Callback() {
-                                @Override
-                                public void onCompleted(GraphResponse response) {
-                                    if (response != null) {
-                                        try {
-                                            JSONObject data = response.getJSONObject();
-
-                                            if (data.has("picture")) {
-                                                String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
-                                                Log.i("url1",profilePicUrl);
-                                                photoURL= profilePicUrl;
-                                                new LoginActionTask().execute(GrubMatePreference.getUserUrl());
-                                                // Picasso.with(LoginActivity.this).load(profilePicUrl).into(profileImage);
-                                            }
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            }).executeAsync();
-
-                    GraphRequest.Callback gCallback = new GraphRequest.Callback() {
-                        @Override
-                        public void onCompleted(GraphResponse response) {
-
-                            if (response != null && response.getJSONObject() != null && response.getJSONObject().has("first_name"))
-                            {
-                                try {
-                                    facebookUsername = response.getJSONObject().getString("name");
-                                } catch (JSONException e) {
-
-                                }
-                            }
-                        }
-                    };
-                    new GraphRequest(AccessToken.getCurrentAccessToken(),
-                            "/me?fields=id,name,gender,email,first_name,last_name", null,HttpMethod.GET, gCallback).executeAsync();
-
-                    new LoginActionTask().execute(GrubMatePreference.getUserUrl());
-
-                    Intent startMainActivity = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(startMainActivity);
-
-
                 }
 
                 @Override
@@ -235,6 +120,86 @@ public class LoginActivity extends AppCompatActivity {
     public void showShortToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
+
+
+    public void getFriendList(final AccessToken token){
+        new GraphRequest(
+                token,
+                "/me/friends",
+                null,
+                HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        Log.i("friendlist 1", response.toString());
+                        try {
+                            JSONArray rawName = response.getJSONObject().getJSONArray("data");
+                            ArrayList<String> friends = new ArrayList<String>();
+                            String userID = token.getUserId();
+                            facebookID = userID;
+                            Log.i("userid",userID);
+                            for (int l = 0; l < rawName.length(); l++) {
+                                friends.add(rawName.getJSONObject(l).getString("id"));
+                            }
+                            friendList = friends;
+                            getProfileImage(token);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+        ).executeAsync();
+    }
+    public void getProfileImage(final AccessToken token){
+        Bundle params = new Bundle();
+        params.putString("fields", "id,email,picture.type(large)");
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        if (response != null) {
+                            try {
+                                JSONObject data = response.getJSONObject();
+
+                                if (data.has("picture")) {
+                                    String profilePicUrl = data.getJSONObject("picture").getJSONObject("data").getString("url");
+                                    Log.i("url1",profilePicUrl);
+                                    photoURL = profilePicUrl;
+                                    // Picasso.with(LoginActivity.this).load(profilePicUrl).into(profileImage);
+                                    getName(token);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }).executeAsync();
+    }
+    public void getName(final AccessToken token){
+        GraphRequest.Callback gCallback = new GraphRequest.Callback() {
+            @Override
+            public void onCompleted(GraphResponse response) {
+
+                if (response != null && response.getJSONObject() != null && response.getJSONObject().has("first_name"))
+                {
+                    try {
+                        facebookUsername = response.getJSONObject().getString("name");
+                        new LoginActionTask().execute(GrubMatePreference.getUserUrl());
+                    } catch (JSONException e) {
+
+                    }
+                }
+            }
+        };
+        new GraphRequest(AccessToken.getCurrentAccessToken(),"/me?fields=id,name,gender,email,first_name,last_name", null,HttpMethod.GET, gCallback).executeAsync();
+    }
+
+
+
+
+
+
+// Async Task
 
     public class LoginActionTask extends AsyncTask<String, Integer, String> {
 
@@ -272,8 +237,22 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            showShortToast("result" + postActionResponse);
+            if(postActionResponse==null||postActionResponse.length() == 0 || postActionResponse.length()>20) return;
+            PersistantDataManager.setUserID(Integer.parseInt(postActionResponse));
+            Intent startMainActivity = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(startMainActivity);
         }
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+

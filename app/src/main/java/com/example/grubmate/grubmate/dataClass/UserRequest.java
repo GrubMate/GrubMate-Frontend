@@ -1,6 +1,6 @@
-package dataClass;
+package com.example.grubmate.grubmate.dataClass;
 
-public class Request {
+public class UserRequest {
     public Integer requestID;
     public Integer requesterID;
     public Integer targetPostID;

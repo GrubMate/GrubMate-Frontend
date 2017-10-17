@@ -23,22 +23,20 @@ import java.io.IOException;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener{
     private EditText searchItemNameText;
-    private EditText searchItemTagsText;
-    private EditText searchItemAllergyText;
     private Spinner searchItemCategorySpinner;
     private Spinner searchItemTimeSpinner;
     private Button searchButton;
     private String title;
     private String[] tags;
     private String category;
-    private String[] timePeriod;
+    private String timePeriod;
     private Boolean[] allergyInfo;
     private Gson gson;
     class SearchFields{
         public String title;
         public String[] tags;
         public String category;
-        public String[] timePeriod;
+        public String timePeriod;
         public Boolean[] allergyInfo;
 
     }
@@ -47,8 +45,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         searchItemNameText = (EditText) findViewById(R.id.et_search_item_name);
-        searchItemTagsText = (EditText) findViewById(R.id.et_search_item_tags);
-        searchItemAllergyText = (EditText) findViewById(R.id.et_search_item_allergy);
+
         searchItemCategorySpinner = (Spinner) findViewById(R.id.search_spinner_category);
         ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this,
                 R.array.food_category, android.R.layout.simple_spinner_item);
@@ -75,11 +72,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     public boolean validateForm() {
         if(title != null) return true;
-//        tags = null;
-//        if(category !=null) return true;
-//        timePeriod = new String[2];
-//        timePeriod[0] = searchItemTimeSpinner.getSelectedItem().toString();
-//        allergyInfo = new Boolean[3];
+        if(category != "Category") return true;
+        if(timePeriod != "Time Period") return true;
         return false;
     };
 
@@ -88,8 +82,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         title = searchItemNameText.getText().toString();
         tags = null;
         category = searchItemCategorySpinner.getSelectedItem().toString();
-        timePeriod = new String[2];
-        timePeriod[0] = searchItemTimeSpinner.getSelectedItem().toString();
+        timePeriod = searchItemTimeSpinner.getSelectedItem().toString();
         allergyInfo = new Boolean[3];
         if(validateForm()) {
             new SearchActivity.SearchTask().execute("post");

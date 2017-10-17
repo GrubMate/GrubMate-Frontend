@@ -46,17 +46,6 @@
                 android:id="@+id/spinner_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-            <EditText
-                android:id="@+id/et_subscribe_item_allergy"
-                android:hint="@string/post_action_allergy_hint"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <EditText
-                android:id="@+id/et_post_item_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/post_action_address_hint"/>
-
         </LinearLayout>
     </ScrollView>
 

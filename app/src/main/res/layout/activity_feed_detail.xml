@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:orientation="vertical"
     tools:context="com.example.grubmate.grubmate.FeedDetailActivity">
 
     <TextView
@@ -20,19 +21,44 @@
         android:text="@string/tv_feed_quantity_default"/>
     <LinearLayout
         android:id="@+id/poster_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="invisible"
         >
+        <Button
+            android:id="@+id/b_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit"/>
+        <Button
+            android:id="@+id/b_delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_post_requests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/requester_view"
+        android:id="@+id/requester_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="invisible"
         >
+        <Button
+            android:id="@+id/b_poster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Poster Information"/>
+        <Button
+            android:id="@+id/b_request"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Request"/>
     </LinearLayout>
 
 </LinearLayout>

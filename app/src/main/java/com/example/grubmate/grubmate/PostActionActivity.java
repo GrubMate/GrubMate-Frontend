@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.EventLogTags;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -53,8 +54,10 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private TextView postItemLocationText;
     private GoogleApiClient mGoogleApiClient;
     private String postItemName, postItemDescription,postItemCategory,postItemTime;
-    private ArrayList<String> postItemTags;
+    private String[] tags;
     private boolean[] postItemAllergy;
+    private String timePeriod;
+    private String category;
     private Integer postItemQuantity;
     private Double[] postItemAddress;
     private Integer userID;
@@ -63,6 +66,9 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private double Lat;
     private double Lng;
     private Boolean isHomeMade;
+    private Post mPostData;
+    private Gson gson;
+    private Integer mPostID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +132,24 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 
         postHomeCheckBox = (CheckBox) findViewById(R.id.cb_post_home);
         // end of oncreate
+        Intent callIntent = getIntent();
+        gson = new Gson();
+        mPostData = null;
+        mPostID = null;
+        if(callIntent.hasExtra("post_data")) {
+            String extraText = callIntent.getStringExtra("post_data");
+            mPostData = gson.fromJson(callIntent.getStringExtra("post_data"), Post.class);
+            postItemNameText.setText(mPostData.title);
+            postItemQuantityText.setText(String.valueOf(mPostData.leftQuantity));
+            if(mPostData.isHomeMade) {
+                postHomeCheckBox.setChecked(true);
+            } else {
+                postHomeCheckBox.setChecked(false);
+            }
+            postItemDescriptionText.setText(mPostData.description);
+            mPostID = mPostData.postID;
+        }
+
     }
 
     //Store the location's Latitude to Lat and Logitude to Lng
@@ -160,6 +184,10 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             return false;
         } else if (postItemTagsText.getText().length() == 0) {
             return false;
+        } else if (postItemTimeSpinner.getSelectedItem().toString() == "Time Period") {
+            return false;
+        } else if (postItemCategorySpinner.getSelectedItem().toString() == "Category") {
+            return false;
         }
         return true;
     };
@@ -168,19 +196,21 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         if(validateForm()) {
 
-            postItemTags = new ArrayList<String>();
             postItemName = postItemNameText.getText().toString();
             postItemDescription = postItemDescriptionText.getText().toString();
             postItemQuantity = Integer.parseInt(postItemQuantityText.getText().toString());
-            postItemTags.add(postItemNameText.getText().toString());
+            String tagString = postItemTagsText.getText().toString();
+            tags = tagString.split(",");
             postItemAllergy = new boolean[3];
             postItemAddress = new Double[2];
             postItemAddress[0] = Lat;
             postItemAddress[1] = Lng;
             postItemCategory = postItemCategorySpinner.getSelectedItem().toString();
+            if(postItemCategory == "Category") postItemCategory = null;
             isHomeMade = postHomeCheckBox.isChecked();
+            timePeriod = postItemTimeSpinner.getSelectedItem().toString();
+            if(timePeriod == "Time Period") timePeriod = null;
             groupIDs = new Integer[1];
-
             // TODO: change this to reald user id in production
             userID = 0;
             new PostActionTask().execute(GrubMatePreference.getPostActionURl(userID));
@@ -202,10 +232,8 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
                 return null;
             }
 
-            Post newPost = new Post();
-            String [] postItemTagsArray = postItemTags.toArray(new String[postItemTags.size()]);
-            newPost.postID = null;
-            newPost.tags = postItemTagsArray;
+            Post newPost = mPostData == null?new Post():mPostData;
+            newPost.tags = tags;
             newPost.category = postItemCategory;
             newPost.description = postItemDescription;
             newPost.address = postItemAddress;
@@ -213,21 +241,27 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             newPost.leftQuantity = postItemQuantity;
             newPost.isActive = true;
             newPost.title = postItemName;
-            newPost.allergyInfo = null;
+//            newPost.allergyInfo = null;
             newPost.posterID = PersistantDataManager.getUserID();
             // TODO: change to real groups ids
             newPost.groupIDs = groupIDs;
             newPost.isHomeMade = isHomeMade;
-            newPost.postID = null;
-            newPost.postPhotos =null;
-            newPost.timePeriod = null;
-            newPost.requestsIDs = null;
+             newPost.timePeriod = timePeriod;
+//            newPost.requestsIDs = null;
             Gson gson = new Gson();
             String postJson = gson.toJson(newPost);
-            try {
-               return NetworkUtilities.post(params[0],postJson);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(mPostData==null) {
+                try {
+                    return NetworkUtilities.post(params[0],postJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    return NetworkUtilities.put(GrubMatePreference.getPostActionURl(PersistantDataManager.getUserID()), postJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
             return null;
@@ -235,7 +269,12 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            showShortToast("result" + postActionResponse);
+            if (postActionResponse != null) {
+                showShortToast("Succeed");
+                finish();
+            } else {
+                showShortToast("Error: please retry");
+            }
         }
     }
 

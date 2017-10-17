@@ -5,6 +5,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -21,6 +22,11 @@ import okhttp3.Response;
 public class NetworkUtilities {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
+    public static OkHttpClient clientLong = new OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .build();
     public static OkHttpClient client = new OkHttpClient();
 
     // Send a GET request to address specified by url, return raw response text
@@ -33,6 +39,23 @@ public class NetworkUtilities {
                     .url(url)
                     .build();
             Response response = client.newCall(request).execute();
+            return response.body()==null?null:response.body().string();
+        } catch (SocketException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public static String getLong(String url) throws IOException {
+        if(url==null||url.length() == 0) {
+            return null;
+        }
+        try {
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+            Response response = clientLong.newCall(request).execute();
             return response.body()==null?null:response.body().string();
         } catch (SocketException e) {
             e.printStackTrace();

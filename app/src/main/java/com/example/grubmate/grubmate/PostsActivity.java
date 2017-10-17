@@ -30,32 +30,52 @@ public class PostsActivity extends AppCompatActivity implements FeedAdapter.Feed
     private FeedAdapter mPostAdapter;
     private ProgressBar mPostProgressBar;
     private TextView mEmptyText;
-    private BroadcastReceiver notificationReceiver;
+    private BroadcastReceiver mNotificationReceiver;
     private Gson gson;
+    private IntentFilter intentFilter;
 
     public static final String BROADCAST_ACTION = "com.example.grubmate.grubmate.notification.post";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posts);
+        gson = new Gson();
 
         mPostView = (RecyclerView) findViewById(R.id.rv_post);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mPostView.setLayoutManager(layoutManager);
         mPostAdapter = new FeedAdapter(this);
         mPostView.setAdapter(mPostAdapter);
+
         mPostProgressBar = (ProgressBar) findViewById(R.id.pb_post);
         mEmptyText = (TextView) findViewById(R.id.tv_post_empty_text);
-        notificationReceiver = new BroadcastReceiver() {
+        mNotificationReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                // TODO: change this to incur updates
+                new FetchPostListTask().execute(GrubMatePreference.getUserPostUrl(PersistantDataManager.getUserID()));
             }
         };
-        IntentFilter intentFilter = new IntentFilter();
+        intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_ACTION);
-        registerReceiver(notificationReceiver, intentFilter);
-        new FetchPostListTask().execute(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+        registerReceiver(mNotificationReceiver, intentFilter);
+        new FetchPostListTask().execute(GrubMatePreference.getUserPostUrl(PersistantDataManager.getUserID()));
+    }
+
+    protected void onRestart() {
+        super.onRestart();
+        registerReceiver(mNotificationReceiver, intentFilter);
+        new FetchPostListTask().execute(GrubMatePreference.getUserPostUrl(PersistantDataManager.getUserID()));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mNotificationReceiver);
+        super.onDestroy();
     }
 
     @Override

@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity
     private ProgressBar mFeedProgressBar;
     private TextView mEmptyText;
     // used for service
-    private BroadcastReceiver notificationReceiver;
+    private BroadcastReceiver mNotificationReceiver;
+    private IntentFilter intentFilter;
 
     public final static String BROADCAST_ACTION = "com.example.grubmate.grubmate.notification";
     private NotificationService.NotificationBinder notificationBinder;
@@ -138,22 +139,21 @@ public class MainActivity extends AppCompatActivity
 
                 // start the intent
                 startActivity(startDetailActivityIntent);
-
             }
         });
         mFeedProgressBar = (ProgressBar) findViewById(R.id.pb_feed);
         mEmptyText = (TextView) findViewById(R.id.tv_feed_empty_text);
 
-        notificationReceiver = new BroadcastReceiver() {
+        mNotificationReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Toast.makeText(context, "received notification", Toast.LENGTH_SHORT).show();
+                new FetchFeedListTask().execute(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
             }
         };
 
-        IntentFilter intentFilter = new IntentFilter();
+        intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_ACTION);
-        registerReceiver(notificationReceiver, intentFilter);
+        registerReceiver(mNotificationReceiver, intentFilter);
         // start the service for notification
 
         Intent bindIntent = new Intent(context, NotificationService.class);
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity
             destinationActivity = SubscriptionsActivity.class;
         } else if (id == R.id.nav_posts) {
             destinationActivity = PostsActivity.class;
-        } else if (id == R.id.nav_orders) {
+        } else if (id == R.id.nav_notification) {
 
         } else if (id == R.id.nav_profile) {
             destinationActivity = ProfileActivity.class;
@@ -278,6 +278,7 @@ public class MainActivity extends AppCompatActivity
 
             try {
                 String response = NetworkUtilities.get(baseUrl);
+                Log.d(TAG, response);
                 if (response == null || response.length() == 0)
                     return null;
                 return JsonUtilities.getFeedItems(response);
@@ -307,11 +308,21 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    protected void onRestart() {
+        registerReceiver(mNotificationReceiver, intentFilter);
+        super.onRestart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(notificationReceiver);
         unbindService(connection);
+        unregisterReceiver(mNotificationReceiver);
     }
 
     @Override

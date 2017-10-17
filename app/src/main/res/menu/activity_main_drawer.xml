@@ -12,8 +12,8 @@
             android:id="@+id/nav_posts"
             android:title="Posts" />
         <item
-            android:id="@+id/nav_orders"
-            android:title="Orders" />
+            android:id="@+id/nav_notification"
+            android:title="Notification Center" />
         <item
             android:id="@+id/nav_profile"
             android:title="Profile"></item>

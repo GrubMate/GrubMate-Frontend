@@ -12,13 +12,13 @@ public class Post {
     public String[] postPhotos;
     public String[] tags;
     public String category;
-    public String[] timePeriod;
+    public String timePeriod;
     public String description;
     public Double[] address;
     public Integer[] groupIDs;
     public Integer totalQuantity;
     public Integer leftQuantity;
-    public Integer requestsIDs;
+    public Integer[] requestsIDs;
     public Boolean isActive;
     public Boolean[] allergyInfo;
 
