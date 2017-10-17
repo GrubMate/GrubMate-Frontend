@@ -13,12 +13,18 @@ import java.util.ArrayList;
  */
 
 public class RequestAdapter extends BaseQuickAdapter<UserRequest, BaseViewHolder>{
-    public RequestAdapter(int layoutResId, ArrayList<UserRequest> data) {
-        super(layoutResId, data);
+    public RequestAdapter(ArrayList<UserRequest> data) {
+        super(R.layout.request_list_item, data);
     }
     @Override
     protected void convert(BaseViewHolder helper, UserRequest item) {
-        helper.setText(R.id.item_name, item.requesterID)
-        .addOnClickListener(R.id.b_accept);
+        helper.setText(R.id.item_name, String.valueOf(item.requesterID))
+        .addOnClickListener(R.id.b_accept)
+        .addOnClickListener(R.id.b_deny);
+        if(item.status == "ACCEPTED" || item.status=="DENIED") {
+            helper.setGone(R.id.b_accept, false)
+                    .setGone(R.id.b_accept, false);
+
+        }
     }
 }

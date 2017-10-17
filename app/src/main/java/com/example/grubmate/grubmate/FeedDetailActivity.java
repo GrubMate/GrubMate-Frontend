@@ -1,6 +1,7 @@
 package com.example.grubmate.grubmate;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -80,14 +81,22 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
 
         mRequestView = (RecyclerView) findViewById(R.id.rv_post_requests);
         mUserRequests = new ArrayList<UserRequest>();
-        mRequestAdapter = new RequestAdapter(R.id.request_list_item, mUserRequests);
+        mRequestAdapter = new RequestAdapter(mUserRequests);
         mRequestAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         mRequestAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener(){
 
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                Log.d("Request", "Button clicked");
-                // TODO: send accept
+                switch(view.getId()) {
+                    case R.id.b_accept:
+                        new AcceptRequestTask().execute(position);
+                        break;
+                    case R.id.b_deny:
+                        new DenyRequestTask().execute(position);
+                        break;
+                    default:
+                        Log.d("Feed Detail", "Network Error");
+                }
 
             }
         });
@@ -110,6 +119,8 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
                     mEditButton.setEnabled(false);
                     mDeleteButton.setEnabled(false);
                 }
+                new GetRequestTask().execute();
+                Log.d("Post Detail", "Get Request Sent");
             } else {
                 posterLayout.setVisibility(View.INVISIBLE);
                 requesterLayout.setVisibility(View.VISIBLE);
@@ -246,10 +257,6 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
 
         @Override
         protected String doInBackground(String... params) {
-            if (params.length == 0||params[0].length()==0) {
-                return null;
-            }
-
             try {
                 return NetworkUtilities.delete(GrubMatePreference.getPostDeleteURL(PersistantDataManager.getUserID(), mPostData.postID), null);
             } catch (IOException e) {
@@ -273,9 +280,7 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
 
         @Override
         protected String doInBackground(String... params) {
-            if (params.length == 0||params[0].length()==0) {
-                return null;
-            }
+            Log.d("Feed Detail", "Request sent");
 
             try {
                 return NetworkUtilities.get(GrubMatePreference.getRequestListUrl(PersistantDataManager.getUserID(), mPostData.postID));
@@ -288,11 +293,65 @@ public class FeedDetailActivity extends AppCompatActivity implements GoogleApiCl
 
         @Override
         protected void onPostExecute(String postActionResponse) {
+            Log.d("Post Detail", postActionResponse);
             if (postActionResponse != null) {
-                mRequestAdapter.setNewData(JsonUtilities.getRequestItems(postActionResponse));
+                mUserRequests = JsonUtilities.getRequestItems(postActionResponse);
+                mRequestAdapter.setNewData(mUserRequests);
             } else {
                 Toast.makeText(FeedDetailActivity.this, "Error: Network Error", Toast.LENGTH_SHORT);
             }
         }
     }
+
+    public class AcceptRequestTask extends AsyncTask<Integer, Integer, String> {
+
+        @Override
+        protected String doInBackground(Integer... params) {
+            Log.d("Feed Detail", "Request sent");
+
+            try {
+                return NetworkUtilities.get(GrubMatePreference.getAcceptRequestURL(PersistantDataManager.getUserID(), mUserRequests.get(params[0]).requestID));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String postActionResponse) {
+            Log.d("Post Detail", postActionResponse);
+            if (postActionResponse != null) {
+                new GetRequestTask().execute();
+            } else {
+                Toast.makeText(FeedDetailActivity.this, "Error: Network Error", Toast.LENGTH_SHORT);
+            }
+        }
+    }
+    public class DenyRequestTask extends AsyncTask<Integer, Integer, String> {
+
+        @Override
+        protected String doInBackground(Integer... params) {
+            Log.d("Feed Detail", "Request sent");
+
+            try {
+                return NetworkUtilities.get(GrubMatePreference.getDenyRequestURL(PersistantDataManager.getUserID(), mUserRequests.get(params[0]).requestID));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String postActionResponse) {
+            Log.d("Post Detail", postActionResponse);
+            if (postActionResponse != null) {
+                new GetRequestTask().execute();
+            } else {
+                Toast.makeText(FeedDetailActivity.this, "Error: Network Error", Toast.LENGTH_SHORT);
+            }
+        }
+    }
+
 }

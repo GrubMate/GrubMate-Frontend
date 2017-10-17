@@ -46,6 +46,7 @@ public class SubscriptionDetailActivity extends AppCompatActivity implements Vie
 
     @Override
     public void onClick(View view) {
+        Log.d("Subscription", "called");
         new SubscriptionDeleteTask().execute();
     }
 
@@ -54,6 +55,7 @@ public class SubscriptionDetailActivity extends AppCompatActivity implements Vie
         @Override
         protected String doInBackground(String... params) {
             try {
+                Log.d("Subscription", "Sent");
                 return NetworkUtilities.delete(GrubMatePreference.getSubscriptionDeleteURL(PersistantDataManager.getUserID(), mSubscriptionData.subscriptionID), null);
             } catch (IOException e) {
                 e.printStackTrace();

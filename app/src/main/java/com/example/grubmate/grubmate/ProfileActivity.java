@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.EditText;
@@ -12,9 +15,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.User;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
+import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.gson.Gson;
@@ -23,6 +28,7 @@ import com.squareup.picasso.Picasso;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity {
     private ImageView mProfileAvatar;
@@ -30,6 +36,9 @@ public class ProfileActivity extends AppCompatActivity {
     private RatingBar mProfileRatingBar;
     private Gson gson;
     private int userID;
+    private RecyclerView mRecyclerView;
+    private PastPostAdapter mPastPostAdapter;
+    private ArrayList<Post> mPastPostList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +52,17 @@ public class ProfileActivity extends AppCompatActivity {
         if(callIntent.hasExtra("user_id")) {
             userID = Integer.parseInt(callIntent.getStringExtra("user_id"));
         }
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_past_orders);
+        mPastPostList = new ArrayList<Post>();
+        mPastPostAdapter = new PastPostAdapter(mPastPostList);
+        mPastPostAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mPastPostAdapter);
+
         new PostActionTask().execute(GrubMatePreference.getUserUrl(PersistantDataManager.getUserID()));
+        new PastPostTask().execute(userID);
 
     }
 
@@ -81,4 +100,23 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    public class PastPostTask extends AsyncTask<Integer, Integer, String> {
+
+        @Override
+        protected String doInBackground(Integer... params) {
+            try {
+                return NetworkUtilities.get(GrubMatePreference.getPastPostURL(userID));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String postActionResponse) {
+            mPastPostList = JsonUtilities.getFeedItems(postActionResponse);
+            mPastPostAdapter.setNewData(mPastPostList);
+        }
+    }
 }
