@@ -78,7 +78,6 @@
         <activity android:name=".GroupSettingsActivity">
 
         </activity>
-        <activity android:name=".PostsActivity"></activity>
     </application>
 
 </manifest>

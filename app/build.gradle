@@ -38,6 +38,7 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.android.support:support-v4:26.+'
     compile 'com.android.support:support-vector-drawable:26.+'
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     testCompile 'junit:junit:4.12'
 }
 

@@ -47,9 +47,10 @@ public class JsonUtilities {
         return gson.fromJson(jsonString,groupsList.getClass());
     }
 
-    public static ArrayList<String> getfriendsList(String jsonString){
+    public static ArrayList<String> getfriendsList(String jsonString) {
         ArrayList<String> friendsList = new ArrayList<String>();
-        return gson.fromJson(jsonString,friendsList.getClass());
+        return gson.fromJson(jsonString, friendsList.getClass());
+    }
     public static ArrayList<Subscription> getSubscriptionItems(String jsonString) {
         try {
             SubscriptionList subscriptionList = gson.fromJson(jsonString, SubscriptionList.class);
