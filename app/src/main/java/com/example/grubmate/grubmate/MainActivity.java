@@ -6,11 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,40 +25,32 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.grubmate.grubmate.adapters.FeedAdapter;
 import com.example.grubmate.grubmate.dataClass.Post;
+import com.example.grubmate.grubmate.fragments.FeedFragment;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
-import com.example.grubmate.grubmate.utilities.MockData;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.gson.Gson;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FeedAdapter.FeedAdapterOnClickHandler {
+        implements NavigationView.OnNavigationItemSelectedListener, FeedAdapter.FeedAdapterOnClickHandler, FeedFragment.OnFragmentInteractionListener {
     public static final String TAG = "MainActivity";
     private Context context;
-    private ArrayList<Post> feedData;
+
     public static final int SEARCH_IDENTIFICATION_CODE = 91;
 
-    // used for recyclerview
-    private RecyclerView mFeedView;
-    private FeedAdapter mFeedAdapter;
+
 
     private Button mPostButton;
     private Button mSubscribeButton;
 
-    // used for better user experience when loading
-    private ProgressBar mFeedProgressBar;
-    private TextView mEmptyText;
+
     // used for service
     private BroadcastReceiver mNotificationReceiver;
     private IntentFilter intentFilter;
@@ -98,13 +89,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Setting up feed
-        mFeedView = (RecyclerView) findViewById(R.id.rv_feed);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mFeedView.setLayoutManager(layoutManager);
-        mFeedAdapter = new FeedAdapter(this);
-        mFeedView.setAdapter(mFeedAdapter);
-        //        mFeedAdapter.setFeedData(MockData.mockFeedData);
+
 
         mPostButton = (Button) findViewById(R.id.b_home_post);
         mSubscribeButton = (Button) findViewById(R.id.b_home_subscribe);
@@ -141,13 +126,12 @@ public class MainActivity extends AppCompatActivity
                 startActivity(startDetailActivityIntent);
             }
         });
-        mFeedProgressBar = (ProgressBar) findViewById(R.id.pb_feed);
-        mEmptyText = (TextView) findViewById(R.id.tv_feed_empty_text);
+
 
         mNotificationReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                new FetchFeedListTask().execute(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+
             }
         };
 
@@ -161,8 +145,6 @@ public class MainActivity extends AppCompatActivity
         Intent startIntent = new Intent(this, NotificationService.class);
         startService(startIntent);
 
-        // TODO: change it back to work
-        new FetchFeedListTask().execute(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
     }
 
     @Override
@@ -245,7 +227,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(Post feedItemData) {
-        Class destinationActivity = FeedDetailActivity.class;
+        Class destinationActivity = FeedAdapter.FeedDetailActivity.class;
 
         // construct the intent
         Intent startDetailActivityIntent = new Intent(context, destinationActivity);
@@ -258,55 +240,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public class FetchFeedListTask extends AsyncTask<String, Integer, ArrayList<Post>> {
-        @Override
-        protected void onPreExecute() {
-            mFeedView.setVisibility(View.INVISIBLE);
-            mFeedProgressBar.getLayoutParams().height = (int) getResources().getDimension(R.dimen.pb_height);
-            mFeedProgressBar.setVisibility(View.VISIBLE);
-            mEmptyText.setVisibility(View.INVISIBLE);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected ArrayList<Post> doInBackground(String... params) {
-            if (params.length == 0) {
-                return null;
-            }
-
-            String baseUrl = params[0];
-
-            try {
-                String response = NetworkUtilities.get(baseUrl);
-                Log.d(TAG, response);
-                if (response == null || response.length() == 0)
-                    return null;
-                return JsonUtilities.getFeedItems(response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<Post> feedItems) {
-            if (feedItems != null) {
-                feedData = feedItems;
-                mFeedAdapter.setFeedData(feedData);
-                mFeedProgressBar.setVisibility(View.INVISIBLE);
-                mFeedProgressBar.getLayoutParams().height = 0;
-                mFeedView.setVisibility(View.VISIBLE);
-                if (feedData.size() < 1)
-                    mEmptyText.setVisibility(View.VISIBLE);
-            } else {
-                mEmptyText.setVisibility(View.VISIBLE);
-                mFeedProgressBar.setVisibility(View.INVISIBLE);
-                mFeedProgressBar.getLayoutParams().height = 0;
-
-            }
-        }
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        Log.d("Main", uri.toString());
     }
+
+
 
     protected void onRestart() {
         registerReceiver(mNotificationReceiver, intentFilter);
@@ -334,11 +273,11 @@ public class MainActivity extends AppCompatActivity
                 Log.d("MainActivity", returnedData);
                 if (returnedData == null || returnedData.length() == 0)
                     return;
-                this.feedData = JsonUtilities.getFeedItems(returnedData);
-                this.mFeedAdapter.setFeedData(feedData);
-                mFeedProgressBar.setVisibility(View.INVISIBLE);
-                mFeedProgressBar.getLayoutParams().height = 0;
-                mFeedView.setVisibility(View.VISIBLE);
+//                this.feedData = JsonUtilities.getFeedItems(returnedData);
+//                this.mFeedAdapter.setFeedData(feedData);
+//                mFeedProgressBar.setVisibility(View.INVISIBLE);
+//                mFeedProgressBar.getLayoutParams().height = 0;
+//                mFeedView.setVisibility(View.VISIBLE);
             }
             break;
         default:
