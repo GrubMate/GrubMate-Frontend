@@ -1,4 +1,4 @@
-package com.example.grubmate.grubmate;
+package com.example.grubmate.grubmate.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.dataClass.Subscription;
 
 import java.util.ArrayList;

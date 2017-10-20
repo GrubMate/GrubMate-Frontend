@@ -1,7 +1,8 @@
-package com.example.grubmate.grubmate;
+package com.example.grubmate.grubmate.adapters;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.dataClass.User;
 import com.example.grubmate.grubmate.dataClass.UserRequest;
 import com.facebook.places.internal.LocationPackageManager;

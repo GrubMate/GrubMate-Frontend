@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.grubmate.grubmate.adapters.FeedAdapter;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
@@ -81,7 +82,7 @@ public class PostsActivity extends AppCompatActivity implements FeedAdapter.Feed
     @Override
     public void onClick(Post feedItemData) {
         // start detail page with the data;
-        Class destinationActivity = FeedDetailActivity.class;
+        Class destinationActivity = FeedAdapter.FeedDetailActivity.class;
 
         Intent startDetailActivityIntent = new Intent(this, destinationActivity);
 
