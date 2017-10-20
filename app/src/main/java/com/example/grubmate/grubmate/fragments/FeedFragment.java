@@ -1,10 +1,13 @@
 package com.example.grubmate.grubmate.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,18 +17,34 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.example.grubmate.grubmate.PostsActivity;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.BFeedAdapter;
 import com.example.grubmate.grubmate.adapters.FeedAdapter;
 import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
+import com.example.grubmate.grubmate.dataClass.UserRequest;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+import static com.example.grubmate.grubmate.adapters.FeedAdapter.FeedDetailActivity.PLACE_AUTOCOMPLETE_REQUEST_CODE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,7 +54,7 @@ import java.util.ArrayList;
  * Use the {@link FeedFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FeedFragment extends Fragment {
+public class FeedFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener{
     public static final String TAG = "FeedFragment";
     public static final int FETCH_FEED_LIST = 2023423423;
     // TODO: Rename parameter arguments, choose names that match
@@ -55,6 +74,13 @@ public class FeedFragment extends Fragment {
     // used for better user experience when loading
     private ProgressBar mFeedProgressBar;
     private TextView mEmptyText;
+    private GoogleApiClient mGoogleApiClient;
+    private ArrayList<UserRequest> mUserRequests;
+    private Double[] address;
+    private Integer requesterID;
+    private Integer targetPostID;
+    private double Lat;
+    private double Lng;
 
 
     public FeedFragment() {
@@ -99,8 +125,22 @@ public class FeedFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
         mFeedView.setLayoutManager(layoutManager);
         mFeedAdapter = new BFeedAdapter(feedData);
-        mFeedView.setAdapter(mFeedAdapter);
+        mFeedAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (view.getId()) {
+                    case R.id.tv_feed_item_poster:
 
+                        break;
+                    case R.id.b_feed_item_request:
+                        requestPost(position);
+                        view.setEnabled(false);
+                        break;
+                    default:
+                }
+            }
+        });
+        mFeedView.setAdapter(mFeedAdapter);
         mFeedProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_feed);
         mEmptyText = (TextView) rootView.findViewById(R.id.tv_feed_empty_text);
         //        mFeedAdapter.setFeedData(MockData.mockFeedData);
@@ -135,6 +175,11 @@ public class FeedFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
     /**
@@ -181,8 +226,6 @@ public class FeedFragment extends Fragment {
 
             return MockData.getPostList(2);
         }
-
-        @Override
         protected void onPostExecute(ArrayList<Post> feedItems) {
             if (feedItems != null) {
                 feedData = feedItems;
@@ -197,6 +240,80 @@ public class FeedFragment extends Fragment {
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
 
+            }
+        }
+    }
+
+        public class RequestTask extends AsyncTask<Integer, Integer, String> {
+            @Override
+
+            protected String doInBackground(Integer ...params) {
+                Integer postID = params[0];
+                if (postID < 0) {
+                    return null;
+                }
+
+                UserRequest newRequest = new UserRequest();
+                newRequest.address = new Double[2];
+                newRequest.address[0] = Lat;
+                newRequest.address[1] = Lng;
+                newRequest.requesterID = requesterID;
+                newRequest.status = "Pending";
+                newRequest.targetPostID = targetPostID;
+                Gson gson = new Gson();
+                String requestJson = gson.toJson(newRequest);
+                Log.d("Detail", requestJson);
+                try {
+                    return NetworkUtilities.post(GrubMatePreference.getRequestURL(PersistantDataManager.getUserID()), requestJson);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String response) {
+
+            }
+        }
+
+    private void requestPost(int pos) {
+        requesterID = PersistantDataManager.getUserID();
+        targetPostID = feedData.get(pos).postID;
+        address = new Double[2];
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(), this)
+                .build();
+
+        try {
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                    .build(getActivity());
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(getContext(), data);
+
+                Lat = place.getLatLng().latitude;
+                Lng = place.getLatLng().longitude;
+                new RequestTask().execute(targetPostID);
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(getContext(), data);
+                // TODO: Handle the error.
+                Log.i("test", status.getStatusMessage());
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
             }
         }
     }

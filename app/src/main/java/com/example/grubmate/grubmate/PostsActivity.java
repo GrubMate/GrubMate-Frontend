@@ -5,26 +5,40 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.grubmate.grubmate.adapters.FeedAdapter;
 import com.example.grubmate.grubmate.dataClass.Post;
+import com.example.grubmate.grubmate.dataClass.UserRequest;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class PostsActivity extends AppCompatActivity implements FeedAdapter.FeedAdapterOnClickHandler{
+import static com.example.grubmate.grubmate.adapters.FeedAdapter.FeedDetailActivity.PLACE_AUTOCOMPLETE_REQUEST_CODE;
+
+public class PostsActivity extends AppCompatActivity implements FeedAdapter.FeedAdapterOnClickHandler, GoogleApiClient.OnConnectionFailedListener {
     public static final String TAG = "PostActivity";
     private ArrayList<Post> postsData;
     private RecyclerView mPostView;
@@ -35,7 +49,9 @@ public class PostsActivity extends AppCompatActivity implements FeedAdapter.Feed
     private Gson gson;
     private IntentFilter intentFilter;
 
+
     public static final String BROADCAST_ACTION = "com.example.grubmate.grubmate.notification.post";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +107,11 @@ public class PostsActivity extends AppCompatActivity implements FeedAdapter.Feed
         startActivity(startDetailActivityIntent);
     }
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
     public class FetchPostListTask extends AsyncTask<String, Integer, ArrayList<Post>> {
         @Override
         protected void onPreExecute() {
@@ -139,4 +160,9 @@ public class PostsActivity extends AppCompatActivity implements FeedAdapter.Feed
             }
         }
     }
+
+
+
+
+
 }
