@@ -33,7 +33,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
         public SubscriptionViewHolder(View itemView) {
             super(itemView);
 //            Log.d(TAG, "itemCreate");
-            mSubscriptionNameTextView = itemView.findViewById(R.id.tv_subscription_title);
+            mSubscriptionNameTextView = itemView.findViewById(R.id.tv_subscription_description);
             itemView.setOnClickListener(this);
         }
 

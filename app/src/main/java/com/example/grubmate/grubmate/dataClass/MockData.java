@@ -21,4 +21,17 @@ public class MockData {
         }
         return result;
     }
+
+    public static ArrayList<Subscription> getSubscriptionList(int num) {
+        ArrayList<Subscription> result = new ArrayList<Subscription>();
+        for(int i = 0; i<num; i++) {
+            Subscription localSubscription = new Subscription();
+            localSubscription.subscriptionID = i;
+            localSubscription.subscriberID = i*2;
+            localSubscription.query = "Subscription title";
+            localSubscription.isActive = true;
+            result.add(localSubscription);
+        }
+        return result;
+    }
 }
