@@ -9,26 +9,9 @@
     tools:showIn="@layout/app_bar_main"
     android:orientation="vertical"
     tools:context="com.example.grubmate.grubmate.MainActivity">
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/fl_main_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
-        <Button
-            android:layout_width="0dp"
-            android:id="@+id/b_home_post"
-            android:layout_height="wrap_content"
-            android:text="@string/button_post"
-            android:layout_weight="1"/>
-        <Button
-            android:layout_width="0dp"
-            android:id="@+id/b_home_subscribe"
-            android:layout_height="wrap_content"
-            android:text="@string/button_subscribe"
-            android:layout_weight="1"/>
-    </LinearLayout>
-    <fragment
-        android:id="@+id/feed_fragment"
-        android:name="com.example.grubmate.grubmate.fragments.FeedFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
+    </FrameLayout>
 </LinearLayout>

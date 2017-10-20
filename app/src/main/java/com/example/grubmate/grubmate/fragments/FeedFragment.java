@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.BFeedAdapter;
 import com.example.grubmate.grubmate.adapters.FeedAdapter;
+import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
@@ -103,8 +104,13 @@ public class FeedFragment extends Fragment {
         mFeedProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_feed);
         mEmptyText = (TextView) rootView.findViewById(R.id.tv_feed_empty_text);
         //        mFeedAdapter.setFeedData(MockData.mockFeedData);
-        new FetchFeedListTask().execute();
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        new FetchFeedListTask().execute(2);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -163,17 +169,17 @@ public class FeedFragment extends Fragment {
             }
 
 
-            try {
-                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
-                Log.d(TAG, response);
-                if (response == null || response.length() == 0)
-                    return null;
-                return JsonUtilities.getFeedItems(response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+//                Log.d(TAG, response);
+//                if (response == null || response.length() == 0)
+//                    return null;
+//                return JsonUtilities.getFeedItems(response);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
-            return null;
+            return MockData.getPostList(2);
         }
 
         @Override

@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,12 +25,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.grubmate.grubmate.adapters.FeedAdapter;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.fragments.FeedFragment;
+import com.example.grubmate.grubmate.fragments.ProfileFragment;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
@@ -39,21 +43,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FeedAdapter.FeedAdapterOnClickHandler, FeedFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FeedFragment.OnFragmentInteractionListener, ProfileFragment.OnProfileFragmentInteractionListener {
     public static final String TAG = "MainActivity";
     private Context context;
-
     public static final int SEARCH_IDENTIFICATION_CODE = 91;
-
-
-
-    private Button mPostButton;
-    private Button mSubscribeButton;
-
-
     // used for service
     private BroadcastReceiver mNotificationReceiver;
     private IntentFilter intentFilter;
+    private FrameLayout fragmentContainer;
 
     public final static String BROADCAST_ACTION = "com.example.grubmate.grubmate.notification";
     private NotificationService.NotificationBinder notificationBinder;
@@ -89,45 +86,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-
-        mPostButton = (Button) findViewById(R.id.b_home_post);
-        mSubscribeButton = (Button) findViewById(R.id.b_home_subscribe);
-
-        mPostButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Class destinationActivity = PostActionActivity.class;
-
-                // construct the intent
-                Intent startDetailActivityIntent = new Intent(context, destinationActivity);
-
-                // put extra data into this intent
-                startDetailActivityIntent.putExtra(Intent.EXTRA_TEXT, PersistantDataManager.getUserID());
-
-                // start the intent
-                startActivity(startDetailActivityIntent);
-
-            }
-        });
-
-        mSubscribeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Class destinationActivity = SubscribeActionActivity.class;
-
-                // construct the intent
-                Intent startDetailActivityIntent = new Intent(context, destinationActivity);
-
-                // put extra data into this intent
-                startDetailActivityIntent.putExtra(Intent.EXTRA_TEXT, PersistantDataManager.getUserID());
-
-                // start the intent
-                startActivity(startDetailActivityIntent);
-            }
-        });
-
-
         mNotificationReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -144,6 +102,10 @@ public class MainActivity extends AppCompatActivity
         bindService(bindIntent, connection, BIND_AUTO_CREATE);
         Intent startIntent = new Intent(this, NotificationService.class);
         startService(startIntent);
+
+        // Put in default fragment
+        FeedFragment feedFragment = FeedFragment.newInstance(null, null);
+        getSupportFragmentManager().beginTransaction().add(R.id.fl_main_fragment_container, feedFragment).commit();
 
     }
 
@@ -195,17 +157,16 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Fragment destinationFragment = null;
         Class destinationActivity = MainActivity.class;
         if (id == R.id.nav_home) {
-            // Handle the camera action
+            destinationFragment = FeedFragment.newInstance(null, null);
         } else if (id == R.id.nav_subscriptions) {
-            destinationActivity = SubscriptionsActivity.class;
         } else if (id == R.id.nav_posts) {
-            destinationActivity = PostsActivity.class;
         } else if (id == R.id.nav_notification) {
 
         } else if (id == R.id.nav_profile) {
-            destinationActivity = ProfileActivity.class;
+            destinationFragment = ProfileFragment.newInstance(PersistantDataManager.getUserID(),null);
         } else if (id == R.id.nav_notification_settings) {
 
         } else if (id == R.id.nav_application_settings) {
@@ -214,30 +175,15 @@ public class MainActivity extends AppCompatActivity
         // construct the intent
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        Intent startDetailActivityIntent = new Intent(context, destinationActivity);
 
-        // put extra data into this intent
-        startDetailActivityIntent.putExtra(Intent.EXTRA_TEXT, PersistantDataManager.getUserID());
-
-        // start the intent
-        startActivity(startDetailActivityIntent);
+        if(destinationFragment !=null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fl_main_fragment_container, destinationFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
 
         return true;
-    }
-
-    @Override
-    public void onClick(Post feedItemData) {
-        Class destinationActivity = FeedAdapter.FeedDetailActivity.class;
-
-        // construct the intent
-        Intent startDetailActivityIntent = new Intent(context, destinationActivity);
-
-        // put extra data into this intent
-        startDetailActivityIntent.putExtra("post_data", new Gson().toJson(feedItemData));
-
-        // start the intent
-        startActivity(startDetailActivityIntent);
-
     }
 
     @Override

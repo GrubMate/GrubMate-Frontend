@@ -24,9 +24,13 @@ public class BFeedAdapter extends BaseQuickAdapter<Post, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder viewHolder, Post item) {
         viewHolder.setText(R.id.tv_feed_item_name, item.title)
-                .setText(R.id.tv_feed_item_poster, item.posterID)
+                // integers has to be wraped as string to avoid android treating them as resource
+                .setText(R.id.tv_feed_item_poster, String.valueOf(item.posterID))
+                .addOnClickListener(R.id.tv_feed_item_poster)
                 .addOnClickListener(R.id.b_feed_item_request);
-        Picasso.with(this.mContext).load(R.drawable.ic_media_play_dark).into((ImageView) viewHolder.getView(R.id.iv_feed_item_image));
+        Picasso.with(this.mContext)
+                .load(R.drawable.mr_dialog_material_background_dark)
+                .into((ImageView) viewHolder.getView(R.id.iv_feed_item_image));
 
     }
 }
