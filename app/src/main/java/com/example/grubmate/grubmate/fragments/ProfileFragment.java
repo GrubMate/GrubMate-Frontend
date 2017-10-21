@@ -21,6 +21,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.grubmate.grubmate.ProfileActivity;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.PastPostAdapter;
+import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.User;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
@@ -42,7 +43,7 @@ import java.util.ArrayList;
  * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements FeedFragment.OnFragmentInteractionListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String USER_ID = "param1";
@@ -61,6 +62,7 @@ public class ProfileFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private PastPostAdapter mPastPostAdapter;
     private ArrayList<Post> mPastPostList;
+    private final static boolean TEST = true;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -113,6 +115,12 @@ public class ProfileFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        new PostActionTask().execute();
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -137,6 +145,11 @@ public class ProfileFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -156,9 +169,6 @@ public class ProfileFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            if (params.length == 0||params[0].length()==0) {
-                return null;
-            }
             try {
                 return NetworkUtilities.get(GrubMatePreference.getUserUrl(userID));
             } catch (IOException e) {
@@ -170,18 +180,29 @@ public class ProfileFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            Log.d("profile", postActionResponse);
-            if(postActionResponse == null || postActionResponse.length()==0) {
-                Toast.makeText(getContext(), "Error occurs during fetching user data", Toast.LENGTH_SHORT).show();
-            } else {
-                User user = gson.fromJson(postActionResponse, User.class);
+            if(TEST) {
+                User user = MockData.getUser(0);
                 mProfileName.setText(user.userName);
-                if(user.ratings!=null&&user.ratings.length>0&&user.ratings[0]!=null) {
+                if (user.ratings != null && user.ratings.length > 0 && user.ratings[0] != null) {
                     mProfileRatingBar.setRating(user.ratings[0]);
                 } else {
                     mProfileRatingBar.setRating(5);
                 }
                 Picasso.with(getContext()).load(user.profilePhoto).into(mProfileAvatar);
+            } else {
+                Log.d("profile", postActionResponse);
+                if (postActionResponse == null || postActionResponse.length() == 0) {
+                    Toast.makeText(getContext(), "Error occurs during fetching user data", Toast.LENGTH_SHORT).show();
+                } else {
+                    User user = gson.fromJson(postActionResponse, User.class);
+                    mProfileName.setText(user.userName);
+                    if (user.ratings != null && user.ratings.length > 0 && user.ratings[0] != null) {
+                        mProfileRatingBar.setRating(user.ratings[0]);
+                    } else {
+                        mProfileRatingBar.setRating(5);
+                    }
+                    Picasso.with(getContext()).load(user.profilePhoto).into(mProfileAvatar);
+                }
             }
         }
     }

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.grubmate.grubmate.adapters.PastPostAdapter;
+import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.User;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
@@ -35,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private PastPostAdapter mPastPostAdapter;
     private ArrayList<Post> mPastPostList;
+    private static final boolean test = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,11 +82,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            Log.d("profile", postActionResponse);
-            if(postActionResponse == null || postActionResponse.length()==0) {
-                Toast.makeText(ProfileActivity.this, "Error occurs during fetching user data", Toast.LENGTH_SHORT).show();
-            } else {
-                User user = gson.fromJson(postActionResponse, User.class);
+            if(test) {
+                User user = MockData.getUser(0);
                 mProfileName.setText(user.userName);
                 if(user.ratings!=null&&user.ratings.length>0&&user.ratings[0]!=null) {
                     mProfileRatingBar.setRating(user.ratings[0]);
@@ -92,6 +91,20 @@ public class ProfileActivity extends AppCompatActivity {
                     mProfileRatingBar.setRating(5);
                 }
                 Picasso.with(ProfileActivity.this).load(user.profilePhoto).into(mProfileAvatar);
+            } else {
+                Log.d("profile", postActionResponse);
+                if(postActionResponse == null || postActionResponse.length()==0) {
+                    Toast.makeText(ProfileActivity.this, "Error occurs during fetching user data", Toast.LENGTH_SHORT).show();
+                } else {
+                    User user = gson.fromJson(postActionResponse, User.class);
+                    mProfileName.setText(user.userName);
+                    if(user.ratings!=null&&user.ratings.length>0&&user.ratings[0]!=null) {
+                        mProfileRatingBar.setRating(user.ratings[0]);
+                    } else {
+                        mProfileRatingBar.setRating(5);
+                    }
+                    Picasso.with(ProfileActivity.this).load(user.profilePhoto).into(mProfileAvatar);
+                }
             }
         }
     }
@@ -105,7 +118,6 @@ public class ProfileActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 

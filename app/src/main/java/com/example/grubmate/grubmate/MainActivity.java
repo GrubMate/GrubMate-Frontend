@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.example.grubmate.grubmate.adapters.FeedAdapter;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.fragments.FeedFragment;
+import com.example.grubmate.grubmate.fragments.PostFragment;
 import com.example.grubmate.grubmate.fragments.ProfileFragment;
 import com.example.grubmate.grubmate.fragments.SubscriptionFragment;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
@@ -166,8 +167,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_subscriptions) {
             destinationFragment = SubscriptionFragment.newInstance(null,null);
         } else if (id == R.id.nav_posts) {
+            destinationFragment = PostFragment.newInstance(null, null);
         } else if (id == R.id.nav_notification) {
-
         } else if (id == R.id.nav_profile) {
             destinationFragment = ProfileFragment.newInstance(PersistantDataManager.getUserID(),null);
         } else if (id == R.id.nav_notification_settings) {
@@ -231,5 +232,10 @@ public class MainActivity extends AppCompatActivity
             break;
         default:
         }
+    }
+
+    @Override
+    public void onPostFragmentInteraction(Uri uri) {
+
     }
 }
