@@ -133,8 +133,8 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
 
                         break;
                     case R.id.b_feed_item_request:
-                        requestPost(position);
                         view.setEnabled(false);
+                        requestPost(position);
                         break;
                     default:
                 }

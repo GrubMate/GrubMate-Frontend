@@ -46,7 +46,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FeedFragment.OnFragmentInteractionListener,
-        ProfileFragment.OnProfileFragmentInteractionListener,SubscriptionFragment.OnSubcriptionFragmentInteractionListener {
+        ProfileFragment.OnProfileFragmentInteractionListener,SubscriptionFragment.OnSubcriptionFragmentInteractionListener, PostFragment.OnPostFragmentInteractionListener {
     public static final String TAG = "MainActivity";
     private Context context;
     public static final int SEARCH_IDENTIFICATION_CODE = 91;
@@ -234,7 +234,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
     public void onPostFragmentInteraction(Uri uri) {
 
     }
