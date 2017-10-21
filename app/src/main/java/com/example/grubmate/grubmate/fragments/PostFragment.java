@@ -92,7 +92,7 @@ public class PostFragment extends Fragment {
             mListener = (OnPostFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnNotificationFragmentInteractionListener");
         }
     }
 

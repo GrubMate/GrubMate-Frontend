@@ -1,11 +1,44 @@
 package com.example.grubmate.grubmate.dataClass;
 
 public class Notification {
-    public String what;
-    public String message;
+    public int type;
+    public static final int REQUEST = 1;
+    public static final int MATCH = 2;
+    public static final int ACCEPTED = 3;
 
-    public static final String NEW_MATCH_FOR_SUBSCRIPTION = "S";
-    public static final String MY_POST_IS_REQUESTED = "p";
-    public static final String MY_REQUEST_IS_RESPONDED = "r";
-    public static final String TEXT = "t";
+    public Integer requestID;
+    public Integer requesterID;
+    public Integer targetPostID;
+    public String requesterName;
+    public String status;
+    public Double[] address;
+    public Integer postID;
+    public Integer posterID;
+    public String posterName;
+    public String title;
+
+    /*
+        REQUEST should have
+        reuestID
+        requesterID
+        requesterName
+        targetPostID
+        title
+        address
+     */
+
+    /*
+        MATCH should have
+        postID
+        posterID
+        posterName
+        title
+     */
+
+    /*
+        ACCEPTED should have
+        requestID
+        title
+        posterID
+     */
 }

@@ -23,5 +23,4 @@ public class Post {
     public ArrayList<Integer> requestsIDs;
     public Boolean isActive;
     public Boolean[] allergyInfo;
-
 }

@@ -74,28 +74,7 @@ public class NotificationService extends Service {
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            if (postActionResponse != null) {
-                Notification notification = gson.fromJson(postActionResponse, Notification.class);
-                if(notification != null) {
-                    Intent local = new Intent();
-                    switch (notification.what) {
-                        case Notification.MY_POST_IS_REQUESTED:
-                            local.setAction(PostsActivity.BROADCAST_ACTION);
-                            break;
-                        case Notification.MY_REQUEST_IS_RESPONDED:
-                            //local.setAction()
-                            break;
-                        case Notification.NEW_MATCH_FOR_SUBSCRIPTION:
-                            local.setAction(SubscriptionsActivity.BROADCAST_ACTION);
-                            break;
-                        default:
-                            Log.d("Notification", "What is not defined");
-                    }
-                    sendBroadcast(local);
-                }
-            } else {
-                Log.d("Notification Service", "Unable to connect");
-            }
+
 //          new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
         }
     }

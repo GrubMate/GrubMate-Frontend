@@ -73,7 +73,6 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     private BFeedAdapter mFeedAdapter;
     // used for better user experience when loading
     private ProgressBar mFeedProgressBar;
-    private TextView mEmptyText;
     private GoogleApiClient mGoogleApiClient;
     private ArrayList<UserRequest> mUserRequests;
     private Double[] address;
@@ -125,6 +124,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
         mFeedView.setLayoutManager(layoutManager);
         mFeedAdapter = new BFeedAdapter(feedData);
+        mFeedAdapter.openLoadAnimation();
         mFeedAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -142,7 +142,6 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         });
         mFeedView.setAdapter(mFeedAdapter);
         mFeedProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_feed);
-        mEmptyText = (TextView) rootView.findViewById(R.id.tv_feed_empty_text);
         //        mFeedAdapter.setFeedData(MockData.mockFeedData);
         return rootView;
     }
@@ -167,7 +166,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnNotificationFragmentInteractionListener");
         }
     }
 
@@ -203,7 +202,6 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             mFeedView.setVisibility(View.INVISIBLE);
             mFeedProgressBar.getLayoutParams().height = (int) getResources().getDimension(R.dimen.pb_height);
             mFeedProgressBar.setVisibility(View.VISIBLE);
-            mEmptyText.setVisibility(View.INVISIBLE);
             super.onPreExecute();
         }
 
@@ -233,10 +231,8 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
                 mFeedView.setVisibility(View.VISIBLE);
-                if (feedData.size() < 1)
-                    mEmptyText.setVisibility(View.VISIBLE);
+
             } else {
-                mEmptyText.setVisibility(View.VISIBLE);
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
 

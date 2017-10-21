@@ -7,15 +7,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -24,29 +20,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.example.grubmate.grubmate.adapters.FeedAdapter;
-import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.fragments.FeedFragment;
+import com.example.grubmate.grubmate.fragments.NotificationCenterFragment;
 import com.example.grubmate.grubmate.fragments.PostFragment;
 import com.example.grubmate.grubmate.fragments.ProfileFragment;
 import com.example.grubmate.grubmate.fragments.SubscriptionFragment;
-import com.example.grubmate.grubmate.utilities.GrubMatePreference;
-import com.example.grubmate.grubmate.utilities.JsonUtilities;
-import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
-import com.google.gson.Gson;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FeedFragment.OnFragmentInteractionListener,
-        ProfileFragment.OnProfileFragmentInteractionListener,SubscriptionFragment.OnSubcriptionFragmentInteractionListener, PostFragment.OnPostFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        FeedFragment.OnFragmentInteractionListener,
+        ProfileFragment.OnProfileFragmentInteractionListener,
+        SubscriptionFragment.OnSubcriptionFragmentInteractionListener,
+        PostFragment.OnPostFragmentInteractionListener,
+        NotificationCenterFragment.OnNotificationFragmentInteractionListener {
     public static final String TAG = "MainActivity";
     private Context context;
     public static final int SEARCH_IDENTIFICATION_CODE = 91;
@@ -169,6 +158,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_posts) {
             destinationFragment = PostFragment.newInstance(null, null);
         } else if (id == R.id.nav_notification) {
+            destinationFragment = NotificationCenterFragment.newInstance(null, null);
         } else if (id == R.id.nav_profile) {
             destinationFragment = ProfileFragment.newInstance(PersistantDataManager.getUserID(),null);
         } else if (id == R.id.nav_notification_settings) {
@@ -191,7 +181,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onNotificationFragmentInteraction(Uri uri) {
         Log.d("Main", uri.toString());
     }
 
@@ -235,6 +225,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onPostFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
     }
 }
