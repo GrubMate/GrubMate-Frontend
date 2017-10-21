@@ -135,7 +135,7 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
             mListener = (OnProfileFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnNotificationFragmentInteractionListener");
         }
     }
 

@@ -126,4 +126,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="button_post_text">Add a post</string>
+    <string name="notification_title">Notifications</string>
+    <string name="notification_request_title">Request</string>
+    <string name="notification_match_title">Match</string>
+    <string name="notification_accpted_title">Accepted</string>
 </resources>

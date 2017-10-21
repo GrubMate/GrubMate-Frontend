@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.dataClass.Post;
+import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -31,6 +32,8 @@ public class BFeedAdapter extends BaseQuickAdapter<Post, BaseViewHolder> {
         Picasso.with(this.mContext)
                 .load(R.drawable.mr_dialog_material_background_dark)
                 .into((ImageView) viewHolder.getView(R.id.iv_feed_item_image));
-
+                if(item.requestsIDs != null && item.requestsIDs.contains(PersistantDataManager.getUserID())) {
+                    viewHolder.getView(R.id.b_feed_item_request).setEnabled(false);
+                }
     }
 }
