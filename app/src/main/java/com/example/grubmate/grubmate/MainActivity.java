@@ -34,6 +34,7 @@ import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.fragments.FeedFragment;
 import com.example.grubmate.grubmate.fragments.PostFragment;
 import com.example.grubmate.grubmate.fragments.ProfileFragment;
+import com.example.grubmate.grubmate.fragments.SubscriptionFragment;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
@@ -44,7 +45,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FeedFragment.OnFragmentInteractionListener, ProfileFragment.OnProfileFragmentInteractionListener, PostFragment.OnPostFragmentInteractionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, FeedFragment.OnFragmentInteractionListener,
+        ProfileFragment.OnProfileFragmentInteractionListener,SubscriptionFragment.OnSubcriptionFragmentInteractionListener {
     public static final String TAG = "MainActivity";
     private Context context;
     public static final int SEARCH_IDENTIFICATION_CODE = 91;
@@ -163,6 +165,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_home) {
             destinationFragment = FeedFragment.newInstance(null, null);
         } else if (id == R.id.nav_subscriptions) {
+            destinationFragment = SubscriptionFragment.newInstance(null,null);
         } else if (id == R.id.nav_posts) {
             destinationFragment = PostFragment.newInstance(null, null);
         } else if (id == R.id.nav_notification) {
