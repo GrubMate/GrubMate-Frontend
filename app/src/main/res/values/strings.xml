@@ -130,4 +130,5 @@
     <string name="notification_request_title">Request</string>
     <string name="notification_match_title">Match</string>
     <string name="notification_accpted_title">Accepted</string>
+    <string name="fragment_post_title">Your Posts</string>
 </resources>
