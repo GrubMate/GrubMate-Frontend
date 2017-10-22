@@ -3,16 +3,26 @@ package com.example.grubmate.grubmate.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.grubmate.grubmate.PostActionActivity;
 import com.example.grubmate.grubmate.R;
+import com.example.grubmate.grubmate.adapters.BPostAdapter;
+import com.example.grubmate.grubmate.dataClass.MockData;
+import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +44,9 @@ public class PostFragment extends Fragment {
 
     public static final String TAG = "PostFragment";
     public Button postButton;
+    public ArrayList<Post> mPostData;
+    private RecyclerView mRecyclerView;
+    private BPostAdapter mPostAdapter;
 
     private OnPostFragmentInteractionListener mListener;
 
@@ -75,7 +88,16 @@ public class PostFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_post, container, false);
         postButton = rootView.findViewById(R.id.b_post_post);
         postButton.setOnClickListener(postListener);
+        mRecyclerView = rootView.findViewById(R.id.rv_post_list);
+        mPostAdapter = new BPostAdapter(mPostData);
+        initRecyclerView(mPostAdapter, mRecyclerView);
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        new FetchPostListTask().execute(1);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -83,6 +105,13 @@ public class PostFragment extends Fragment {
         if (mListener != null) {
             mListener.onPostFragmentInteraction(uri);
         }
+    }
+    private void initRecyclerView(BaseQuickAdapter adapter, RecyclerView view) {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        view.setLayoutManager(layoutManager);
+        adapter.openLoadAnimation();
+        adapter.setEmptyView(R.layout.list_empty_layout, (ViewGroup) view.getParent());
+        view.setAdapter(adapter);
     }
 
     @Override
@@ -134,4 +163,40 @@ public class PostFragment extends Fragment {
 
         }
     };
+
+    public class FetchPostListTask extends AsyncTask<Integer, Integer, ArrayList<Post>> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ArrayList<Post> doInBackground(Integer... params) {
+            if (params.length == 0) {
+                return null;
+            }
+
+
+//            try {
+//                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+//                Log.d(TAG, response);
+//                if (response == null || response.length() == 0)
+//                    return null;
+//                return JsonUtilities.getFeedItems(response);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
+            return MockData.getPostList(2);
+        }
+        protected void onPostExecute(ArrayList<Post> feedItems) {
+            if (feedItems != null) {
+                mPostData = feedItems;
+                mPostAdapter.setNewData(mPostData);
+
+            }
+        }
+    }
+
+
 }

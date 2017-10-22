@@ -125,6 +125,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         mFeedView.setLayoutManager(layoutManager);
         mFeedAdapter = new BFeedAdapter(feedData);
         mFeedAdapter.openLoadAnimation();
+        mFeedAdapter.setEmptyView(R.layout.list_empty_layout, (ViewGroup) mFeedView.getParent());
         mFeedAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {

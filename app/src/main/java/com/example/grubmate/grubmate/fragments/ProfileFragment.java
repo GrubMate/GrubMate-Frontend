@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +64,8 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
     private RecyclerView mRecyclerView;
     private PastPostAdapter mPastPostAdapter;
     private ArrayList<Post> mPastPostList;
+    private LinearLayout mContentLayout;
+    private ProgressBar mProgressBar;
     private final static boolean TEST = true;
 
     public ProfileFragment() {
@@ -111,14 +115,15 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
         LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mPastPostAdapter);
-
+        mContentLayout = rootView.findViewById(R.id.ll_profile_content);
+        mProgressBar = rootView.findViewById(R.id.pb_profile_progress);
         return rootView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        new PostActionTask().execute();
+        new ProfileTask().execute();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -165,7 +170,14 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
         void onFragmentInteraction(Uri uri);
     }
 
-    public class PostActionTask extends AsyncTask<String, Integer, String> {
+    public class ProfileTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+            mContentLayout.setVisibility(View.INVISIBLE);
+            mProgressBar.getLayoutParams().height = (int) getResources().getDimension(R.dimen.pb_height);
+            mProgressBar.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -204,6 +216,9 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                     Picasso.with(getContext()).load(user.profilePhoto).into(mProfileAvatar);
                 }
             }
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mProgressBar.getLayoutParams().height = 0;
+            mContentLayout.setVisibility(View.VISIBLE);
         }
     }
 

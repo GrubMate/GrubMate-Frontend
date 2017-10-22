@@ -5,37 +5,47 @@
     android:orientation="vertical"
     android:padding="16dp"
     tools:context="com.example.grubmate.grubmate.fragments.ProfileFragment">
-
-    <ImageView
-        android:id="@+id/iv_profile_avatar"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true" />
-
-    <TextView
-        android:id="@+id/tv_profile_name"
+    <ProgressBar
+        android:id="@+id/pb_profile_progress"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"/>
+    <LinearLayout
+        android:id="@+id/ll_profile_content"
+        android:visibility="invisible"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="32sp"
-        android:text="@string/profile_name_default"
-        />
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/iv_profile_avatar"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="true" />
 
-    <RatingBar
-        android:id="@+id/rb_profile_rating"
-        android:layout_gravity="center_horizontal"
-        style="@style/Widget.AppCompat.RatingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numStars="5"
-        android:rating="5"
-        android:isIndicator="true"
-        android:stepSize="1" />
+        <TextView
+            android:id="@+id/tv_profile_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="32sp"
+            android:text="@string/profile_name_default"
+            />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_profile_orders"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <RatingBar
+            android:id="@+id/rb_profile_rating"
+            android:layout_gravity="center_horizontal"
+            style="@style/Widget.AppCompat.RatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:rating="5"
+            android:isIndicator="true"
+            android:stepSize="1" />
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_profile_orders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>

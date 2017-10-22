@@ -45,4 +45,25 @@ public class MockData {
 
         return result;
     }
+
+    public static ArrayList<Notification> getNotificationList() {
+        ArrayList<Notification> result = new ArrayList<Notification>();
+        Notification requestNotification = new Notification();
+        requestNotification.type = Notification.REQUEST;
+        requestNotification.title = "Jie JI";
+        requestNotification.requesterName = "Pengxiang Zhu";
+        result.add(requestNotification);
+
+        Notification matchNotification = new Notification();
+        matchNotification.type = Notification.MATCH;
+        matchNotification.title = "Oreo";
+        matchNotification.requesterName = "Pengxiang Zhu";
+        result.add(matchNotification);
+
+        Notification accptedNotification = new Notification();
+        accptedNotification.type = Notification.ACCEPTED;
+        accptedNotification.title = "Lolipop";
+        result.add(accptedNotification);
+        return result;
+    }
 }
