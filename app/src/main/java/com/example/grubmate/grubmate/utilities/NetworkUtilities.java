@@ -22,11 +22,6 @@ import okhttp3.Response;
 public class NetworkUtilities {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
-    public static OkHttpClient clientLong = new OkHttpClient.Builder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .build();
     public static OkHttpClient client = new OkHttpClient();
 
     // Send a GET request to address specified by url, return raw response text
@@ -55,7 +50,7 @@ public class NetworkUtilities {
             Request request = new Request.Builder()
                     .url(url)
                     .build();
-            Response response = clientLong.newCall(request).execute();
+            Response response = client.newCall(request).execute();
             return response.body()==null?null:response.body().string();
         } catch (SocketException e) {
             e.printStackTrace();

@@ -33,7 +33,7 @@ public class NotificationAdapter extends BaseQuickAdapter<Notification, BaseView
                         .setText(R.id.tv_notification_request_requester_name, item.requesterName);
                 break;
             case Notification.MATCH:
-                helper.setVisible(R.id.ll_notification_accepted, true)
+                helper.setVisible(R.id.ll_notification_match, true)
                         .setText(R.id.tv_notification_match_name, item.title)
                         .setText(R.id.tv_notification_match_poster_name, item.posterName);
                 break;

@@ -2,6 +2,7 @@ package com.example.grubmate.grubmate.fragments;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,10 +15,17 @@ import android.widget.ProgressBar;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.NotificationAdapter;
+import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Notification;
+import com.example.grubmate.grubmate.utilities.GrubMatePreference;
+import com.example.grubmate.grubmate.utilities.NetworkUtilities;
+import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import static com.example.grubmate.grubmate.R.id.pb_notification_progress;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -100,7 +108,14 @@ public class NotificationCenterFragment extends Fragment {
             }
         });
         mRecyclerView.setAdapter(mNotificationAdapter);
+        mProgressBar = rootView.findViewById(R.id.pb_notification_progress);
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        new FetchNotificationTask().execute(1);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -140,5 +155,40 @@ public class NotificationCenterFragment extends Fragment {
     public interface OnNotificationFragmentInteractionListener {
         // TODO: Update argument type and name
         void onNotificationFragmentInteraction(Uri uri);
+    }
+
+    class FetchNotificationTask extends AsyncTask<Integer, Integer, String> {
+
+        @Override
+        protected void onPreExecute() {
+            mRecyclerView.setVisibility(View.INVISIBLE);
+            mProgressBar.getLayoutParams().height = (int) getResources().getDimension(R.dimen.pb_height);
+            mProgressBar.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(Integer... integers) {
+            try {
+                return NetworkUtilities.get(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if(s != null && !s.contains("404") && !s.contains("505")) {
+                // TODO: modify this to real parse function later
+                notificationData = MockData.getNotificationList();
+                mNotificationAdapter.setNewData(notificationData);
+            }
+            notificationData = MockData.getNotificationList();
+            mNotificationAdapter.setNewData(notificationData);
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mProgressBar.getLayoutParams().height = 0;
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }
