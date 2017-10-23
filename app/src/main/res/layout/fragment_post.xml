@@ -5,9 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingHorizontal="16dp"
     android:paddingTop="16dp"
-    tools:context="com.example.grubmate.grubmate.PostsActivity">
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    tools:context="com.example.grubmate.grubmate.PostsActivity"
+    android:paddingLeft="16dp">
     <Button
         android:id="@+id/b_post_post"
         android:layout_gravity="center_horizontal"
@@ -18,8 +20,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/fragment_post_title"/>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_post_list"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_post_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 </LinearLayout>

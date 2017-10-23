@@ -48,6 +48,11 @@
                 android:hint="@string/post_action_tags_hint"
                 android:inputType="text"
                 />
+            <Button android:id="@+id/b_post_action_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Photos">
+            </Button>
             <EditText
                 android:id="@+id/et_post_item_description"
                 android:lines="2"
@@ -79,7 +84,7 @@
                 android:layout_height="wrap_content"></Spinner>
             <Button
                 android:id="@+id/et_location"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Location"/>
             <TextView
