@@ -2,7 +2,11 @@ package com.example.grubmate.grubmate;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -35,10 +39,16 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.engine.impl.GlideEngine;
+import com.zhihu.matisse.engine.impl.PicassoEngine;
 
+import android.Manifest;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PostActionActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private EditText postItemNameText;
@@ -52,7 +62,9 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private CheckBox postHomeCheckBox;
     private Button postItemLocation;
     private TextView postItemLocationText;
+    private Button mPhotoButton;
     private GoogleApiClient mGoogleApiClient;
+    private int REQUEST_CODE_CHOOSE = 9191;
     private String postItemName, postItemDescription,postItemCategory,postItemTime;
     private String[] tags;
     private boolean[] postItemAllergy;
@@ -62,13 +74,15 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private Double[] postItemAddress;
     private Integer userID;
     private Integer[] groupIDs;
-    int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 100;
     private double Lat;
     private double Lng;
     private Boolean isHomeMade;
     private Post mPostData;
     private Gson gson;
     private Integer mPostID;
+    private List<Uri> mSelected;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,7 +144,11 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
         groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         postGroupSpinner.setAdapter(groupAdapter);
 
+        mPhotoButton = (Button) findViewById(R.id.b_post_action_photo);
+        mPhotoButton.setOnClickListener(new PhotoButtonClickListener());
+
         postHomeCheckBox = (CheckBox) findViewById(R.id.cb_post_home);
+
         // end of oncreate
         Intent callIntent = getIntent();
         gson = new Gson();
@@ -171,8 +189,12 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
             }
+        } else if (requestCode == REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
+            mSelected = Matisse.obtainResult(data);
+            Log.d("Matisse", "mSelected: " + mSelected);
         }
     }
+
     public void showShortToast(String msg) {
        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
@@ -274,6 +296,49 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
                 finish();
             } else {
                 showShortToast("Error: please retry");
+            }
+        }
+    }
+
+    class PhotoButtonClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View view) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                    && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
+            } else {
+                // Android version is lesser than 6.0 or the permission is already granted.
+                Matisse.from(PostActionActivity.this)
+                        .choose(MimeType.allOf())
+                        .countable(true)
+                        .maxSelectable(5)
+//                    .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
+                        .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                        .thumbnailScale(0.85f)
+                        .imageEngine(new GlideEngine())
+                        .forResult(REQUEST_CODE_CHOOSE);
+
+            }
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Matisse.from(PostActionActivity.this)
+                            .choose(MimeType.allOf())
+                            .countable(true)
+                            .maxSelectable(5)
+//                    .gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size))
+                            .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
+                            .thumbnailScale(0.85f)
+                            .imageEngine(new PicassoEngine())
+                            .forResult(REQUEST_CODE_CHOOSE);
+            } else {
+                Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
             }
         }
     }
