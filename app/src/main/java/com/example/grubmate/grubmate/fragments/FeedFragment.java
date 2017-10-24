@@ -274,7 +274,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         requesterID = PersistantDataManager.getUserID();
         targetPostID = feedData.get(pos).postID;
         address = new Double[2];
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+        if(mGoogleApiClient==null) mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(getActivity(), this)

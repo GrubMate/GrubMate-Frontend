@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -14,6 +16,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.EventLogTags;
 import android.util.Log;
 import android.view.View;
@@ -45,7 +48,11 @@ import com.zhihu.matisse.engine.impl.GlideEngine;
 import com.zhihu.matisse.engine.impl.PicassoEngine;
 
 import android.Manifest;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -263,6 +270,29 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             newPost.leftQuantity = postItemQuantity;
             newPost.isActive = true;
             newPost.title = postItemName;
+            ArrayList<String> encodedImages = new ArrayList<>();
+            for(int i = 0; i<mSelected.size();i++) {
+                Bitmap bitmap = null;
+                InputStream is = null;
+                try {
+                    is = getContentResolver().openInputStream(mSelected.get(i));
+                    bitmap = BitmapFactory.decodeStream(is);
+                    is.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(bitmap != null) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG,40,baos);
+                    String encodedImage = Base64.encodeToString(baos.toByteArray(),Base64.DEFAULT);
+                    encodedImages.add(encodedImage);
+                } else {
+
+                }
+            }
+            if(encodedImages.size() > 0) newPost.postPhotos = encodedImages.toArray(new String[]{});
 //            newPost.allergyInfo = null;
             newPost.posterID = PersistantDataManager.getUserID();
             // TODO: change to real groups ids
@@ -272,6 +302,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 //            newPost.requestsIDs = null;
             Gson gson = new Gson();
             String postJson = gson.toJson(newPost);
+            Post post = gson.fromJson(postJson, Post.class);
             if(mPostData==null) {
                 try {
                     return NetworkUtilities.post(params[0],postJson);
