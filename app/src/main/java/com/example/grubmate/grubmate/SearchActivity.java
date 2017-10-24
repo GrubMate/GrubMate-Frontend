@@ -3,6 +3,8 @@ package com.example.grubmate.grubmate;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.grubmate.grubmate.fragments.FeedFragment;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
@@ -32,6 +35,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private String timePeriod;
     private Boolean[] allergyInfo;
     private Gson gson;
+
     class SearchFields{
         public String title;
         public String[] tags;
@@ -64,6 +68,13 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         searchButton = (Button) findViewById(R.id.b_search_button);
         searchButton.setOnClickListener(this);
         gson = new Gson();
+
+        Fragment destinationFragment = FeedFragment.newInstance(null, null);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(1, destinationFragment).commit();
+//        transaction.replace(R.id.fragment_search, destinationFragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
     }
 
     public void showShortToast(String msg) {
