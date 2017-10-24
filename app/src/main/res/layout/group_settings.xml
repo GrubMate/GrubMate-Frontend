@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <EditText
@@ -9,7 +11,8 @@
         android:layout_marginTop="16dp"
         android:textSize="32sp"
         android:textAlignment="center"
-        android:hint="group"/>
+        android:hint="group name"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -20,22 +23,19 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:orientation="vertical">
-            <CheckBox
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="alergy 1" />
-            <CheckBox
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="alergy 2"/>
 
-            <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="alergy 3" />
+
 
         </LinearLayout>
+
+
     </ScrollView>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/groupSettingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_menu_edit" />
 </LinearLayout>
