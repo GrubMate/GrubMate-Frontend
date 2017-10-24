@@ -22,8 +22,8 @@
     <item android:title="Settings">
         <menu>
             <item
-                android:id="@+id/nav_notification_settings"
-                android:title="Notification Settings" />
+                android:id="@+id/nav_group_settings"
+                android:title="Group Settings" />
             <item
                 android:id="@+id/nav_application_settings"
                 android:title="Application Settings" />
