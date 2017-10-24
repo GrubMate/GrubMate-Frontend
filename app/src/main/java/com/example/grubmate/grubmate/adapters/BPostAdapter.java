@@ -32,4 +32,5 @@ public class BPostAdapter extends BaseQuickAdapter<Post, BaseViewHolder>{
             viewHolder.getView(R.id.b_post_delete).setEnabled(false);
         }
     }
+
 }

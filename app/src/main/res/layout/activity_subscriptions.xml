@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context="com.example.grubmate.grubmate.SubscriptionsActivity">
+    tools:context="com.example.grubmate.grubmate.activities.SubscriptionsActivity">
     <ProgressBar
         android:id="@+id/pb_subscription"
         android:layout_width="120dp"

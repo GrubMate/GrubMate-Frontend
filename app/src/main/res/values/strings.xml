@@ -131,4 +131,5 @@
     <string name="notification_match_title">Match</string>
     <string name="notification_accpted_title">Accepted</string>
     <string name="fragment_post_title">Your Posts</string>
+    <string name="loading_layout_text">Your Oreo is on the way</string>
 </resources>

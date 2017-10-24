@@ -103,7 +103,13 @@ public class NotificationCenterFragment extends Fragment {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
+                    case R.id.b_notification_accept:
 
+                        break;
+                    case R.id.b_notification_deny:
+                        break;
+                    case R.id.b_notification_request:
+                        break;
                 }
             }
         });

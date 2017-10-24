@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.grubmate.grubmate.PostActionActivity;
-import com.example.grubmate.grubmate.ProfileActivity;
+import com.example.grubmate.grubmate.activities.ProfileActivity;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.UserRequest;
