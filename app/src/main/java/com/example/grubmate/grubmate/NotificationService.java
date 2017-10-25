@@ -2,6 +2,7 @@ package com.example.grubmate.grubmate;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.LauncherApps;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -14,12 +15,22 @@ import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.gson.Gson;
+import com.squareup.picasso.OkHttpDownloader;
 
 import java.io.IOException;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class NotificationService extends Service {
     private NotificationBinder mBinder = new NotificationBinder();
     private Gson gson;
+    private static OkHttpClient client;
     class NotificationBinder extends Binder {
         public void startPolling() {
             Log.d("NotificationService", "polling started");
@@ -40,13 +51,14 @@ public class NotificationService extends Service {
         super.onCreate();
         Log.d("NotificationService", "onCreateExecuted");
         gson = new Gson();
+        client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO: send a polling request for data
         Log.d("NotificationService", "onStartExecuted");
-//        new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
+       new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -56,26 +68,45 @@ public class NotificationService extends Service {
     }
 
     public class NotificationTask extends AsyncTask<String, Integer, String> {
+        private Semaphore semaphore;
+        private String result;
 
         @Override
         protected String doInBackground(String... params) {
+            semaphore = new Semaphore(0);
+            result = null;
             if (params.length == 0||params[0].length()==0) {
                 return null;
             }
-
+                Request request = new Request.Builder()
+                        .url(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()))
+                        .build();
+            // asynchrounously send notification request;
+            client.newCall(request).enqueue(new NotificationCallBack());
             try {
-                return  NetworkUtilities.getLong(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
-            } catch (IOException e) {
+                semaphore.acquire();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            return null;
+            return result;
         }
 
         @Override
         protected void onPostExecute(String postActionResponse) {
+            new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
 
-//          new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
+        }
+        class NotificationCallBack implements Callback {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d(this.toString(), "Network error");
+                semaphore.release();
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                result = response.body()==null?null:response.body().string();
+                semaphore.release();
+            }
         }
     }
 }

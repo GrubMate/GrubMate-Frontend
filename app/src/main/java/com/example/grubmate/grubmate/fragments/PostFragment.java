@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.example.grubmate.grubmate.adapters.BPostAdapter;
 import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
+import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.gson.Gson;
@@ -211,15 +213,15 @@ public class PostFragment extends Fragment {
             }
 
 
-//            try {
-//                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
-//                Log.d(TAG, response);
-//                if (response == null || response.length() == 0)
-//                    return null;
-//                return JsonUtilities.getFeedItems(response);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+                Log.d(TAG, response);
+                if (response == null || response.length() == 0)
+                    return null;
+                return JsonUtilities.getFeedItems(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             return MockData.getPostList(2);
         }
