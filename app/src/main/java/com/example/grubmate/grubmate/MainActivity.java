@@ -215,11 +215,6 @@ public class MainActivity extends AppCompatActivity
                 Log.d("MainActivity", returnedData);
                 if (returnedData == null || returnedData.length() == 0)
                     return;
-//                this.feedData = JsonUtilities.getFeedItems(returnedData);
-//                this.mFeedAdapter.setFeedData(feedData);
-//                mFeedProgressBar.setVisibility(View.INVISIBLE);
-//                mFeedProgressBar.getLayoutParams().height = 0;
-//                mFeedView.setVisibility(View.VISIBLE);
             }
             break;
         default:

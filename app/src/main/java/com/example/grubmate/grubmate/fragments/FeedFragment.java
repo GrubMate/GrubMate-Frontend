@@ -22,6 +22,7 @@ import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.UserRequest;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
+import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -203,20 +204,15 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
 
         @Override
         protected ArrayList<Post> doInBackground(Integer... params) {
-            if (params.length == 0) {
-                return null;
+            try {
+                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+                Log.d(TAG, response);
+                if (response == null || response.length() == 0)
+                    return MockData.getPostList(2);
+                return JsonUtilities.getFeedItems(response);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-
-//            try {
-//                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
-//                Log.d(TAG, response);
-//                if (response == null || response.length() == 0)
-//                    return null;
-//                return JsonUtilities.getFeedItems(response);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
 
             return MockData.getPostList(2);
         }
