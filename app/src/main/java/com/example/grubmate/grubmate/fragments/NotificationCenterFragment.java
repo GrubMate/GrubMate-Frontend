@@ -1,16 +1,20 @@
 package com.example.grubmate.grubmate.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.grubmate.grubmate.R;
@@ -103,7 +107,20 @@ public class NotificationCenterFragment extends Fragment {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
-
+                    case R.id.b_notification_accept:
+                        view.setEnabled(false);
+                        Button denyButton = (Button) adapter.getViewByPosition(position, R.id.b_notification_deny);
+                        if(denyButton!=null)denyButton.setEnabled(false);
+                        new AcceptRequestTask().execute(position);
+                        break;
+                    case R.id.b_notification_deny:
+                        view.setEnabled(false);
+                        Button acceptButton = (Button) adapter.getViewByPosition(position, R.id.b_notification_accept);
+                        if(acceptButton!=null)acceptButton.setEnabled(false);
+                        new DenyRequestTask().execute(position);
+                        break;
+                    case R.id.b_notification_request:
+                        break;
                 }
             }
         });
@@ -189,6 +206,56 @@ public class NotificationCenterFragment extends Fragment {
             mProgressBar.setVisibility(View.INVISIBLE);
             mProgressBar.getLayoutParams().height = 0;
             mRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+    public class AcceptRequestTask extends AsyncTask<Integer, Integer, String> {
+
+        @Override
+        protected String doInBackground(Integer... params) {
+            Log.d("Feed Detail", "Request sent");
+            Integer notificationPos = params[0];
+            try {
+                return NetworkUtilities.get(GrubMatePreference.getAcceptRequestURL(PersistantDataManager.getUserID(), notificationData.get(notificationPos).requestID));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String postActionResponse) {
+            Log.d("Post Detail", postActionResponse);
+            if (postActionResponse != null) {
+                Toast.makeText(getContext(), "You successfully accept a request", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    public class DenyRequestTask extends AsyncTask<Integer, Integer, String> {
+
+        @Override
+        protected String doInBackground(Integer... params) {
+            Log.d("Feed Detail", "Request sent");
+            Integer notificationPos = params[0];
+            try {
+                return NetworkUtilities.get(GrubMatePreference.getDenyRequestURL(PersistantDataManager.getUserID(), notificationData.get(notificationPos).requestID));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String postActionResponse) {
+            Log.d("Post Detail", postActionResponse);
+            if (postActionResponse != null) {
+                Toast.makeText(getContext(), "You successfully denied a request", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

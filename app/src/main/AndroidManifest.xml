@@ -49,11 +49,11 @@
             android:name=".SearchActivity"
             android:label="Search" />
         <activity
-            android:name=".SubscriptionsActivity"
+            android:name=".activities.SubscriptionsActivity"
             android:label="Subscriptions"
             android:launchMode="singleTop" />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".activities.ProfileActivity"
             android:label="Profile"
             android:launchMode="singleTop" />
         <activity
@@ -76,10 +76,10 @@
             <!--</intent-filter>-->
         </activity>
         <activity
-            android:name=".PostsActivity"
+            android:name=".activities.PostsActivity"
             android:label="Posts"
             android:launchMode="singleTop" />
-        <activity android:name=".NotificationCenterActivity"></activity>
+        <activity android:name=".activities.NotificationCenterActivity"></activity>
         <activity android:name=".SettingsActivity">
 
         </activity>

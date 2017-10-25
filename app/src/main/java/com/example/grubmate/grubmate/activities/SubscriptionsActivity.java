@@ -1,4 +1,4 @@
-package com.example.grubmate.grubmate;
+package com.example.grubmate.grubmate.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.grubmate.grubmate.R;
+import com.example.grubmate.grubmate.SubscriptionDetailActivity;
 import com.example.grubmate.grubmate.adapters.SubscriptionAdapter;
 import com.example.grubmate.grubmate.dataClass.Subscription;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;

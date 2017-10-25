@@ -1,7 +1,6 @@
 package com.example.grubmate.grubmate.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.example.grubmate.grubmate.ProfileActivity;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.PastPostAdapter;
 import com.example.grubmate.grubmate.dataClass.MockData;

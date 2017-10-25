@@ -22,7 +22,7 @@ import okhttp3.Response;
 public class NetworkUtilities {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
-    public static OkHttpClient client = new OkHttpClient();
+    public static OkHttpClient client = new OkHttpClient.Builder().connectTimeout(1, TimeUnit.SECONDS).build();
 
     // Send a GET request to address specified by url, return raw response text
     public static String get(String url) throws IOException {

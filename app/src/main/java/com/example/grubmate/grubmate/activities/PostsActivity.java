@@ -1,4 +1,4 @@
-package com.example.grubmate.grubmate;
+package com.example.grubmate.grubmate.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.FeedAdapter;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.UserRequest;
@@ -160,6 +161,7 @@ public class PostsActivity extends AppCompatActivity implements FeedAdapter.Feed
             }
         }
     }
+
 
 
 

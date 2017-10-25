@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.grubmate.grubmate.PostActionActivity;
@@ -20,8 +21,12 @@ import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.BPostAdapter;
 import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
+import com.example.grubmate.grubmate.utilities.GrubMatePreference;
+import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -47,6 +52,7 @@ public class PostFragment extends Fragment {
     public ArrayList<Post> mPostData;
     private RecyclerView mRecyclerView;
     private BPostAdapter mPostAdapter;
+    private Gson gson;
 
     private OnPostFragmentInteractionListener mListener;
 
@@ -79,6 +85,7 @@ public class PostFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        gson = new Gson();
     }
 
     @Override
@@ -90,6 +97,29 @@ public class PostFragment extends Fragment {
         postButton.setOnClickListener(postListener);
         mRecyclerView = rootView.findViewById(R.id.rv_post_list);
         mPostAdapter = new BPostAdapter(mPostData);
+        mPostAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (view.getId()) {
+                    case R.id.b_post_edit:
+                        Class destinationActivity = PostActionActivity.class;
+
+                        // construct the intentø
+                        Intent startDetailActivityIntent = new Intent(getContext(), destinationActivity);
+
+                        // put extra data into this intent
+                        startDetailActivityIntent.putExtra(Intent.EXTRA_TEXT, PersistantDataManager.getUserID());
+                        startDetailActivityIntent.putExtra("post_data", gson.toJson(mPostData.get(position)));
+                        // start the intent
+                        startActivity(startDetailActivityIntent);
+                        break;
+                    case R.id.b_post_delete:
+                        view.setEnabled(false);
+                        new DeletePostTask().execute(mPostData.get(position).postID);
+                        break;
+                }
+            }
+        });
         initRecyclerView(mPostAdapter, mRecyclerView);
         return rootView;
     }
@@ -110,7 +140,7 @@ public class PostFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         view.setLayoutManager(layoutManager);
         adapter.openLoadAnimation();
-        adapter.setEmptyView(R.layout.list_empty_layout, (ViewGroup) view.getParent());
+        adapter.setEmptyView(R.layout.list_loading_layout, (ViewGroup) view.getParent());
         view.setAdapter(adapter);
     }
 
@@ -129,6 +159,9 @@ public class PostFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+    public void showShortToast(String msg) {
+        Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -168,6 +201,7 @@ public class PostFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mPostAdapter.setEmptyView(R.layout.list_loading_layout, (ViewGroup) mRecyclerView.getParent());
         }
 
         @Override
@@ -193,10 +227,37 @@ public class PostFragment extends Fragment {
             if (feedItems != null) {
                 mPostData = feedItems;
                 mPostAdapter.setNewData(mPostData);
+                if(mPostData.size() == 0) {
+                    mPostAdapter.setEmptyView(R.layout.list_empty_layout, (ViewGroup) mRecyclerView.getParent());
+                }
+            } else {
+                    mPostAdapter.setEmptyView(R.layout.list_error_layout, (ViewGroup) mRecyclerView.getParent());
 
             }
         }
     }
+    public class DeletePostTask extends AsyncTask<Integer, Integer, String> {
+        @Override
+        protected String doInBackground(Integer... integers) {
+            Integer postID = integers[0];
+            try {
+                return   NetworkUtilities.delete(GrubMatePreference.getPostDeleteURL(PersistantDataManager.getUserID(), postID), null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
 
+        @Override
+        protected void onPostExecute(String s) {
+            if(s != null) {
+                showShortToast("Your post was successfully deleted");
+                new FetchPostListTask().execute();
+            } else {
+                showShortToast("Netowrk Error");
+            }
+            super.onPostExecute(s);
+        }
+    }
 
 }

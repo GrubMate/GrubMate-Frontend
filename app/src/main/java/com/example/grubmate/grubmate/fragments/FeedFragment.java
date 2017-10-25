@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,18 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.example.grubmate.grubmate.PostsActivity;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.BFeedAdapter;
-import com.example.grubmate.grubmate.adapters.FeedAdapter;
 import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.UserRequest;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
-import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.android.gms.common.ConnectionResult;
@@ -279,7 +274,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         requesterID = PersistantDataManager.getUserID();
         targetPostID = feedData.get(pos).postID;
         address = new Double[2];
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+        if(mGoogleApiClient==null) mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(getActivity(), this)
