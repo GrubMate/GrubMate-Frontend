@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.example.grubmate.grubmate.fragments.FeedFragment;
+import com.example.grubmate.grubmate.fragments.GroupFragment;
 import com.example.grubmate.grubmate.fragments.NotificationCenterFragment;
 import com.example.grubmate.grubmate.fragments.PostFragment;
 import com.example.grubmate.grubmate.fragments.ProfileFragment;
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity
         ProfileFragment.OnProfileFragmentInteractionListener,
         SubscriptionFragment.OnSubcriptionFragmentInteractionListener,
         PostFragment.OnPostFragmentInteractionListener,
-        NotificationCenterFragment.OnNotificationFragmentInteractionListener {
+        NotificationCenterFragment.OnNotificationFragmentInteractionListener
+        , GroupFragment.OnGroupFragmentInteractionListener {
     public static final String TAG = "MainActivity";
     private Context context;
     public static final int SEARCH_IDENTIFICATION_CODE = 91;
@@ -161,8 +163,8 @@ public class MainActivity extends AppCompatActivity
             destinationFragment = NotificationCenterFragment.newInstance(null, null);
         } else if (id == R.id.nav_profile) {
             destinationFragment = ProfileFragment.newInstance(PersistantDataManager.getUserID(),null);
-        } else if (id == R.id.nav_notification_settings) {
-
+        } else if (id == R.id.nav_group_settings) {
+            destinationFragment = GroupFragment.newInstance(null,null);
         } else if (id == R.id.nav_application_settings) {
 
         }

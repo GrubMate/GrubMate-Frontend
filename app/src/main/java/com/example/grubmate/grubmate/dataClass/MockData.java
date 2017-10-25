@@ -1,5 +1,7 @@
 package com.example.grubmate.grubmate.dataClass;
 
+import android.icu.util.Freezable;
+
 import java.util.ArrayList;
 
 /**
@@ -41,6 +43,31 @@ public class MockData {
             localSubscription.query = "Subscription title";
             localSubscription.isActive = true;
             result.add(localSubscription);
+        }
+
+        return result;
+    }
+
+    public static ArrayList<Group> getGroupList(int num) {
+        ArrayList<Group> result = new ArrayList<Group>();
+        for(int i = 0; i<num; i++) {
+            Group localGroup = new Group();
+            localGroup.memberIDs = new ArrayList<Integer>();
+            localGroup.groupID = i;
+            localGroup.groupName = "group number " + i;
+            result.add(localGroup);
+        }
+
+        return result;
+    }
+
+    public static ArrayList<Friend> geFriendList(int num) {
+        ArrayList<Friend> result = new ArrayList<Friend>();
+        for(int i = 0; i<num; i++) {
+            Friend localFriend = new Friend();
+            localFriend.id = i;
+            localFriend.name = "friend number " + i;
+            result.add(localFriend);
         }
 
         return result;
