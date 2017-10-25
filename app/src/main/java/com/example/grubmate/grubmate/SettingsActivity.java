@@ -2,8 +2,10 @@ package com.example.grubmate.grubmate;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.grubmate.grubmate.dataClass.Group;
 import com.example.grubmate.grubmate.dataClass.Post;
+import com.example.grubmate.grubmate.fragments.FeedFragment;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
@@ -22,7 +25,7 @@ import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements FeedFragment.OnFragmentInteractionListener {
     private CheckBox allergy1, allergy2, allergy3;
     private boolean allergies[];
     private int groupsNum;
@@ -78,6 +81,12 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
     public class SettingsTask extends AsyncTask<String, Integer, ArrayList<Group>> {
 
         @Override
