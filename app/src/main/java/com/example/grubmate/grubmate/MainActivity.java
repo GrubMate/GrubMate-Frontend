@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         startService(startIntent);
 
         // Put in default fragment
-        FeedFragment feedFragment = FeedFragment.newInstance(null, null);
+        FeedFragment feedFragment = FeedFragment.newInstance(null, null,null);
         getSupportFragmentManager().beginTransaction().add(R.id.fl_main_fragment_container, feedFragment).commit();
 
     }
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity
         Fragment destinationFragment = null;
         Class destinationActivity = MainActivity.class;
         if (id == R.id.nav_home) {
-            destinationFragment = FeedFragment.newInstance(null, null);
+            destinationFragment = FeedFragment.newInstance(null, null,null);
         } else if (id == R.id.nav_subscriptions) {
             destinationFragment = SubscriptionFragment.newInstance(null,null);
         } else if (id == R.id.nav_posts) {

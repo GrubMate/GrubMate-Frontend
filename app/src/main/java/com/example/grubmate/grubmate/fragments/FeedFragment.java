@@ -78,7 +78,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     private Integer targetPostID;
     private double Lat;
     private double Lng;
-
+    private ArrayList<Post> mPastPostList;
 
     public FeedFragment() {
         // Required empty public constructor
@@ -93,11 +93,12 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
      * @return A new instance of fragment FeedFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static FeedFragment newInstance(String param1, String param2) {
+    public static FeedFragment newInstance(String param1, String param2, ArrayList<Post> pastPostList) {
         FeedFragment fragment = new FeedFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putSerializable("pastPost",pastPostList);
         fragment.setArguments(args);
         return fragment;
     }
@@ -108,6 +109,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            mPastPostList = (ArrayList<Post>)getArguments().getSerializable("pastPost");
         }
         feedData = new ArrayList<Post>();
          mGoogleApiClient = new GoogleApiClient.Builder(getContext())
@@ -161,7 +163,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         mGoogleApiClient.connect();
         if(mParam2==null) {
             new FetchFeedListTask().execute(2);
-        }else{
+        }else if(mParam2=="search"){
             Intent i = getActivity().getIntent();
 
             ArrayList<Post> searchResult= (ArrayList<Post>) i.getSerializableExtra("searchResult");
@@ -171,6 +173,13 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             mFeedProgressBar.getLayoutParams().height = 0;
             mFeedView.setVisibility(View.VISIBLE);
            // new FetchFeedListTask().execute(2);
+        }else if(mParam2=="profile"){
+            Log.i("profile","");
+            feedData = mPastPostList;
+            mFeedAdapter.setNewData(feedData);
+            mFeedProgressBar.setVisibility(View.INVISIBLE);
+            mFeedProgressBar.getLayoutParams().height = 0;
+            mFeedView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -235,15 +244,15 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
 
         @Override
         protected ArrayList<Post> doInBackground(Integer... params) {
-            try {
-                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
-                Log.d(TAG, response);
-                if (response == null || response.length() == 0)
-                    return MockData.getPostList(2);
-                return JsonUtilities.getFeedItems(response);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+//                Log.d(TAG, response);
+//                if (response == null || response.length() == 0)
+//                    return MockData.getPostList(2);
+//                return JsonUtilities.getFeedItems(response);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
             return MockData.getPostList(2);
         }
