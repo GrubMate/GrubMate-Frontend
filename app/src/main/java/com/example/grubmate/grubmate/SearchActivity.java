@@ -146,7 +146,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             if (searchResponse != null) {
                 showShortToast("Succeed");
 
-                Fragment destinationFragment = FeedFragment.newInstance(null, "search");
+                Fragment destinationFragment = FeedFragment.newInstance(null, "search",null);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 //transaction.add(1, destinationFragment).commit();
                 transaction.replace(R.id.fragment_search, destinationFragment);

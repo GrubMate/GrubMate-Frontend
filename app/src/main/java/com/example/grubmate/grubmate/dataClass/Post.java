@@ -1,12 +1,13 @@
 package com.example.grubmate.grubmate.dataClass;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by tianhangliu on 10/12/17.
  */
 
-public class Post {
+public class Post implements Serializable {
     public Integer postID;
     public Integer posterID;
     public String title;

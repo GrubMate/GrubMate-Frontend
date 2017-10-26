@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -106,13 +107,12 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
         mProfileAvatar = (ImageView) rootView.findViewById(R.id.iv_profile_avatar);
         mProfileName = (TextView) rootView.findViewById(R.id.tv_profile_name);
         mProfileRatingBar = (RatingBar) rootView.findViewById(R.id.rb_profile_rating);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_profile_orders);
+      //  mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_profile_orders);
         mPastPostList = new ArrayList<Post>();
         mPastPostAdapter = new PastPostAdapter(mPastPostList);
         mPastPostAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext(), LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mPastPostAdapter);
+      //  mRecyclerView.setLayoutManager(layoutManager);
         mContentLayout = rootView.findViewById(R.id.ll_profile_content);
         mProgressBar = rootView.findViewById(R.id.pb_profile_progress);
         return rootView;
@@ -179,11 +179,11 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
 
         @Override
         protected String doInBackground(String... params) {
-            try {
-                return NetworkUtilities.get(GrubMatePreference.getUserUrl(userID));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                return NetworkUtilities.get(GrubMatePreference.getUserUrl(userID));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
             return null;
         }
@@ -217,6 +217,12 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
             mProgressBar.setVisibility(View.INVISIBLE);
             mProgressBar.getLayoutParams().height = 0;
             mContentLayout.setVisibility(View.VISIBLE);
+
+            ArrayList<Post> obj = MockData.getPastPostList(3);
+            Fragment childFragment = FeedFragment.newInstance(null, "profile",obj);
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(R.id.rv_profile_orders, childFragment).commit();
+
         }
     }
 
