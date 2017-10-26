@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class Post implements Serializable {
     public Integer postID;
     public Integer posterID;
+    public String posterName;
     public String title;
     public Boolean isHomeMade;
     public String[] postPhotos;

@@ -208,17 +208,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-        case SEARCH_IDENTIFICATION_CODE:
-            if (resultCode == RESULT_OK) {
-                String returnedData = data.getStringExtra("data_return");
-                Log.d("MainActivity", returnedData);
-                if (returnedData == null || returnedData.length() == 0)
-                    return;
-            }
-            break;
-        default:
-        }
+        super.onActivityResult(requestCode,resultCode,data);
     }
 
     public void onPostFragmentInteraction(Uri uri) {

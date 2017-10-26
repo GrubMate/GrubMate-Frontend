@@ -1,7 +1,9 @@
 package com.example.grubmate.grubmate.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -56,6 +59,10 @@ public class NotificationCenterFragment extends Fragment {
     private Double[] address;
     private Integer requesterID;
     private Integer targetPostID;
+    private BroadcastReceiver mNotificationReceiver;
+    private IntentFilter intentFilter;
+    private Gson gson;
+    public final static String BROADCAST_ACTION = "com.example.grubmate.grubmate.notification";
     private double Lat;
     private double Lng;
 
@@ -90,6 +97,22 @@ public class NotificationCenterFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        gson = new Gson();
+        mNotificationReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String payload = intent.getStringExtra("notification");
+                Log.d("Notification Center", payload==null?"null":payload);
+                if(payload!=null) {
+                    notificationData.add(0, gson.fromJson(payload, Notification.class));
+                    mNotificationAdapter.setNewData(notificationData);
+                }
+            }
+        };
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(BROADCAST_ACTION);
+        // start the service for notification
         notificationData = new ArrayList<Notification>();
     }
 
@@ -103,6 +126,8 @@ public class NotificationCenterFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mNotificationAdapter = new NotificationAdapter(notificationData);
         mNotificationAdapter.openLoadAnimation();
+        mRecyclerView.setAdapter(mNotificationAdapter);
+        mProgressBar = rootView.findViewById(R.id.pb_notification_progress);
         mNotificationAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -124,8 +149,6 @@ public class NotificationCenterFragment extends Fragment {
                 }
             }
         });
-        mRecyclerView.setAdapter(mNotificationAdapter);
-        mProgressBar = rootView.findViewById(R.id.pb_notification_progress);
         return rootView;
     }
 
@@ -140,6 +163,18 @@ public class NotificationCenterFragment extends Fragment {
         if (mListener != null) {
             mListener.onNotificationFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onResume() {
+        getActivity().registerReceiver(mNotificationReceiver, intentFilter);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        getActivity().unregisterReceiver(mNotificationReceiver);
+        super.onPause();
     }
 
     @Override

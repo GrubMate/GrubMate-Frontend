@@ -11,6 +11,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.grubmate.grubmate.dataClass.Notification;
+import com.example.grubmate.grubmate.fragments.FeedFragment;
+import com.example.grubmate.grubmate.fragments.NotificationCenterFragment;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
@@ -58,7 +60,7 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO: send a polling request for data
         Log.d("NotificationService", "onStartExecuted");
-       new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
+       new NotificationTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "Notification");
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -75,9 +77,6 @@ public class NotificationService extends Service {
         protected String doInBackground(String... params) {
             semaphore = new Semaphore(0);
             result = null;
-            if (params.length == 0||params[0].length()==0) {
-                return null;
-            }
                 Request request = new Request.Builder()
                         .url(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()))
                         .build();
@@ -93,8 +92,14 @@ public class NotificationService extends Service {
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            new NotificationTask().execute(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
-
+            if(postActionResponse != null && !postActionResponse.contains("Error")) {
+                Intent local = new Intent();
+                local.setAction(NotificationCenterFragment.BROADCAST_ACTION);
+                Log.d("notification", postActionResponse);
+                local.putExtra("notification", postActionResponse);
+                sendBroadcast(local);
+            }
+            new NotificationTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "Notification");;
         }
         class NotificationCallBack implements Callback {
             @Override
