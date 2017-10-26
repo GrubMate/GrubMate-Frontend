@@ -105,6 +105,7 @@ public class NotificationService extends Service {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 result = response.body()==null?null:response.body().string();
+                Log.d("Notification", result==null?"null":result);
                 semaphore.release();
             }
         }
