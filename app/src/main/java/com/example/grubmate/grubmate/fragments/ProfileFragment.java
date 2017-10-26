@@ -185,12 +185,12 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                 e.printStackTrace();
             }
 
-            return null;
+            return gson.toJson(MockData.getUser(PersistantDataManager.userID));
         }
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-                Log.d("profile", postActionResponse);
+                Log.d("profile", postActionResponse==null?"null":postActionResponse);
                 if (postActionResponse == null || postActionResponse.length() == 0) {
                     Toast.makeText(getContext(), "Error occurs during fetching user data", Toast.LENGTH_SHORT).show();
                 } else {
@@ -203,8 +203,8 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                     }
                     Picasso.with(getContext()).load(user.profilePhoto).into(mProfileAvatar);
                 }
-            mProgressBar.setVisibility(View.INVISIBLE);
             mProgressBar.getLayoutParams().height = 0;
+            mProgressBar.setVisibility(View.INVISIBLE);
             mContentLayout.setVisibility(View.VISIBLE);
         }
     }

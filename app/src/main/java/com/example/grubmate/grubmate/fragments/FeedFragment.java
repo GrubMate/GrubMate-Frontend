@@ -110,7 +110,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         feedData = new ArrayList<Post>();
-         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+         if(mGoogleApiClient==null)mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(getActivity(), this)
@@ -172,6 +172,13 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             mFeedView.setVisibility(View.VISIBLE);
            // new FetchFeedListTask().execute(2);
         }
+    }
+
+    @Override
+    public void onPause() {
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
+        super.onPause();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
