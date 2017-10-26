@@ -113,12 +113,14 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
         // Setting up feed
         mFeedView = (RecyclerView) rootView.findViewById(R.id.rv_feed);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
         mFeedView.setLayoutManager(layoutManager);
+
         mFeedAdapter = new BFeedAdapter(feedData);
         mFeedAdapter.openLoadAnimation();
         mFeedAdapter.setEmptyView(R.layout.list_empty_layout, (ViewGroup) mFeedView.getParent());
@@ -146,7 +148,19 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     @Override
     public void onStart() {
         super.onStart();
-        new FetchFeedListTask().execute(2);
+        if(mParam2==null) {
+            new FetchFeedListTask().execute(2);
+        }else{
+            Intent i = getActivity().getIntent();
+
+            ArrayList<Post> searchResult= (ArrayList<Post>) i.getSerializableExtra("searchResult");
+            feedData = searchResult;
+            mFeedAdapter.setNewData(feedData);
+            mFeedProgressBar.setVisibility(View.INVISIBLE);
+            mFeedProgressBar.getLayoutParams().height = 0;
+            mFeedView.setVisibility(View.VISIBLE);
+           // new FetchFeedListTask().execute(2);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -1,8 +1,11 @@
 package com.example.grubmate.grubmate;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -14,14 +17,18 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.grubmate.grubmate.dataClass.MockData;
+import com.example.grubmate.grubmate.dataClass.Post;
+import com.example.grubmate.grubmate.fragments.FeedFragment;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
-public class SearchActivity extends AppCompatActivity implements View.OnClickListener{
+public class SearchActivity extends AppCompatActivity implements View.OnClickListener,FeedFragment.OnFragmentInteractionListener{
     private EditText searchItemNameText;
     private Spinner searchItemCategorySpinner;
     private Spinner searchItemTimeSpinner;
@@ -32,6 +39,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private String timePeriod;
     private Boolean[] allergyInfo;
     private Gson gson;
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
     class SearchFields{
         public String title;
         public String[] tags;
@@ -64,6 +77,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         searchButton = (Button) findViewById(R.id.b_search_button);
         searchButton.setOnClickListener(this);
         gson = new Gson();
+
+
     }
 
     public void showShortToast(String msg) {
@@ -91,50 +106,58 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public class SearchTask extends AsyncTask<String, Integer, String> {
+    public class SearchTask extends AsyncTask<String, Integer, ArrayList<Post>> {
 
         @Override
-        protected String doInBackground(String... params) {
+        protected ArrayList<Post> doInBackground(String... params) {
             if (params.length == 0) {
                 return null;
             }
-            if(params[0] == "get") {
-                try {
-                    String baseUrl = GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID());
-                    String response = NetworkUtilities.get(baseUrl);
-                    Log.d("Search",response);
-                    return response;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else if (params[0] == "post") {
-                SearchFields searchFields = new SearchFields();
-                searchFields.title = title;
-                searchFields.category = category;
-                searchFields.tags = tags;
-                searchFields.timePeriod = timePeriod;
-                searchFields.allergyInfo = allergyInfo;
-
-                String response = null;
-                try {
-                    response = NetworkUtilities.post(GrubMatePreference.getSearchURL(PersistantDataManager.getUserID()), gson.toJson(searchFields));
-                    return response;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
+//            if(params[0] == "get") {
+//                try {
+//                    String baseUrl = GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID());
+//                    String response = NetworkUtilities.get(baseUrl);
+//                    Log.d("Search",response);
+//                    return response;
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            } else if (params[0] == "post") {
+//                SearchFields searchFields = new SearchFields();
+//                searchFields.title = title;
+//                searchFields.category = category;
+//                searchFields.tags = tags;
+//                searchFields.timePeriod = timePeriod;
+//                searchFields.allergyInfo = allergyInfo;
+//
+//                String response = null;
+//                try {
+//                    response = NetworkUtilities.post(GrubMatePreference.getSearchURL(PersistantDataManager.getUserID()), gson.toJson(searchFields));
+//                    return response;
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+            return MockData.getSearchList(3);
         }
 
         @Override
-        protected void onPostExecute(String searchResponse) {
+        protected void onPostExecute(ArrayList<Post> searchResponse) {
             if (searchResponse != null) {
                 showShortToast("Succeed");
-                Intent intent = new Intent();
-                Log.d("SearchActivity",searchResponse);
-                intent.putExtra("data_return", searchResponse);
-                setResult(RESULT_OK, intent);
-                finish();
+
+                Fragment destinationFragment = FeedFragment.newInstance(null, "search");
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                //transaction.add(1, destinationFragment).commit();
+                transaction.replace(R.id.fragment_search, destinationFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+                getIntent().putExtra("searchResult", searchResponse);
+//                Intent intent = new Intent();
+//                Log.d("SearchActivity",searchResponse);
+//                intent.putExtra("data_return", searchResponse);
+//                setResult(RESULT_OK, intent);
+//                finish();
             }
         }
     }
