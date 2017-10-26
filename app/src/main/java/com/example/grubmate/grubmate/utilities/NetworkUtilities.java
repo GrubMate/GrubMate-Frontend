@@ -33,6 +33,7 @@ public class NetworkUtilities {
             Request request = new Request.Builder()
                     .url(url)
                     .build();
+            Log.d("Netowrk", "reaady to execute "+url);
             Response response = client.newCall(request).execute();
             return response.body()==null?null:response.body().string();
         } catch (SocketException e) {

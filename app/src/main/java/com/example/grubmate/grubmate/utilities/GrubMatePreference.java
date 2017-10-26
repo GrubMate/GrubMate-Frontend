@@ -13,6 +13,7 @@ public class GrubMatePreference {
     public static final String notificationURL = "/notification";
     public static final String requestURL = "/request";
     public static final String subscriptionURL = "/subscription";
+    public static final String imageUrl = "/image";
     public static String getSubscribeActionURL(int ID) {
         return domain + subscribeActionURL + "/" + ID;
     }
@@ -28,9 +29,9 @@ public class GrubMatePreference {
     public static String getPastPostURL(int ID) {
         return domain + postURL + "/" + ID+"/false";
     }
-
-
-
+    public static String getImageUrl(String imageID) {
+        return domain + imageUrl + '/' + imageID;
+    }
     public static String getFeedUrl(int ID) {
         return domain + postURL + "/" + ID;
     }

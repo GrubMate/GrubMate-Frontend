@@ -5,6 +5,9 @@ public class Notification {
     public static final int REQUEST = 1;
     public static final int MATCH = 2;
     public static final int ACCEPTED = 3;
+    public static final int RATING = 4;
+    public static final int DENIED = 5;
+
 
     public Integer requestID;
     public Integer requesterID;

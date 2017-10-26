@@ -190,16 +190,6 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            if(TEST) {
-                User user = MockData.getUser(0);
-                mProfileName.setText(user.userName);
-                if (user.ratings != null && user.ratings.length > 0 && user.ratings[0] != null) {
-                    mProfileRatingBar.setRating(user.ratings[0]);
-                } else {
-                    mProfileRatingBar.setRating(5);
-                }
-                Picasso.with(getContext()).load(user.profilePhoto).into(mProfileAvatar);
-            } else {
                 Log.d("profile", postActionResponse);
                 if (postActionResponse == null || postActionResponse.length() == 0) {
                     Toast.makeText(getContext(), "Error occurs during fetching user data", Toast.LENGTH_SHORT).show();
@@ -213,7 +203,6 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                     }
                     Picasso.with(getContext()).load(user.profilePhoto).into(mProfileAvatar);
                 }
-            }
             mProgressBar.setVisibility(View.INVISIBLE);
             mProgressBar.getLayoutParams().height = 0;
             mContentLayout.setVisibility(View.VISIBLE);

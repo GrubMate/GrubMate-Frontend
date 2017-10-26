@@ -17,7 +17,9 @@ import android.widget.ProgressBar;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.grubmate.grubmate.R;
+import com.example.grubmate.grubmate.activities.ProfileActivity;
 import com.example.grubmate.grubmate.adapters.BFeedAdapter;
+import com.example.grubmate.grubmate.adapters.FeedAdapter;
 import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.UserRequest;
@@ -108,6 +110,11 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         feedData = new ArrayList<Post>();
+         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(), this)
+                .build();
     }
 
     @Override
@@ -129,7 +136,10 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
                     case R.id.tv_feed_item_poster:
-
+                        Intent posterIntent = new Intent(getContext(), ProfileActivity.class);
+                        Object mPostData;
+                        posterIntent.putExtra("user_id", String.valueOf(feedData.get(position).posterID));
+                        startActivity(posterIntent);
                         break;
                     case R.id.b_feed_item_request:
                         view.setEnabled(false);
@@ -148,6 +158,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     @Override
     public void onStart() {
         super.onStart();
+        mGoogleApiClient.connect();
         if(mParam2==null) {
             new FetchFeedListTask().execute(2);
         }else{
@@ -185,6 +196,12 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
     }
 
     @Override
@@ -237,7 +254,9 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
                 mFeedView.setVisibility(View.VISIBLE);
-
+                if(feedItems.size()==0) {
+                    mFeedAdapter.setEmptyView(R.layout.list_empty_layout);
+                }
             } else {
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
@@ -254,6 +273,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
                 if (postID < 0) {
                     return null;
                 }
+                Log.d("Feed", "Ready to send request");
 
                 UserRequest newRequest = new UserRequest();
                 newRequest.address = new Double[2];
@@ -284,16 +304,10 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         requesterID = PersistantDataManager.getUserID();
         targetPostID = feedData.get(pos).postID;
         address = new Double[2];
-        if(mGoogleApiClient==null) mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
-
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
                     .build(getActivity());
-            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+            this.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException e) {
             e.printStackTrace();
         } catch (GooglePlayServicesNotAvailableException e) {
@@ -302,6 +316,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("Feed", "returned from google");
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 Place place = PlaceAutocomplete.getPlace(getContext(), data);
