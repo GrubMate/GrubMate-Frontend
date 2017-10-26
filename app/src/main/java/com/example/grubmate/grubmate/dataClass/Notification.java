@@ -19,6 +19,12 @@ public class Notification {
     public Integer posterID;
     public String posterName;
     public String title;
+    public Integer fromUserID;
+    public String fromUserName;
+    public Integer toUserID;
+    public String toUserName;
+    public Integer rating;
+
 
     /*
         REQUEST should have
