@@ -146,6 +146,8 @@ public class NotificationCenterFragment extends Fragment {
                         break;
                     case R.id.b_notification_request:
                         break;
+                    case R.id.b_notification_submit:
+                        break;
                 }
             }
         });

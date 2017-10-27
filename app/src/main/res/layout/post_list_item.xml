@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:text="@string/default_text" />
         <LinearLayout
+            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
@@ -31,6 +32,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Edit" />
+            <Button
+                android:id="@+id/b_post_confirm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Confirm"/>
         </LinearLayout>
     </LinearLayout>
 

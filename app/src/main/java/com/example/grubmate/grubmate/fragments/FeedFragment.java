@@ -112,7 +112,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             mPastPostList = (ArrayList<Post>)getArguments().getSerializable("pastPost");
         }
         feedData = new ArrayList<Post>();
-         mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+         if(mGoogleApiClient==null)mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(getActivity(), this)
@@ -181,6 +181,13 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             mFeedProgressBar.getLayoutParams().height = 0;
             mFeedView.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onPause() {
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
+        super.onPause();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

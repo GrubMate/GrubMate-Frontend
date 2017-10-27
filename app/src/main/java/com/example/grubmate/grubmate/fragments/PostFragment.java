@@ -119,6 +119,10 @@ public class PostFragment extends Fragment {
                         view.setEnabled(false);
                         new DeletePostTask().execute(mPostData.get(position).postID);
                         break;
+                    case R.id.b_post_confirm:
+                        view.setEnabled(false);
+                        new ConfirmPostTask().execute(mPostData.get(position).postID);
+                        break;
                 }
             }
         });
@@ -239,6 +243,29 @@ public class PostFragment extends Fragment {
         }
     }
     public class DeletePostTask extends AsyncTask<Integer, Integer, String> {
+        @Override
+        protected String doInBackground(Integer... integers) {
+            Integer postID = integers[0];
+            try {
+                return   NetworkUtilities.delete(GrubMatePreference.getPostDeleteURL(PersistantDataManager.getUserID(), postID), null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if(s != null) {
+                showShortToast("Your post was successfully deleted");
+                new FetchPostListTask().execute();
+            } else {
+                showShortToast("Netowrk Error");
+            }
+            super.onPostExecute(s);
+        }
+    }
+    public class ConfirmPostTask extends AsyncTask<Integer, Integer, String> {
         @Override
         protected String doInBackground(Integer... integers) {
             Integer postID = integers[0];

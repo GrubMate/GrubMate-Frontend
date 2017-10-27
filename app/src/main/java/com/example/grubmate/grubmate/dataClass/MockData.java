@@ -119,6 +119,14 @@ public class MockData {
         accptedNotification.type = Notification.ACCEPTED;
         accptedNotification.title = "Lolipop";
         result.add(accptedNotification);
+        Notification ratingNotification = new Notification();
+        ratingNotification.type = Notification.RATING;
+        ratingNotification.title = "Lolipop";
+        ratingNotification.fromUserName = "Pengxiang";
+        ratingNotification.fromUserID = 0;
+        ratingNotification.toUserName = "Jieji";
+        ratingNotification.toUserID = 1;
+        result.add(ratingNotification);
         return result;
     }
 }

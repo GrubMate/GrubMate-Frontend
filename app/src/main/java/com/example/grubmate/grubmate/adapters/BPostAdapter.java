@@ -26,7 +26,8 @@ public class BPostAdapter extends BaseQuickAdapter<Post, BaseViewHolder>{
         viewHolder.setText(R.id.tv_post_name, item.title)
                 // integers has to be wraped as string to avoid android treating them as resource
                 .addOnClickListener(R.id.b_post_delete)
-                .addOnClickListener(R.id.b_post_edit);
+                .addOnClickListener(R.id.b_post_edit)
+                .addOnClickListener(R.id.b_post_confirm);
         if(item.totalQuantity - item.leftQuantity != 0) {
             viewHolder.getView(R.id.b_post_edit).setEnabled(false);
             viewHolder.getView(R.id.b_post_delete).setEnabled(false);
