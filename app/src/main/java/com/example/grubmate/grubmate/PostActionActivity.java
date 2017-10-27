@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
@@ -56,6 +57,7 @@ import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PostActionActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
     private EditText postItemNameText;
@@ -111,9 +113,13 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
         postItemCategorySpinner = (Spinner) findViewById(R.id.spinner_category);
         ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this,
                 R.array.food_category, android.R.layout.simple_spinner_item);
+        for(int i = 0; i<PersistantDataManager.getGroupIDs().size(); i++) {
+            categoryAdapter.add(String.valueOf(PersistantDataManager.getGroupIDs().get(i)));
+        }
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         postItemCategorySpinner.setAdapter(categoryAdapter);
         postItemLocationText = (TextView) findViewById(R.id.et_location_text) ;
+        //Auto_complete activity open when button clicked
         //Auto_complete activity open when button clicked
         postItemLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -213,13 +219,28 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             return false;
         } else if (postItemTagsText.getText().length() == 0) {
             return false;
-        } else if (postItemTimeSpinner.getSelectedItem().toString() == "Time Period") {
+        } else if (Objects.equals(postItemTimeSpinner.getSelectedItem().toString(), "Time Period")) {
             return false;
-        } else if (postItemCategorySpinner.getSelectedItem().toString() == "Category") {
+        } else if (Objects.equals(postItemCategorySpinner.getSelectedItem().toString(), "Category")) {
+            return false;
+        } else if (mSelected.size()==0) {
+            return false;
+        } else if (postItemDescriptionText.getText().length()==0) {
+            return false;
+        } else if (postItemQuantityText.getText().length()==0) {
             return false;
         }
         return true;
     };
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mGoogleApiClient.stopAutoManage(this);
+        mGoogleApiClient.disconnect();
+        super.onPause();
+
+    }
 
     @Override
     public void onClick(View view) {
@@ -240,6 +261,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             timePeriod = postItemTimeSpinner.getSelectedItem().toString();
             if(timePeriod == "Time Period") timePeriod = null;
             groupIDs = new Integer[1];
+            groupIDs[0] = postGroupSpinner.getSelectedItemPosition();
             // TODO: change this to reald user id in production
             userID = 0;
             new PostActionTask().execute(GrubMatePreference.getPostActionURl(userID));
