@@ -40,9 +40,6 @@ public class NetworkUtilitiesTest {
     {
         String url = null;
         assertNull( NetworkUtilities.get(url) );
-
-        url = "";
-        assertNull( NetworkUtilities.get(url) );
     }
 
     @Test
@@ -71,6 +68,6 @@ public class NetworkUtilitiesTest {
 
         assertEquals(expectResult, NetworkUtilities.get(url));
     }
-    
+
 
 }
