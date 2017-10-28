@@ -96,5 +96,10 @@ public class ExampleInstrumentedTest {
         // onView(withId(R.id.fab_post)).perform(click());
     }
 
+    @Test
+    public void groupAction() throws UiObjectNotFoundException
+    {
+
+    }
 
 }
