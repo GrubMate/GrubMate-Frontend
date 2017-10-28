@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,16 +24,27 @@ import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.NotificationAdapter;
 import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Notification;
+import com.example.grubmate.grubmate.dataClass.UserRequest;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static com.example.grubmate.grubmate.R.id.pb_notification_progress;
+import static com.example.grubmate.grubmate.adapters.FeedAdapter.FeedDetailActivity.PLACE_AUTOCOMPLETE_REQUEST_CODE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,7 +54,7 @@ import static com.example.grubmate.grubmate.R.id.pb_notification_progress;
  * Use the {@link NotificationCenterFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NotificationCenterFragment extends Fragment {
+public class NotificationCenterFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -70,6 +82,13 @@ public class NotificationCenterFragment extends Fragment {
 
     public NotificationCenterFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
     }
 
     /**
@@ -109,6 +128,11 @@ public class NotificationCenterFragment extends Fragment {
                 }
             }
         };
+        if(mGoogleApiClient==null)mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(),1024, this)
+                .build();
 
         intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_ACTION);
@@ -145,6 +169,7 @@ public class NotificationCenterFragment extends Fragment {
                         new DenyRequestTask().execute(position);
                         break;
                     case R.id.b_notification_request:
+                        requestPost(position);
                         break;
                     case R.id.b_notification_submit:
                         break;
@@ -157,6 +182,7 @@ public class NotificationCenterFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        mGoogleApiClient.connect();
         new FetchNotificationTask().execute(1);
     }
 
@@ -175,8 +201,10 @@ public class NotificationCenterFragment extends Fragment {
 
     @Override
     public void onPause() {
-        getActivity().unregisterReceiver(mNotificationReceiver);
         super.onPause();
+        getActivity().unregisterReceiver(mNotificationReceiver);
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -194,6 +222,11 @@ public class NotificationCenterFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 
     /**
@@ -292,6 +325,75 @@ public class NotificationCenterFragment extends Fragment {
                 Toast.makeText(getContext(), "You successfully denied a request", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    public class RequestTask extends AsyncTask<Integer, Integer, String> {
+        @Override
+
+        protected String doInBackground(Integer ...params) {
+            Integer postID = params[0];
+            if (postID < 0) {
+                return null;
+            }
+            Log.d("Feed", "Ready to send request");
+
+            UserRequest newRequest = new UserRequest();
+            newRequest.address = new Double[2];
+            newRequest.address[0] = Lat;
+            newRequest.address[1] = Lng;
+            newRequest.requesterID = requesterID;
+            newRequest.status = "Pending";
+            newRequest.targetPostID = targetPostID;
+            Gson gson = new Gson();
+            String requestJson = gson.toJson(newRequest);
+            Log.d("Detail", requestJson);
+            try {
+                return NetworkUtilities.post(GrubMatePreference.getRequestURL(PersistantDataManager.getUserID()), requestJson);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+
+        }
+    }
+
+    private void requestPost(int pos) {
+        requesterID = PersistantDataManager.getUserID();
+        targetPostID = notificationData.get(pos).postID;
+        address = new Double[2];
+        try {
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                    .build(getActivity());
+            this.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("Feed", "returned from google");
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(getContext(), data);
+
+                Lat = place.getLatLng().latitude;
+                Lng = place.getLatLng().longitude;
+                new NotificationCenterFragment.RequestTask().execute(targetPostID);
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(getContext(), data);
+                // TODO: Handle the error.
+                Log.i("test", status.getStatusMessage());
+
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
             }
         }
     }
