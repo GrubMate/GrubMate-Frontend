@@ -236,12 +236,21 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onPause() {
         super.onPause();
-        mGoogleApiClient.stopAutoManage(this);
-        mGoogleApiClient.disconnect();
-        super.onPause();
+        //mGoogleApiClient.stopAutoManage(this);
+       // mGoogleApiClient.disconnect();
+       // super.onPause();
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // stop GoogleApiClient
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.stopAutoManage(this);
+            mGoogleApiClient.disconnect();
+        }
+    }
     @Override
     public void onClick(View view) {
         if(validateForm()) {
