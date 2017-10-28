@@ -36,8 +36,10 @@ public class GroupSettingsActivityTest {
             new ActivityTestRule(GroupSettingsActivity.class);
 
     @Test
-    public void groupSetting() throws UiObjectNotFoundException
+    public void AddGroupWithoutUsers() throws UiObjectNotFoundException
     {
+        onView(withId(R.id.fab_group_add)).perform(click());
+        onView(withId(R.id.group_name)).perform(typeText("Test group"));
         onView(withId(R.id.))
     }
 }
