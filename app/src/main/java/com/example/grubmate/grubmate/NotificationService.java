@@ -92,6 +92,7 @@ public class NotificationService extends Service {
 
         @Override
         protected void onPostExecute(String postActionResponse) {
+            Log.d("Notification", postActionResponse==null?"Null":postActionResponse);
             if(postActionResponse != null && !postActionResponse.contains("Error")) {
                 Intent local = new Intent();
                 local.setAction(NotificationCenterFragment.BROADCAST_ACTION);

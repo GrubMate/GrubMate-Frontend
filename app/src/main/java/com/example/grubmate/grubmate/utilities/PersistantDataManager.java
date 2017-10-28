@@ -2,6 +2,8 @@ package com.example.grubmate.grubmate.utilities;
 
 import android.util.Log;
 
+import com.example.grubmate.grubmate.dataClass.Notification;
+
 import java.util.ArrayList;
 
 /**
@@ -11,6 +13,16 @@ import java.util.ArrayList;
 public class PersistantDataManager {
     public static int userID = 0;
     public static ArrayList<Integer> groupIDs = new ArrayList<Integer>();
+
+    public static ArrayList<Notification> getNotificationCache() {
+        return notificationCache;
+    }
+
+    public static void setNotificationCache(ArrayList<Notification> notificationCache) {
+        PersistantDataManager.notificationCache = notificationCache;
+    }
+
+    public static ArrayList<Notification> notificationCache = new ArrayList<Notification>();
     public static int getUserID() {
         return userID;
     }

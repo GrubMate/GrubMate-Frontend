@@ -188,8 +188,10 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     @Override
     public void onPause() {
         super.onPause();
-        mGoogleApiClient.stopAutoManage(getActivity());
-        mGoogleApiClient.disconnect();
+        if(mGoogleApiClient != null) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -254,15 +256,15 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
 
         @Override
         protected ArrayList<Post> doInBackground(Integer... params) {
-//            try {
-//                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
-//                Log.d(TAG, response);
-//                if (response == null || response.length() == 0)
-//                    return MockData.getPostList(2);
-//                return JsonUtilities.getFeedItems(response);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+                Log.d(TAG, response);
+                if (response == null || response.length() == 0)
+                    return MockData.getPostList(2);
+                return JsonUtilities.getFeedItems(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             return MockData.getPostList(2);
         }

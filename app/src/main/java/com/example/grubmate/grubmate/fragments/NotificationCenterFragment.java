@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -43,7 +44,7 @@ import java.util.ArrayList;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static com.example.grubmate.grubmate.R.id.pb_notification_progress;
+import static com.example.grubmate.grubmate.R.id.poster_layout;
 import static com.example.grubmate.grubmate.adapters.FeedAdapter.FeedDetailActivity.PLACE_AUTOCOMPLETE_REQUEST_CODE;
 
 /**
@@ -87,8 +88,10 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
     @Override
     public void onStop() {
         super.onStop();
-        mGoogleApiClient.stopAutoManage(getActivity());
-        mGoogleApiClient.disconnect();
+        if(mGoogleApiClient!=null) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+        }
     }
 
     /**
@@ -122,17 +125,14 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
             public void onReceive(Context context, Intent intent) {
                 String payload = intent.getStringExtra("notification");
                 Log.d("Notification Center", payload==null?"null":payload);
-                if(payload!=null) {
+                if(payload!=null&&payload.length()>0) {
                     notificationData.add(0, gson.fromJson(payload, Notification.class));
+                    PersistantDataManager.setNotificationCache(notificationData);
                     mNotificationAdapter.setNewData(notificationData);
                 }
             }
         };
-        if(mGoogleApiClient==null)mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(),1024, this)
-                .build();
+
 
         intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_ACTION);
@@ -151,7 +151,7 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
         mNotificationAdapter = new NotificationAdapter(notificationData);
         mNotificationAdapter.openLoadAnimation();
         mRecyclerView.setAdapter(mNotificationAdapter);
-        mProgressBar = rootView.findViewById(R.id.pb_notification_progress);
+//        mProgressBar = rootView.findViewById(R.id.pb_notification_progress);
         mNotificationAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -172,6 +172,9 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
                         requestPost(position);
                         break;
                     case R.id.b_notification_submit:
+                        RatingBar ratingBar = view.findViewById(R.id.rb_notification_rating);
+                        int score = ratingBar.getNumStars();
+                        new SubmitRatingTask().execute(position,score);
                         break;
                 }
             }
@@ -182,8 +185,14 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
     @Override
     public void onStart() {
         super.onStart();
+        if(mGoogleApiClient==null)mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(getActivity(),1024, this)
+                .build();
         mGoogleApiClient.connect();
-        new FetchNotificationTask().execute(1);
+        notificationData = PersistantDataManager.getNotificationCache();
+        mNotificationAdapter.setNewData(notificationData);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -244,48 +253,51 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
         void onNotificationFragmentInteraction(Uri uri);
     }
 
-    class FetchNotificationTask extends AsyncTask<Integer, Integer, String> {
-
-        @Override
-        protected void onPreExecute() {
-            mRecyclerView.setVisibility(View.INVISIBLE);
-            mProgressBar.getLayoutParams().height = (int) getResources().getDimension(R.dimen.pb_height);
-            mProgressBar.setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(Integer... integers) {
-            try {
-                return NetworkUtilities.get(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if(s != null && !s.contains("404") && !s.contains("505")) {
-                // TODO: modify this to real parse function later
-                notificationData = MockData.getNotificationList();
-                mNotificationAdapter.setNewData(notificationData);
-            }
-            notificationData = MockData.getNotificationList();
-            mNotificationAdapter.setNewData(notificationData);
-            mProgressBar.setVisibility(View.INVISIBLE);
-            mProgressBar.getLayoutParams().height = 0;
-            mRecyclerView.setVisibility(View.VISIBLE);
-        }
-    }
+//    class FetchNotificationTask extends AsyncTask<Integer, Integer, String> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            mRecyclerView.setVisibility(View.INVISIBLE);
+//            mProgressBar.getLayoutParams().height = (int) getResources().getDimension(R.dimen.pb_height);
+//            mProgressBar.setVisibility(View.VISIBLE);
+//            super.onPreExecute();
+//        }
+//
+//        @Override
+//        protected String doInBackground(Integer... integers) {
+//            try {
+//                return NetworkUtilities.get(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String s) {
+//            if(s != null && !s.contains("404") && !s.contains("505")) {
+//                // TODO: modify this to real parse function later
+//                notificationData = MockData.getNotificationList();
+//                mNotificationAdapter.setNewData(notificationData);
+//            } else {
+//                            notificationData = MockData.getNotificationList();
+//            mNotificationAdapter.setNewData(notificationData);
+//
+//            }
+//            mProgressBar.setVisibility(View.INVISIBLE);
+//            mProgressBar.getLayoutParams().height = 0;
+//            mRecyclerView.setVisibility(View.VISIBLE);
+//        }
+//    }
     public class AcceptRequestTask extends AsyncTask<Integer, Integer, String> {
-
+        int pos;
         @Override
         protected String doInBackground(Integer... params) {
             Log.d("Feed Detail", "Request sent");
-            Integer notificationPos = params[0];
+            pos = params[0];
             try {
-                return NetworkUtilities.get(GrubMatePreference.getAcceptRequestURL(PersistantDataManager.getUserID(), notificationData.get(notificationPos).requestID));
+                int requestID = notificationData.get(pos).requestID;
+                return NetworkUtilities.get(GrubMatePreference.getAcceptRequestURL(PersistantDataManager.getUserID(), requestID));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -297,6 +309,9 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
         protected void onPostExecute(String postActionResponse) {
             Log.d("Post Detail", postActionResponse);
             if (postActionResponse != null) {
+                notificationData.remove(pos);
+                mNotificationAdapter.setNewData(notificationData);
+                PersistantDataManager.setNotificationCache(notificationData);
                 Toast.makeText(getContext(), "You successfully accept a request", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
@@ -304,13 +319,13 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
         }
     }
     public class DenyRequestTask extends AsyncTask<Integer, Integer, String> {
-
+        int pos;
         @Override
         protected String doInBackground(Integer... params) {
             Log.d("Feed Detail", "Request sent");
-            Integer notificationPos = params[0];
+            Integer pos = params[0];
             try {
-                return NetworkUtilities.get(GrubMatePreference.getDenyRequestURL(PersistantDataManager.getUserID(), notificationData.get(notificationPos).requestID));
+                return NetworkUtilities.get(GrubMatePreference.getDenyRequestURL(PersistantDataManager.getUserID(), notificationData.get(pos).requestID));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -322,6 +337,9 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
         protected void onPostExecute(String postActionResponse) {
             Log.d("Post Detail", postActionResponse);
             if (postActionResponse != null) {
+                notificationData.remove(pos);
+                mNotificationAdapter.setNewData(notificationData);
+                PersistantDataManager.setNotificationCache(notificationData);
                 Toast.makeText(getContext(), "You successfully denied a request", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
@@ -329,13 +347,11 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
         }
     }
     public class RequestTask extends AsyncTask<Integer, Integer, String> {
+        int pos;
         @Override
 
         protected String doInBackground(Integer ...params) {
-            Integer postID = params[0];
-            if (postID < 0) {
-                return null;
-            }
+            pos = params[0];
             Log.d("Feed", "Ready to send request");
 
             UserRequest newRequest = new UserRequest();
@@ -359,7 +375,54 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
 
         @Override
         protected void onPostExecute(String response) {
+            if(response!=null && !response.contains("error")) {
+                notificationData.remove(pos);
+                mNotificationAdapter.setNewData(notificationData);
+                PersistantDataManager.setNotificationCache(notificationData);
+                Toast.makeText(getContext(), "You successfully request a post", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
+            }
 
+        }
+    }
+
+    public class SubmitRatingTask extends AsyncTask<Integer, Integer, String> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        int pos;
+        @Override
+        protected String doInBackground(Integer... params) {
+            Log.d("Rating", "Rating Sent");
+            pos = params[0];
+            Integer score = params[1];
+            Notification notification = new Notification();
+            notification.toUserID = notificationData.get(pos).toUserID;
+            notification.fromUserID = notificationData.get(pos).fromUserID;
+            notification.rating = score;
+            notification.type = Notification.RATING;
+            try {
+                return NetworkUtilities.post(GrubMatePreference.getRatingUrl(PersistantDataManager.getUserID()), gson.toJson(notification));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String postActionResponse) {
+            Log.d("Rating Response", postActionResponse==null?"null":postActionResponse);
+            if (postActionResponse != null) {
+                notificationData.remove(pos);
+                mNotificationAdapter.setNewData(notificationData);
+                PersistantDataManager.setNotificationCache(notificationData);
+                Toast.makeText(getContext(), "You successfully submit a rating", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
