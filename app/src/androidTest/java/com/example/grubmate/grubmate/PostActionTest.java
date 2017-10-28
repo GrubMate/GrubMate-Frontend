@@ -40,7 +40,7 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class PostActionTest {
 
     UiDevice mDevice;
     @Rule
@@ -85,15 +85,15 @@ public class ExampleInstrumentedTest {
         UiObject address = mDevice.findObject(new UiSelector().text("University of Southern California"));
         address.click();
 
-        onView(withId(R.id.b_post_action_photo))
-                .perform(click());
+//        onView(withId(R.id.b_post_action_photo))
+//                .perform(click());
 
-        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        UiObject checkBox = mDevice.findObject(new UiSelector().index(0));
-        checkBox.click();
-        UiObject apply = mDevice.findObject(new UiSelector().text("Apply"));
-        apply.click();
-      // onView(withId(R.id.fab_post)).perform(click());
+//        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+//        UiObject checkBox = mDevice.findObject(new UiSelector().checked(false));
+//        checkBox.click();
+//        UiObject apply = mDevice.findObject(new UiSelector().text("Apply"));
+//        apply.click();
+         onView(withId(R.id.fab_post)).perform(click());
     }
 
 
