@@ -109,6 +109,7 @@ public class SubscriptionFragment extends Fragment {
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
                     case R.id.b_subscription_item_unsubscribe:
+                        view.setEnabled(false);
                         new SubscriptionDeleteTask().execute(position);
                         break;
                 }
@@ -201,7 +202,7 @@ public class SubscriptionFragment extends Fragment {
 
           try {
                 String response = NetworkUtilities.get(GrubMatePreference.getSubscriptionURL(PersistantDataManager.getUserID()));
-                Log.d(TAG, response);
+                Log.d(TAG, response==null?"null":response);
                 if (response == null || response.length() == 0)
                     return MockData.getSubscriptionList(2);;
                 return JsonUtilities.getSubscriptionItems(response);
