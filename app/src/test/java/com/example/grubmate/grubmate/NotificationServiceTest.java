@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
  */
 public class NotificationServiceTest {
     NotificationService notificationService;
+    NotificationService.NotificationTask notificationTask;
     @Before
     public void setUp() throws Exception {
         notificationService = new NotificationService();
@@ -25,12 +26,20 @@ public class NotificationServiceTest {
     }
 
     @Test
-    public void onBind() throws Exception {
+    public void testOnBind() throws Exception {
         Intent intent = new Intent();
          IBinder binder = notificationService.onBind(intent);
          assertNotNull("Should not be null", binder);
          assertThat(binder, instanceOf(IBinder.class));
     }
-    
+
+    @Test
+    public void testIsResponseValid() {
+        assertSame("Reponse should not be null",false, notificationService.isResponseValid(null));
+        assertSame("Reponse should not be empty",false, notificationService.isResponseValid(""));
+        assertSame("Reponse should not contain error",false, notificationService.isResponseValid("error"));
+        assertSame("Regular response should be true", true, notificationService.isResponseValid("{}"));
+    }
+
 
 }
