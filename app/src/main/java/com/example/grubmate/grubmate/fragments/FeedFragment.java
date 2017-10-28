@@ -187,9 +187,9 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
 
     @Override
     public void onPause() {
+        super.onPause();
         mGoogleApiClient.stopAutoManage(getActivity());
         mGoogleApiClient.disconnect();
-        super.onPause();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -219,6 +219,8 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     @Override
     public void onStop() {
         super.onStop();
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
     }
 
     @Override
