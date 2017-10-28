@@ -149,6 +149,17 @@ public class GroupSettingsActivity extends AppCompatActivity {
                             currentGroup.memberIDs.add(allFriendsList.get(i).id);
                         }
                     }
+                    if(!isAdd) {
+                        groupsList.set(groupID,currentGroup);
+                    }else{
+                        groupsList.add(currentGroup);
+                    }
+
+                    ArrayList<Integer> groupIDs = new ArrayList<Integer>();
+                    for(int i=0;i<groupsList.size();i++){
+                        groupIDs.add(groupsList.get(i).groupID);
+                    }
+                    PersistantDataManager.setGroupIDs(groupIDs);
 
                     new SetGroupsTask().execute("");
 

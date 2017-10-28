@@ -109,14 +109,9 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-            mPastPostList = (ArrayList<Post>)getArguments().getSerializable("pastPost");
+            mPastPostList = (ArrayList<Post>) getArguments().getSerializable("pastPost");
         }
         feedData = new ArrayList<Post>();
-         if(mGoogleApiClient==null)mGoogleApiClient = new GoogleApiClient.Builder(getContext())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(getActivity(), this)
-                .build();
     }
 
     @Override
@@ -160,6 +155,12 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     @Override
     public void onStart() {
         super.onStart();
+        if(mGoogleApiClient==null)mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .enableAutoManage(getActivity(), this)
+                    .build();
+
         mGoogleApiClient.connect();
         if(mParam2==null) {
             new FetchFeedListTask().execute(2);
@@ -180,6 +181,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             mFeedProgressBar.setVisibility(View.INVISIBLE);
             mFeedProgressBar.getLayoutParams().height = 0;
             mFeedView.setVisibility(View.VISIBLE);
+
         }
     }
 
@@ -216,7 +218,6 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
 
     @Override
     public void onStop() {
-        mGoogleApiClient.disconnect();
         super.onStop();
     }
 

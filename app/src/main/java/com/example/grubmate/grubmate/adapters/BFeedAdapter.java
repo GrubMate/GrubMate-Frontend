@@ -25,11 +25,20 @@ public class BFeedAdapter extends BaseQuickAdapter<Post, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder viewHolder, Post item) {
-        viewHolder.setText(R.id.tv_feed_item_name, item.title)
-                // integers has to be wraped as string to avoid android treating them as resource
-                .setText(R.id.tv_feed_item_poster, item.posterName)
-                .addOnClickListener(R.id.tv_feed_item_poster)
-                .addOnClickListener(R.id.b_feed_item_request);
+        if(item.isActive){
+            viewHolder.setText(R.id.tv_feed_item_name, item.title)
+                    // integers has to be wraped as string to avoid android treating them as resource
+                    .setText(R.id.tv_feed_item_poster, item.posterName)
+                    .addOnClickListener(R.id.tv_feed_item_poster)
+                    .addOnClickListener(R.id.b_feed_item_request);
+        }else{
+            viewHolder.setText(R.id.tv_feed_item_name, item.title)
+                    // integers has to be wraped as string to avoid android treating them as resource
+                    .setText(R.id.tv_feed_item_poster, item.posterName)
+                    .addOnClickListener(R.id.tv_feed_item_poster)
+                    .setVisible(R.id.b_feed_item_request,false);
+        }
+
         if(item.postPhotos!=null && item.postPhotos.length > 0) {
             Picasso.with(this.mContext)
                     .load(GrubMatePreference.getImageUrl(item.postPhotos[0]))
@@ -40,8 +49,9 @@ public class BFeedAdapter extends BaseQuickAdapter<Post, BaseViewHolder> {
                     .load(R.drawable.mr_dialog_material_background_dark)
                     .into((ImageView) viewHolder.getView(R.id.iv_feed_item_image));
         }
-                if(item.requestsIDs != null && item.requestsIDs.contains(PersistantDataManager.getUserID())) {
+
+        if(item.requestsIDs != null && item.requestsIDs.contains(PersistantDataManager.getUserID())) {
                     viewHolder.getView(R.id.b_feed_item_request).setEnabled(false);
-                }
+        }
     }
 }

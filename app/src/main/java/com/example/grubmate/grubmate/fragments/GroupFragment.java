@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,7 @@ import com.example.grubmate.grubmate.adapters.BGroupAdapter;
 import com.example.grubmate.grubmate.dataClass.Group;
 import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
+import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 
 import java.util.ArrayList;
 
@@ -189,6 +191,11 @@ public class GroupFragment extends Fragment {
                 feedData = feedItems;
                 mFeedAdapter.setNewData(feedData);
                 mFeedView.setVisibility(View.VISIBLE);
+                ArrayList<Integer> groupIDs = new ArrayList<Integer>();
+                for(int i=0;i<feedItems.size();i++){
+                    groupIDs.add(feedItems.get(i).groupID);
+                }
+                PersistantDataManager.setGroupIDs(groupIDs);
                 final ArrayList<Group> list = feedItems;
                 mFeedAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
                     @Override

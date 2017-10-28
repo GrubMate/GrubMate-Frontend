@@ -19,6 +19,7 @@ public class MockData {
             localPost.posterID = i;
             localPost.isHomeMade = i%2 == 0;
             localPost.title = "Pengxiang";
+            localPost.isActive = true;
             result.add(localPost);
         }
         return result;
@@ -34,6 +35,7 @@ public class MockData {
             localPost.posterID = i;
             localPost.isHomeMade = i%2 == 0;
             localPost.title = "search";
+            localPost.isActive = true;
             result.add(localPost);
         }
         return result;
@@ -49,6 +51,7 @@ public class MockData {
             localPost.posterID = i;
             localPost.isHomeMade = i%2 == 0;
             localPost.title = "Past Post";
+            localPost.isActive = false;
             result.add(localPost);
         }
         return result;
