@@ -70,33 +70,34 @@ public class LoginActivity extends AppCompatActivity {
             loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
                 @Override
                 public void onSuccess(final LoginResult login_result) {
+                    getFriendList(login_result.getAccessToken());
 
-                    new GraphRequest(
-                            token,
-                            "/me/friends",
-                            null,
-                            HttpMethod.GET,
-                            new GraphRequest.Callback() {
-                                public void onCompleted(GraphResponse response) {
-                                    Log.i("friendlist 1", response.toString());
-                                    try {
-                                        JSONArray rawName = response.getJSONObject().getJSONArray("data");
-                                        ArrayList<String> friends = new ArrayList<String>();
-                                        String userID = token.getUserId();
-                                        facebookID = userID;
-                                        Log.i("userid",userID);
-                                        for (int l = 0; l < rawName.length(); l++) {
-                                            friends.add(rawName.getJSONObject(l).getString("id"));
-                                        }
-                                        friendList = friends;
-                                        getProfileImage(token);
-
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                    ).executeAsync();
+//                    new GraphRequest(
+//                            token,
+//                            "/me/friends",
+//                            null,
+//                            HttpMethod.GET,
+//                            new GraphRequest.Callback() {
+//                                public void onCompleted(GraphResponse response) {
+//                                    Log.i("friendlist 1", response.toString());
+//                                    try {
+//                                        JSONArray rawName = response.getJSONObject().getJSONArray("data");
+//                                        ArrayList<String> friends = new ArrayList<String>();
+//                                        String userID = token.getUserId();
+//                                        facebookID = userID;
+//                                        Log.i("userid",userID);
+//                                        for (int l = 0; l < rawName.length(); l++) {
+//                                            friends.add(rawName.getJSONObject(l).getString("id"));
+//                                        }
+//                                        friendList = friends;
+//                                        getProfileImage(token);
+//
+//                                    } catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    }
+//                                }
+//                            }
+//                    ).executeAsync();
                 }
 
                 @Override
@@ -216,7 +217,7 @@ public class LoginActivity extends AppCompatActivity {
             newUser.facebookID = facebookID;
             newUser.userID = null;
             newUser.bio = null;
-            newUser.ratings = null;
+            newUser.rating = null;
             newUser.allergy = null;
             newUser.groupID = null;
             newUser.postsID = null;

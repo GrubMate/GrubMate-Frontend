@@ -86,11 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
             if(test) {
                 User user = MockData.getUser(0);
                 mProfileName.setText(user.userName);
-                if(user.ratings!=null&&user.ratings.length>0&&user.ratings[0]!=null) {
-                    mProfileRatingBar.setRating(user.ratings[0]);
-                } else {
                     mProfileRatingBar.setRating(5);
-                }
                 Picasso.with(ProfileActivity.this).load(user.profilePhoto).into(mProfileAvatar);
             } else {
                 Log.d("profile", postActionResponse);
@@ -99,11 +95,7 @@ public class ProfileActivity extends AppCompatActivity {
                 } else {
                     User user = gson.fromJson(postActionResponse, User.class);
                     mProfileName.setText(user.userName);
-                    if(user.ratings!=null&&user.ratings.length>0&&user.ratings[0]!=null) {
-                        mProfileRatingBar.setRating(user.ratings[0]);
-                    } else {
                         mProfileRatingBar.setRating(5);
-                    }
                     Picasso.with(ProfileActivity.this).load(user.profilePhoto).into(mProfileAvatar);
                 }
             }

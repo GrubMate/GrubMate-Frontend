@@ -92,12 +92,16 @@ public class NotificationService extends Service {
 
         @Override
         protected void onPostExecute(String postActionResponse) {
+            Log.d("Notification", postActionResponse==null?"Null":postActionResponse);
             if(postActionResponse != null && !postActionResponse.contains("Error")) {
                 Intent local = new Intent();
                 local.setAction(NotificationCenterFragment.BROADCAST_ACTION);
                 Log.d("notification", postActionResponse);
-                local.putExtra("notification", postActionResponse);
-                sendBroadcast(local);
+                if(postActionResponse!=null&&postActionResponse.length()>0&&!postActionResponse.contains("error")) {
+                    PersistantDataManager.addNotificationi(gson.fromJson(postActionResponse, Notification.class));
+                    local.putExtra("notification", postActionResponse);
+                    sendBroadcast(local);
+                }
             }
             new NotificationTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "Notification");;
         }

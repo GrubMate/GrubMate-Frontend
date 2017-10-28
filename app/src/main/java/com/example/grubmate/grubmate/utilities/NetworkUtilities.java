@@ -66,7 +66,8 @@ public class NetworkUtilities {
             return null;
         }
         try {
-            RequestBody body = RequestBody.create(JSON, jsonBody);
+            Log.d("Netowrk Post", url);
+            RequestBody body = jsonBody!=null?RequestBody.create(JSON, jsonBody):RequestBody.create(JSON, "");
             Request request = new Request.Builder()
                     .url(url)
                     .post(body)

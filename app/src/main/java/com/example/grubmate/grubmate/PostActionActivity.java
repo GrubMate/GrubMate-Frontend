@@ -234,9 +234,11 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onPause() {
         super.onPause();
-        //mGoogleApiClient.stopAutoManage(this);
-       // mGoogleApiClient.disconnect();
-       // super.onPause();
+
+        if(mGoogleApiClient!=null) {
+            mGoogleApiClient.stopAutoManage(this);
+            mGoogleApiClient.disconnect();
+        }
 
     }
 
@@ -268,10 +270,10 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             timePeriod = postItemTimeSpinner.getSelectedItem().toString();
             if(timePeriod == "Time Period") timePeriod = null;
             groupIDs = new Integer[1];
-            groupIDs[0] = postGroupSpinner.getSelectedItemPosition();
+            groupIDs[0] = Objects.equals(postGroupSpinner.getSelectedItem().toString(), "All")?null:Integer.parseInt(postGroupSpinner.getSelectedItem().toString());
             // TODO: change this to reald user id in production
             userID = 0;
-            new PostActionTask().execute(GrubMatePreference.getPostActionURl(userID));
+            new PostActionTask().execute();
         } else {
             showShortToast("Please fill out all necessary fields before posting");
         }
@@ -286,9 +288,6 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         protected String doInBackground(String... params) {
-            if (params.length == 0||params[0].length()==0) {
-                return null;
-            }
 
             Post newPost = mPostData == null?new Post():mPostData;
             newPost.tags = tags;
@@ -339,7 +338,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             Post post = gson.fromJson(postJson, Post.class);
             if(mPostData==null) {
                 try {
-                    return NetworkUtilities.post(params[0],postJson);
+                    return NetworkUtilities.post(GrubMatePreference.getPostActionURl(PersistantDataManager.getUserID()),postJson);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

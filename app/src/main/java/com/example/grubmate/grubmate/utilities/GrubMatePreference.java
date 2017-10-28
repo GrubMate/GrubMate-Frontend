@@ -5,7 +5,7 @@ package com.example.grubmate.grubmate.utilities;
  */
 
 public class GrubMatePreference {
-    public static final String domain = "http://10.120.74.149:8080";
+    public static final String domain = "http://10.120.76.91:8080";
     public static final String subscribeActionURL = "/subscription";
     public static final String postURL = "/post";
     public static final String searchURL = "/search";
@@ -14,6 +14,8 @@ public class GrubMatePreference {
     public static final String requestURL = "/request";
     public static final String subscriptionURL = "/subscription";
     public static final String imageUrl = "/image";
+    public static final String confimUrl = "/post";
+    public static final String ratingUrl = "";
     public static String getSubscribeActionURL(int ID) {
         return domain + subscribeActionURL + "/" + ID;
     }
@@ -57,6 +59,14 @@ public class GrubMatePreference {
     }
     public static String getSubscriptionDeleteURL(int ID, int subscriptionID) {
         return domain + subscriptionURL + "/" + ID + "/" + subscriptionID;
+    }
+
+    public static String getConfimUrl(int ID, int postID) {
+        return domain+confimUrl+"/" + ID + "/"+postID;
+    }
+
+    public static String getRatingUrl(int ID) {
+        return ratingUrl;
     }
 
     public static String getRequestURL() {
