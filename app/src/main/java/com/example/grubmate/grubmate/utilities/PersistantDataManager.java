@@ -25,4 +25,5 @@ public class PersistantDataManager {
     public static void setGroupIDs(ArrayList<Integer> groupIDs) {
         PersistantDataManager.groupIDs = groupIDs;
     }
+
 }
