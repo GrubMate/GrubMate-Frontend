@@ -220,8 +220,12 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
         if (context instanceof OnNotificationFragmentInteractionListener) {
             mListener = (OnNotificationFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnNotificationFragmentInteractionListener");
+            mListener = new OnNotificationFragmentInteractionListener() {
+                @Override
+                public void onNotificationFragmentInteraction(Uri uri) {
+
+                }
+            };
         }
     }
 
