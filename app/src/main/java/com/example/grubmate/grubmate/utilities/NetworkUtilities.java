@@ -13,6 +13,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+
 /**
  * Created by tianhangliu on 10/1/17.
  *
@@ -33,7 +34,7 @@ public class NetworkUtilities {
             Request request = new Request.Builder()
                     .url(url)
                     .build();
-            Log.d("Netowrk", "reaady to execute "+url);
+            //Log.d("Netowrk", "reaady to execute "+url);
             Response response = client.newCall(request).execute();
             return response.body()==null?null:response.body().string();
         } catch (SocketException e) {
@@ -72,6 +73,8 @@ public class NetworkUtilities {
                     .post(body)
                     .build();
             Response response = client.newCall(request).execute();
+
+            //String test = response.body().string();
             return response.body()==null?null:response.body().string();
         } catch (SocketException e) {
             e.printStackTrace();
