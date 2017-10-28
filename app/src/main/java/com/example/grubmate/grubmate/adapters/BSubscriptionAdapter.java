@@ -30,4 +30,5 @@ public class BSubscriptionAdapter extends BaseQuickAdapter<Subscription, BaseVie
                 .addOnClickListener(R.id.b_subscription_item_unsubscribe);
 
     }
+
 }

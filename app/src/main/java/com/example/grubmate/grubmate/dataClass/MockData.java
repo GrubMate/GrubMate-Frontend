@@ -59,7 +59,7 @@ public class MockData {
     public static User getUser(int id) {
         User result = new User();
         result.userName = "Jie Ji";
-        result.ratings = new Integer[]{5, 5};
+        result.rating = 4.5;
         result.profilePhoto = "https://scontent-lax3-2.xx.fbcdn.net/v/t1.0-1/p320x320/18157207_1865865683653472_4594581227614755828_n.jpg?oh=f4dd57613f14e50610f16ba17043bce7&oe=5A643985";
         result.facebookID = "100006901752615";
         return result;
@@ -106,30 +106,30 @@ public class MockData {
 
     public static ArrayList<Notification> getNotificationList() {
         ArrayList<Notification> result = new ArrayList<Notification>();
-        Notification requestNotification = new Notification();
-        requestNotification.type = Notification.REQUEST;
-        requestNotification.title = "Jie JI";
-        requestNotification.requesterName = "Pengxiang Zhu";
-        result.add(requestNotification);
-
-        Notification matchNotification = new Notification();
-        matchNotification.type = Notification.MATCH;
-        matchNotification.title = "Oreo";
-        matchNotification.requesterName = "Pengxiang Zhu";
-        result.add(matchNotification);
-
-        Notification accptedNotification = new Notification();
-        accptedNotification.type = Notification.ACCEPTED;
-        accptedNotification.title = "Lolipop";
-        result.add(accptedNotification);
-        Notification ratingNotification = new Notification();
-        ratingNotification.type = Notification.RATING;
-        ratingNotification.title = "Lolipop";
-        ratingNotification.fromUserName = "Pengxiang";
-        ratingNotification.fromUserID = 0;
-        ratingNotification.toUserName = "Jieji";
-        ratingNotification.toUserID = 1;
-        result.add(ratingNotification);
+//        Notification requestNotification = new Notification();
+//        requestNotification.type = Notification.REQUEST;
+//        requestNotification.title = "Jie JI";
+//        requestNotification.requesterName = "Pengxiang Zhu";
+//        result.add(requestNotification);
+//
+//        Notification matchNotification = new Notification();
+//        matchNotification.type = Notification.MATCH;
+//        matchNotification.title = "Oreo";
+//        matchNotification.requesterName = "Pengxiang Zhu";
+//        result.add(matchNotification);
+//
+//        Notification accptedNotification = new Notification();
+//        accptedNotification.type = Notification.ACCEPTED;
+//        accptedNotification.title = "Lolipop";
+//        result.add(accptedNotification);
+//        Notification ratingNotification = new Notification();
+//        ratingNotification.type = Notification.RATING;
+//        ratingNotification.title = "Lolipop";
+//        ratingNotification.fromUserName = "Pengxiang";
+//        ratingNotification.fromUserID = 0;
+//        ratingNotification.toUserName = "Jieji";
+//        ratingNotification.toUserID = 1;
+//        result.add(ratingNotification);
         return result;
     }
 }
