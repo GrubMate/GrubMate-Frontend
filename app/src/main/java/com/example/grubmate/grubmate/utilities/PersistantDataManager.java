@@ -22,6 +22,10 @@ public class PersistantDataManager {
         PersistantDataManager.notificationCache = notificationCache;
     }
 
+    public static void addNotificationi(Notification notification) {
+        notificationCache.add(0, notification);
+    }
+
     public static ArrayList<Notification> notificationCache = new ArrayList<Notification>();
     public static int getUserID() {
         return userID;

@@ -39,6 +39,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -164,7 +165,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         mGoogleApiClient.connect();
         if(mParam2==null) {
             new FetchFeedListTask().execute(2);
-        }else if(mParam2=="search"){
+        }else if(Objects.equals(mParam2, "search")){
             Intent i = getActivity().getIntent();
 
             ArrayList<Post> searchResult= (ArrayList<Post>) i.getSerializableExtra("searchResult");
@@ -174,7 +175,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             mFeedProgressBar.getLayoutParams().height = 0;
             mFeedView.setVisibility(View.VISIBLE);
            // new FetchFeedListTask().execute(2);
-        }else if(mParam2=="profile"){
+        }else if(Objects.equals(mParam2, "profile")){
             Log.i("profile","");
             feedData = mPastPostList;
             mFeedAdapter.setNewData(feedData);
@@ -276,7 +277,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
                 mFeedProgressBar.getLayoutParams().height = 0;
                 mFeedView.setVisibility(View.VISIBLE);
                 if(feedItems.size()==0) {
-                    mFeedAdapter.setEmptyView(R.layout.list_empty_layout);
+                    mFeedAdapter.setEmptyView(R.layout.list_empty_layout, mFeedView);
                 }
             } else {
                 mFeedProgressBar.setVisibility(View.INVISIBLE);

@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.example.grubmate.grubmate.R.id.poster_layout;
+import static com.example.grubmate.grubmate.R.id.recyclerview;
 import static com.example.grubmate.grubmate.adapters.FeedAdapter.FeedDetailActivity.PLACE_AUTOCOMPLETE_REQUEST_CODE;
 
 /**
@@ -72,6 +73,7 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
     private Double[] address;
     private Integer requesterID;
     private Integer targetPostID;
+    private int targetPostPos;
     private BroadcastReceiver mNotificationReceiver;
     private IntentFilter intentFilter;
     private Gson gson;
@@ -126,8 +128,7 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
                 String payload = intent.getStringExtra("notification");
                 Log.d("Notification Center", payload==null?"null":payload);
                 if(payload!=null&&payload.length()>0) {
-                    notificationData.add(0, gson.fromJson(payload, Notification.class));
-                    PersistantDataManager.setNotificationCache(notificationData);
+                    notificationData = PersistantDataManager.getNotificationCache();
                     mNotificationAdapter.setNewData(notificationData);
                 }
             }
@@ -150,35 +151,31 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
         mRecyclerView.setLayoutManager(layoutManager);
         mNotificationAdapter = new NotificationAdapter(notificationData);
         mNotificationAdapter.openLoadAnimation();
-        mRecyclerView.setAdapter(mNotificationAdapter);
-//        mProgressBar = rootView.findViewById(R.id.pb_notification_progress);
         mNotificationAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
                     case R.id.b_notification_accept:
                         view.setEnabled(false);
-                        Button denyButton = (Button) adapter.getViewByPosition(position, R.id.b_notification_deny);
-                        if(denyButton!=null)denyButton.setEnabled(false);
                         new AcceptRequestTask().execute(position);
                         break;
                     case R.id.b_notification_deny:
                         view.setEnabled(false);
-                        Button acceptButton = (Button) adapter.getViewByPosition(position, R.id.b_notification_accept);
-                        if(acceptButton!=null)acceptButton.setEnabled(false);
                         new DenyRequestTask().execute(position);
                         break;
                     case R.id.b_notification_request:
                         requestPost(position);
                         break;
                     case R.id.b_notification_submit:
-                        RatingBar ratingBar = view.findViewById(R.id.rb_notification_rating);
+                        RatingBar ratingBar = (RatingBar) adapter.getViewByPosition(mRecyclerView, position,R.id.rb_notification_rating);
                         int score = ratingBar.getNumStars();
                         new SubmitRatingTask().execute(position,score);
                         break;
                 }
             }
         });
+        mRecyclerView.setAdapter(mNotificationAdapter);
+//        mProgressBar = rootView.findViewById(R.id.pb_notification_progress);
         return rootView;
     }
 
@@ -351,7 +348,8 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
         @Override
 
         protected String doInBackground(Integer ...params) {
-            pos = params[0];
+            targetPostID = params[0];
+            pos = params[1];
             Log.d("Feed", "Ready to send request");
 
             UserRequest newRequest = new UserRequest();
@@ -428,6 +426,7 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
 
     private void requestPost(int pos) {
         requesterID = PersistantDataManager.getUserID();
+        targetPostPos = pos;
         targetPostID = notificationData.get(pos).postID;
         address = new Double[2];
         try {
@@ -449,7 +448,7 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
 
                 Lat = place.getLatLng().latitude;
                 Lng = place.getLatLng().longitude;
-                new NotificationCenterFragment.RequestTask().execute(targetPostID);
+                new NotificationCenterFragment.RequestTask().execute(targetPostID, targetPostPos);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(getContext(), data);
                 // TODO: Handle the error.
