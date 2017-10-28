@@ -195,11 +195,6 @@ public class SubscriptionFragment extends Fragment {
 
         @Override
         protected ArrayList<Subscription> doInBackground(Integer... params) {
-            if (params.length == 0) {
-                return null;
-            }
-
-
           try {
                 String response = NetworkUtilities.get(GrubMatePreference.getSubscriptionURL(PersistantDataManager.getUserID()));
                 Log.d(TAG, response==null?"null":response);
@@ -249,6 +244,7 @@ public class SubscriptionFragment extends Fragment {
         protected void onPostExecute(String postActionResponse) {
             if (postActionResponse != null) {
                 Toast.makeText(getContext(), "Unsubscribed Successfully", Toast.LENGTH_SHORT).show();
+                new FetchSubscriptionFeedListTask().execute();
             } else {
                 Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
             }
