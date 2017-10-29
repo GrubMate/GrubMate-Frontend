@@ -235,7 +235,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     protected void onPause() {
         super.onPause();
 
-        if(mGoogleApiClient!=null) {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.stopAutoManage(this);
             mGoogleApiClient.disconnect();
         }

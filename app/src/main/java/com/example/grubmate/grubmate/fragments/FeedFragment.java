@@ -208,8 +208,14 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnNotificationFragmentInteractionListener");
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnNotificationFragmentInteractionListener");
+            mListener = new OnFragmentInteractionListener() {
+                @Override
+                public void onFragmentInteraction(Uri uri) {
+
+                }
+            };
         }
     }
 

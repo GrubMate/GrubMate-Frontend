@@ -53,6 +53,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
             localID = intent.getIntExtra("index",localID);
             isAdd = false;
         } else {
+            groupsList = (ArrayList<Group>) getIntent().getSerializableExtra("groupsList");
             isAdd = true;
         }
 
@@ -62,7 +63,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
         checkBoxList = new ArrayList<CheckBox>();
         fab = (FloatingActionButton) findViewById(R.id.groupSettingButton);
         nameText = (EditText) findViewById(R.id.group_name);
-        Log.d("callFriendURL","sdf");
+        Log.d("groupList",String.valueOf(groupsList.size()));
         new GetFriendListTask().execute("");
     }
 
@@ -125,33 +126,37 @@ public class GroupSettingsActivity extends AppCompatActivity {
 
             fab.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+                    Log.i("new?",String.valueOf(isAdd));
 
+                    currentGroup = new Group();
                     if(!isAdd) {
                         currentGroup = groupsList.get(localID);
                         currentGroup.groupID = groupID;
                     }else{
-                        currentGroup = new Group() ;
                         currentGroup.groupID = null;
                     }
                     currentGroup.memberIDs = new ArrayList<Integer>();
 
                     // if(nameText.getText()!= null) {
-                    currentGroup.groupName = " ";
+
                     currentGroup.groupName = nameText.getText().toString();
                     // }else{
                     //     currentGroup.groupName = "  ";
                     //  }
 
-                    // currentGroup.groupOwnerID = PersistantDataManager.getUserID();
-                    currentGroup.groupOwnerID = 20;
+                    currentGroup.groupOwnerID = PersistantDataManager.getUserID();
+
                     for(int i=0;i<friendsNum;i++) {
                         if(checkBoxList.get(i).isChecked()){
                             currentGroup.memberIDs.add(allFriendsList.get(i).id);
                         }
                     }
+
+
                     if(!isAdd) {
                         groupsList.set(groupID,currentGroup);
                     }else{
+
                         groupsList.add(currentGroup);
                     }
 
@@ -161,8 +166,11 @@ public class GroupSettingsActivity extends AppCompatActivity {
                     }
                     PersistantDataManager.setGroupIDs(groupIDs);
 
-                    new SetGroupsTask().execute("");
-
+                    if(currentGroup.memberIDs.size() == 0 || currentGroup.groupName.length() == 0){
+                        showShortToast("please add at least one friend and fill out the group name");
+                    }else {
+                        new SetGroupsTask().execute("");
+                    }
                 }
             });
         }
