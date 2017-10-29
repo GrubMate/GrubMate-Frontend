@@ -38,4 +38,12 @@ public class SubscriptionDetailActivityTest {
         google.click();
     }
 
+    @Test
+    public void setUpNewSubscription() throws UiObjectNotFoundException
+    {
+        mFragmentTestRule.launchActivity(null);
+
+        onView(withId(R.id.b_subscription_subscribe)).perform(click());
+    }
+
 }
