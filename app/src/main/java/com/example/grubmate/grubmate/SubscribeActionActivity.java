@@ -70,16 +70,16 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
     }
 
     public boolean validateForm() {
-        if (subscribeItemNameText.getText().length() >0) {
-            return false;
+        if (subscribeItemNameText.getText().length() > 0) {
+            return true;
         } else if (subscribeItemTagsText.getText().length() > 0) {
-            return false;
+            return true;
         } else if (subscribeItemCategorySpinner.getSelectedItem().toString() != "Category") {
-            return false;
+            return true;
         } else if (subscribeItemTimeSpinner.getSelectedItem().toString() != "Time Period") {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     };
 
     @Override
