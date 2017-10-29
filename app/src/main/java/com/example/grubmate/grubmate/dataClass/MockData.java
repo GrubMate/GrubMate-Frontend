@@ -9,6 +9,7 @@ import java.util.ArrayList;
  */
 
 public class MockData {
+    public final static boolean TESTING = true;
     public static ArrayList<Post> getPostList(int num) {
         ArrayList<Post> result = new ArrayList<Post>();
         for(int i = 0; i<num; i++) {
@@ -106,30 +107,32 @@ public class MockData {
 
     public static ArrayList<Notification> getNotificationList() {
         ArrayList<Notification> result = new ArrayList<Notification>();
-//        Notification requestNotification = new Notification();
-//        requestNotification.type = Notification.REQUEST;
-//        requestNotification.title = "Jie JI";
-//        requestNotification.requesterName = "Pengxiang Zhu";
-//        result.add(requestNotification);
-//
-//        Notification matchNotification = new Notification();
-//        matchNotification.type = Notification.MATCH;
-//        matchNotification.title = "Oreo";
-//        matchNotification.requesterName = "Pengxiang Zhu";
-//        result.add(matchNotification);
-//
-//        Notification accptedNotification = new Notification();
-//        accptedNotification.type = Notification.ACCEPTED;
-//        accptedNotification.title = "Lolipop";
-//        result.add(accptedNotification);
-//        Notification ratingNotification = new Notification();
-//        ratingNotification.type = Notification.RATING;
-//        ratingNotification.title = "Lolipop";
-//        ratingNotification.fromUserName = "Pengxiang";
-//        ratingNotification.fromUserID = 0;
-//        ratingNotification.toUserName = "Jieji";
-//        ratingNotification.toUserID = 1;
-//        result.add(ratingNotification);
+        if(TESTING) {
+            Notification requestNotification = new Notification();
+            requestNotification.type = Notification.REQUEST;
+            requestNotification.title = "Jie JI";
+            requestNotification.requesterName = "Pengxiang Zhu";
+            result.add(requestNotification);
+
+            Notification matchNotification = new Notification();
+            matchNotification.type = Notification.MATCH;
+            matchNotification.title = "Oreo";
+            matchNotification.requesterName = "Pengxiang Zhu";
+            result.add(matchNotification);
+
+            Notification accptedNotification = new Notification();
+            accptedNotification.type = Notification.ACCEPTED;
+            accptedNotification.title = "Lolipop";
+            result.add(accptedNotification);
+            Notification ratingNotification = new Notification();
+            ratingNotification.type = Notification.RATING;
+            ratingNotification.title = "Lolipop";
+            ratingNotification.fromUserName = "Pengxiang";
+            ratingNotification.fromUserID = 0;
+            ratingNotification.toUserName = "Jieji";
+            ratingNotification.toUserID = 1;
+            result.add(ratingNotification);
+        }
         return result;
     }
 }

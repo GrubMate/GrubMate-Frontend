@@ -128,18 +128,22 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
             public void onReceive(Context context, Intent intent) {
                 String payload = intent.getStringExtra("notification");
                 Log.d("Notification Center", payload==null?"null":payload);
-                if(payload!=null&&payload.length()>0) {
-                    notificationData = PersistantDataManager.getNotificationCache();
-                    mNotificationAdapter.setNewData(notificationData);
-                }
+                updateNotification(payload);
             }
         };
-
-
         intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_ACTION);
         // start the service for notification
         notificationData = new ArrayList<Notification>();
+    }
+
+    public boolean updateNotification(String payload) {
+        if(payload!=null&&payload.length()>0) {
+            notificationData = PersistantDataManager.getNotificationCache();
+            mNotificationAdapter.setNewData(notificationData);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -255,42 +259,7 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
         void onNotificationFragmentInteraction(Uri uri);
     }
 
-//    class FetchNotificationTask extends AsyncTask<Integer, Integer, String> {
-//
-//        @Override
-//        protected void onPreExecute() {
-//            mRecyclerView.setVisibility(View.INVISIBLE);
-//            mProgressBar.getLayoutParams().height = (int) getResources().getDimension(R.dimen.pb_height);
-//            mProgressBar.setVisibility(View.VISIBLE);
-//            super.onPreExecute();
-//        }
-//
-//        @Override
-//        protected String doInBackground(Integer... integers) {
-//            try {
-//                return NetworkUtilities.get(GrubMatePreference.getNotificationURL(PersistantDataManager.getUserID()));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String s) {
-//            if(s != null && !s.contains("404") && !s.contains("505")) {
-//                // TODO: modify this to real parse function later
-//                notificationData = MockData.getNotificationList();
-//                mNotificationAdapter.setNewData(notificationData);
-//            } else {
-//                            notificationData = MockData.getNotificationList();
-//            mNotificationAdapter.setNewData(notificationData);
-//
-//            }
-//            mProgressBar.setVisibility(View.INVISIBLE);
-//            mProgressBar.getLayoutParams().height = 0;
-//            mRecyclerView.setVisibility(View.VISIBLE);
-//        }
-//    }
+
     public class AcceptRequestTask extends AsyncTask<Integer, Integer, String> {
         int pos;
         @Override

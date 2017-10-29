@@ -2,7 +2,7 @@ package com.example.grubmate.grubmate.utilities;
 
 import android.util.Log;
 
-import com.example.grubmate.grubmate.dataClass.Notification;
+import com.example.grubmate.grubmate.dataClass.*;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class PersistantDataManager {
     public static int userID = 0;
     public static ArrayList<Integer> groupIDs = new ArrayList<Integer>();
-    public static ArrayList<Notification> notificationCache = new ArrayList<Notification>();
+    public static ArrayList<Notification> notificationCache = com.example.grubmate.grubmate.dataClass.MockData.getNotificationList();
 
 
     public static ArrayList<Notification> getNotificationCache() {
