@@ -98,19 +98,7 @@ public class GroupFragment extends Fragment {
         mFeedAdapter.setEmptyView(R.layout.list_empty_layout, (ViewGroup) mFeedView.getParent());
         mAddGroupButton = (FloatingActionButton)rootView.findViewById(R.id.fab_group_add);
         mFeedView.setAdapter(mFeedAdapter);
-        mAddGroupButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Button myButton = new Button(getContext());
-                myButton.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getContext(),GroupSettingsActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                Intent intent = new Intent(getContext(),GroupSettingsActivity.class);
-                startActivity(intent);
-            }
-        });
+
         //        mFeedAdapter.setFeedData(MockData.mockFeedData);
         return rootView;
     }
@@ -216,6 +204,14 @@ public class GroupFragment extends Fragment {
                     }
                 });
 
+                mAddGroupButton.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(getContext(),GroupSettingsActivity.class);
+                        intent.putExtra("groupsList", list);
+                        startActivity(intent);
+                }
+                });
             }
         }
     }

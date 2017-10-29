@@ -99,6 +99,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         category = searchItemCategorySpinner.getSelectedItem().toString();
         timePeriod = searchItemTimeSpinner.getSelectedItem().toString();
         allergyInfo = new Boolean[3];
+
         if(validateForm()) {
             new SearchActivity.SearchTask().execute("post");
         } else {

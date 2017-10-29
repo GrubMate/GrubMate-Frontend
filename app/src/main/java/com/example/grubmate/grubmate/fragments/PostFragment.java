@@ -156,8 +156,14 @@ public class PostFragment extends Fragment {
         if (context instanceof OnPostFragmentInteractionListener) {
             mListener = (OnPostFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnNotificationFragmentInteractionListener");
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnNotificationFragmentInteractionListener");
+            mListener = new OnPostFragmentInteractionListener() {
+                @Override
+                public void onPostFragmentInteraction(Uri uri) {
+
+                }
+            };
         }
     }
 
@@ -270,7 +276,7 @@ public class PostFragment extends Fragment {
         protected String doInBackground(Integer... integers) {
             Integer postID = integers[0];
             try {
-                return   NetworkUtilities.delete(GrubMatePreference.getPostDeleteURL(PersistantDataManager.getUserID(), postID), null);
+                return   NetworkUtilities.post(GrubMatePreference.getConfimUrl(PersistantDataManager.getUserID(), postID), null);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -280,7 +286,7 @@ public class PostFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             if(s != null) {
-                showShortToast("Your post was successfully deleted");
+                showShortToast("Your post was confirmed");
                 new FetchPostListTask().execute();
             } else {
                 showShortToast("Netowrk Error");

@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import com.example.grubmate.grubmate.dataClass.Subscription;
 
@@ -70,13 +71,13 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
 
     public boolean validateForm() {
         if (subscribeItemNameText.getText().length() >0) {
-            return true;
+            return false;
         } else if (subscribeItemTagsText.getText().length() > 0) {
-            return true;
+            return false;
         } else if (subscribeItemCategorySpinner.getSelectedItem().toString() != "Category") {
-            return true;
+            return false;
         } else if (subscribeItemTimeSpinner.getSelectedItem().toString() != "Time Period") {
-            return true;
+            return false;
         }
         return true;
     };
@@ -87,7 +88,9 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
             query = subscribeItemNameText.getText().toString();
             allergyInfo = new Boolean[3];
             category = subscribeItemCategorySpinner.getSelectedItem().toString();
+            if(Objects.equals(category, "Category")) category = null;
             timePeriod = subscribeItemTimeSpinner.getSelectedItem().toString();
+            if(Objects.equals(timePeriod, "Time Period")) timePeriod = null;
             // TODO: modify this into users' real id in production
             String tagString = subscribeItemTagsText.getText().toString();
             tags = tagString.split(",");

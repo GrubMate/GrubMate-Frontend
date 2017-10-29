@@ -223,8 +223,6 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             return false;
         } else if (Objects.equals(postItemCategorySpinner.getSelectedItem().toString(), "Category")) {
             return false;
-        } else if (mSelected.size()==0) {
-            return false;
         } else if (postItemDescriptionText.getText().length()==0) {
             return false;
         } else if (postItemQuantityText.getText().length()==0) {
@@ -236,12 +234,23 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onPause() {
         super.onPause();
-        mGoogleApiClient.stopAutoManage(this);
-        mGoogleApiClient.disconnect();
-        super.onPause();
+
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.stopAutoManage(this);
+            mGoogleApiClient.disconnect();
+        }
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // stop GoogleApiClient
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.stopAutoManage(this);
+            mGoogleApiClient.disconnect();
+        }
+    }
     @Override
     public void onClick(View view) {
         if(validateForm()) {
@@ -261,10 +270,10 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             timePeriod = postItemTimeSpinner.getSelectedItem().toString();
             if(timePeriod == "Time Period") timePeriod = null;
             groupIDs = new Integer[1];
-            groupIDs[0] = postGroupSpinner.getSelectedItemPosition();
+            groupIDs[0] = Objects.equals(postGroupSpinner.getSelectedItem().toString(), "All")?null:Integer.parseInt(postGroupSpinner.getSelectedItem().toString());
             // TODO: change this to reald user id in production
             userID = 0;
-            new PostActionTask().execute(GrubMatePreference.getPostActionURl(userID));
+            new PostActionTask().execute();
         } else {
             showShortToast("Please fill out all necessary fields before posting");
         }
@@ -279,9 +288,6 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 
         @Override
         protected String doInBackground(String... params) {
-            if (params.length == 0||params[0].length()==0) {
-                return null;
-            }
 
             Post newPost = mPostData == null?new Post():mPostData;
             newPost.tags = tags;
@@ -293,28 +299,33 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             newPost.isActive = true;
             newPost.title = postItemName;
             ArrayList<String> encodedImages = new ArrayList<>();
-            for(int i = 0; i<mSelected.size();i++) {
-                Bitmap bitmap = null;
-                InputStream is = null;
-                try {
-                    is = getContentResolver().openInputStream(mSelected.get(i));
-                    bitmap = BitmapFactory.decodeStream(is);
-                    is.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(bitmap != null) {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG,40,baos);
-                    String encodedImage = Base64.encodeToString(baos.toByteArray(),Base64.DEFAULT);
-                    encodedImages.add(encodedImage);
-                } else {
+            if(mSelected!=null) {
+                for (int i = 0; i < mSelected.size(); i++) {
+                    Bitmap bitmap = null;
+                    InputStream is = null;
+                    try {
+                        is = getContentResolver().openInputStream(mSelected.get(i));
+                        bitmap = BitmapFactory.decodeStream(is);
+                        is.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (bitmap != null) {
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 40, baos);
+                        String encodedImage = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+                        encodedImages.add(encodedImage);
+                    } else {
 
+                    }
                 }
+                if (encodedImages.size() > 0)
+                    newPost.postPhotos = encodedImages.toArray(new String[]{});
+            }else{
+                newPost.postPhotos = null;
             }
-            if(encodedImages.size() > 0) newPost.postPhotos = encodedImages.toArray(new String[]{});
 //            newPost.allergyInfo = null;
             newPost.posterID = PersistantDataManager.getUserID();
             // TODO: change to real groups ids
@@ -327,7 +338,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             Post post = gson.fromJson(postJson, Post.class);
             if(mPostData==null) {
                 try {
-                    return NetworkUtilities.post(params[0],postJson);
+                    return NetworkUtilities.post(GrubMatePreference.getPostActionURl(PersistantDataManager.getUserID()),postJson);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -138,8 +138,14 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
         if (context instanceof OnProfileFragmentInteractionListener) {
             mListener = (OnProfileFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnNotificationFragmentInteractionListener");
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnNotificationFragmentInteractionListener");
+            mListener = new OnProfileFragmentInteractionListener() {
+                @Override
+                public void onFragmentInteraction(Uri uri) {
+
+                }
+            };
         }
     }
 
@@ -180,11 +186,11 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
 
         @Override
         protected String doInBackground(String... params) {
-//            try {
-//                return NetworkUtilities.get(GrubMatePreference.getUserUrl(userID));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                return NetworkUtilities.get(GrubMatePreference.getUserUrl(userID));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             return gson.toJson(MockData.getUser(PersistantDataManager.userID));
         }
@@ -197,8 +203,8 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                 } else {
                     User user = gson.fromJson(postActionResponse, User.class);
                     mProfileName.setText(user.userName);
-                    if (user.ratings != null && user.ratings.length > 0 && user.ratings[0] != null) {
-                        mProfileRatingBar.setRating(user.ratings[0]);
+                    if (user.rating != null && user.rating >= 0) {
+                        mProfileRatingBar.setRating(user.rating.intValue());
                     } else {
                         mProfileRatingBar.setRating(5);
                     }

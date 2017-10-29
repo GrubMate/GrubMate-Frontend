@@ -9,7 +9,8 @@ public class User {
     public String facebookID;
     public String profilePhoto;
     public String bio;
-    public Integer[] ratings;
+    public Integer numRatings;
+    public Double rating;
     public Boolean[] allergy;
     public Integer[] groupID;
     public Integer[] postsID;

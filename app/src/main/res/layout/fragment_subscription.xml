@@ -8,12 +8,18 @@
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:id="@+id/tv_feed_title"
+        android:id="@+id/tv_subscription_title"
         android:padding="16dp"
         android:text="Updated Subscription"
         android:textAlignment="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/b_subscription_subscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Subscribe"/>
     <ProgressBar
         android:id="@+id/pb_subscription_progress"
         android:layout_width="120dp"

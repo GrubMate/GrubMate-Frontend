@@ -1,6 +1,7 @@
 package com.example.grubmate.grubmate.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,10 +12,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.example.grubmate.grubmate.PostActionActivity;
 import com.example.grubmate.grubmate.R;
+import com.example.grubmate.grubmate.SubscribeActionActivity;
 import com.example.grubmate.grubmate.adapters.BFeedAdapter;
 import com.example.grubmate.grubmate.adapters.BSubscriptionAdapter;
 import com.example.grubmate.grubmate.dataClass.MockData;
@@ -54,6 +60,7 @@ public class SubscriptionFragment extends Fragment {
     // used for better user experience when loading
     private ProgressBar mFeedProgressBar;
     private TextView mEmptyText;
+    private Button mSubscribeButton;
 
     public SubscriptionFragment() {
         // Required empty public constructor
@@ -97,8 +104,34 @@ public class SubscriptionFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
         mFeedView.setLayoutManager(layoutManager);
         mFeedAdapter = new BSubscriptionAdapter(feedData);
+        mFeedAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (view.getId()) {
+                    case R.id.b_subscription_item_unsubscribe:
+                        view.setEnabled(false);
+                        new SubscriptionDeleteTask().execute(position);
+                        break;
+                }
+            }
+        });
         mFeedView.setAdapter(mFeedAdapter);
+        mSubscribeButton = rootView.findViewById(R.id.b_subscription_subscribe);
+        mSubscribeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Class destinationActivity = SubscribeActionActivity.class;
 
+                // construct the intent
+                Intent startDetailActivityIntent = new Intent(getContext(), destinationActivity);
+
+                // put extra data into this intent
+                startDetailActivityIntent.putExtra(Intent.EXTRA_TEXT, PersistantDataManager.getUserID());
+
+                // start the intent
+                startActivity(startDetailActivityIntent);
+            }
+        });
         mFeedProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_subscription_progress);
         mEmptyText = (TextView) rootView.findViewById(R.id.tv_subscription_description);
         return rootView;
@@ -162,14 +195,9 @@ public class SubscriptionFragment extends Fragment {
 
         @Override
         protected ArrayList<Subscription> doInBackground(Integer... params) {
-            if (params.length == 0) {
-                return null;
-            }
-
-
           try {
                 String response = NetworkUtilities.get(GrubMatePreference.getSubscriptionURL(PersistantDataManager.getUserID()));
-                Log.d(TAG, response);
+                Log.d(TAG, response==null?"null":response);
                 if (response == null || response.length() == 0)
                     return MockData.getSubscriptionList(2);;
                 return JsonUtilities.getSubscriptionItems(response);
@@ -195,6 +223,30 @@ public class SubscriptionFragment extends Fragment {
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
 
+            }
+        }
+    }
+    public class SubscriptionDeleteTask extends AsyncTask<Integer, Integer, String> {
+        @Override
+        protected String doInBackground(Integer... params) {
+            int pos = params[0];
+            try {
+                Log.d("Subscription", "Sent");
+                return NetworkUtilities.delete(GrubMatePreference.getSubscriptionDeleteURL(PersistantDataManager.getUserID(), feedData.get(pos).subscriptionID), null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String postActionResponse) {
+            if (postActionResponse != null) {
+                Toast.makeText(getContext(), "Unsubscribed Successfully", Toast.LENGTH_SHORT).show();
+                new FetchSubscriptionFeedListTask().execute();
+            } else {
+                Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
             }
         }
     }

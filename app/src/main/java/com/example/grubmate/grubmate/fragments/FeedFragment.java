@@ -39,6 +39,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -164,7 +165,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         mGoogleApiClient.connect();
         if(mParam2==null) {
             new FetchFeedListTask().execute(2);
-        }else if(mParam2=="search"){
+        }else if(Objects.equals(mParam2, "search")){
             Intent i = getActivity().getIntent();
 
             ArrayList<Post> searchResult= (ArrayList<Post>) i.getSerializableExtra("searchResult");
@@ -174,7 +175,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             mFeedProgressBar.getLayoutParams().height = 0;
             mFeedView.setVisibility(View.VISIBLE);
            // new FetchFeedListTask().execute(2);
-        }else if(mParam2=="profile"){
+        }else if(Objects.equals(mParam2, "profile")){
             Log.i("profile","");
             feedData = mPastPostList;
             mFeedAdapter.setNewData(feedData);
@@ -188,8 +189,10 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     @Override
     public void onPause() {
         super.onPause();
-        mGoogleApiClient.stopAutoManage(getActivity());
-        mGoogleApiClient.disconnect();
+        if(mGoogleApiClient != null) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -205,8 +208,14 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnNotificationFragmentInteractionListener");
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnNotificationFragmentInteractionListener");
+            mListener = new OnFragmentInteractionListener() {
+                @Override
+                public void onFragmentInteraction(Uri uri) {
+
+                }
+            };
         }
     }
 
@@ -254,15 +263,15 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
 
         @Override
         protected ArrayList<Post> doInBackground(Integer... params) {
-//            try {
-//                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
-//                Log.d(TAG, response);
-//                if (response == null || response.length() == 0)
-//                    return MockData.getPostList(2);
-//                return JsonUtilities.getFeedItems(response);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+                Log.d(TAG, response);
+                if (response == null || response.length() == 0)
+                    return MockData.getPostList(2);
+                return JsonUtilities.getFeedItems(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             return MockData.getPostList(2);
         }
@@ -274,7 +283,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
                 mFeedProgressBar.getLayoutParams().height = 0;
                 mFeedView.setVisibility(View.VISIBLE);
                 if(feedItems.size()==0) {
-                    mFeedAdapter.setEmptyView(R.layout.list_empty_layout);
+                    mFeedAdapter.setEmptyView(R.layout.list_empty_layout, mFeedView);
                 }
             } else {
                 mFeedProgressBar.setVisibility(View.INVISIBLE);

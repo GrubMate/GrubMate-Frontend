@@ -92,12 +92,16 @@ public class NotificationService extends Service {
 
         @Override
         protected void onPostExecute(String postActionResponse) {
+            Log.d("Notification", postActionResponse==null?"Null":postActionResponse);
             if(postActionResponse != null && !postActionResponse.contains("Error")) {
                 Intent local = new Intent();
                 local.setAction(NotificationCenterFragment.BROADCAST_ACTION);
                 Log.d("notification", postActionResponse);
-                local.putExtra("notification", postActionResponse);
-                sendBroadcast(local);
+                if(isResponseValid(postActionResponse)) {
+                    PersistantDataManager.addNotification(gson.fromJson(postActionResponse, Notification.class));
+                    local.putExtra("notification", postActionResponse);
+                    sendBroadcast(local);
+                }
             }
             new NotificationTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "Notification");;
         }
@@ -114,5 +118,19 @@ public class NotificationService extends Service {
                 semaphore.release();
             }
         }
+    }
+
+    public boolean isResponseValid(String response) {
+        if (response == null) {
+            // response should not be false
+            return false;
+        } else if (response.length() == 0) {
+            // response should not be empty
+            return false;
+        } else if (response.contains("error")) {
+            // response should not contain error
+            return false;
+        }
+        return true;
     }
 }

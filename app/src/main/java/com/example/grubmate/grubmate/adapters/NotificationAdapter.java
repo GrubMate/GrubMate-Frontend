@@ -33,6 +33,7 @@ public class NotificationAdapter extends BaseQuickAdapter<Notification, BaseView
                 helper.setVisible(R.id.ll_notification_request, true)
                         .setVisible(R.id.ll_notification_match, false)
                         .setVisible(R.id.ll_notification_accepted, false)
+                        .setVisible(R.id.ll_notification_rating, false)
                         .setText(R.id.tv_notification_request_name, item.title)
                         .setText(R.id.tv_notification_request_requester_name, item.requesterName);
                 break;
@@ -40,6 +41,7 @@ public class NotificationAdapter extends BaseQuickAdapter<Notification, BaseView
                 helper.setVisible(R.id.ll_notification_request, false)
                         .setVisible(R.id.ll_notification_match, true)
                         .setVisible(R.id.ll_notification_accepted, false)
+                        .setVisible(R.id.ll_notification_rating, false)
                         .setText(R.id.tv_notification_match_name, item.title)
                         .setText(R.id.tv_notification_match_poster_name, item.posterName);
                 break;
@@ -47,6 +49,7 @@ public class NotificationAdapter extends BaseQuickAdapter<Notification, BaseView
                 helper.setVisible(R.id.ll_notification_request, false)
                         .setVisible(R.id.ll_notification_match, false)
                         .setVisible(R.id.ll_notification_accepted, true)
+                        .setVisible(R.id.ll_notification_rating, false)
                         .setText(R.id.tv_notification_accepted_name, item.title);
                 break;
             case Notification.RATING:
