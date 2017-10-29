@@ -8,7 +8,6 @@
     android:paddingTop="16dp"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
-    tools:context="com.example.grubmate.grubmate.activities.PostsActivity"
     android:paddingLeft="16dp">
     <Button
         android:id="@+id/b_post_post"

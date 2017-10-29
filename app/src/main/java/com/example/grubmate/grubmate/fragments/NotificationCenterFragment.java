@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static com.example.grubmate.grubmate.R.id.poster_layout;
+import static com.example.grubmate.grubmate.R.id.radio;
 import static com.example.grubmate.grubmate.R.id.recyclerview;
 import static com.example.grubmate.grubmate.adapters.FeedAdapter.FeedDetailActivity.PLACE_AUTOCOMPLETE_REQUEST_CODE;
 
@@ -219,8 +220,12 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
         if (context instanceof OnNotificationFragmentInteractionListener) {
             mListener = (OnNotificationFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnNotificationFragmentInteractionListener");
+            mListener = new OnNotificationFragmentInteractionListener() {
+                @Override
+                public void onNotificationFragmentInteraction(Uri uri) {
+
+                }
+            };
         }
     }
 
@@ -402,7 +407,7 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
             notification.rating = score;
             notification.type = Notification.RATING;
             try {
-                return NetworkUtilities.post(GrubMatePreference.getRatingUrl(PersistantDataManager.getUserID()), gson.toJson(notification));
+                return NetworkUtilities.post(GrubMatePreference.getRatingUrl(notification.fromUserID, notification.toUserID, notification.rating), gson.toJson(notification));
             } catch (IOException e) {
                 e.printStackTrace();
             }

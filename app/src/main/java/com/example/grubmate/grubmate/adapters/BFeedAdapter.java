@@ -2,6 +2,7 @@ package com.example.grubmate.grubmate.adapters;
 
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -25,10 +26,13 @@ public class BFeedAdapter extends BaseQuickAdapter<Post, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder viewHolder, Post item) {
+        String leftQuantity = String.valueOf(item.leftQuantity)+"/"+String.valueOf(item.totalQuantity);
+        Log.i("leftqunatity",leftQuantity);
         if(item.isActive){
             viewHolder.setText(R.id.tv_feed_item_name, item.title)
                     // integers has to be wraped as string to avoid android treating them as resource
                     .setText(R.id.tv_feed_item_poster, item.posterName)
+                    .setText(R.id.tv_feed_item_quantity,leftQuantity)
                     .addOnClickListener(R.id.tv_feed_item_poster)
                     .addOnClickListener(R.id.b_feed_item_request);
         }else{

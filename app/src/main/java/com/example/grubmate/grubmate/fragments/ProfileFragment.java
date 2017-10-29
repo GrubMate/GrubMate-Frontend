@@ -138,8 +138,14 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
         if (context instanceof OnProfileFragmentInteractionListener) {
             mListener = (OnProfileFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnNotificationFragmentInteractionListener");
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnNotificationFragmentInteractionListener");
+            mListener = new OnProfileFragmentInteractionListener() {
+                @Override
+                public void onFragmentInteraction(Uri uri) {
+
+                }
+            };
         }
     }
 

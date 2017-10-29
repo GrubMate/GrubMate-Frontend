@@ -60,18 +60,15 @@ public class ProfileActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mPastPostAdapter);
 
-        new PostActionTask().execute(GrubMatePreference.getUserUrl(PersistantDataManager.getUserID()));
+        new FetchUserTask().execute();
         new PastPostTask().execute(userID);
 
     }
 
-    public class PostActionTask extends AsyncTask<String, Integer, String> {
+    public class FetchUserTask extends AsyncTask<String, Integer, String> {
 
         @Override
         protected String doInBackground(String... params) {
-            if (params.length == 0||params[0].length()==0) {
-                return null;
-            }
             try {
                 return NetworkUtilities.get(GrubMatePreference.getUserUrl(userID));
             } catch (IOException e) {
@@ -83,13 +80,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            if(test) {
-                User user = MockData.getUser(0);
-                mProfileName.setText(user.userName);
-                    mProfileRatingBar.setRating(5);
-                Picasso.with(ProfileActivity.this).load(user.profilePhoto).into(mProfileAvatar);
-            } else {
-                Log.d("profile", postActionResponse);
                 if(postActionResponse == null || postActionResponse.length()==0) {
                     Toast.makeText(ProfileActivity.this, "Error occurs during fetching user data", Toast.LENGTH_SHORT).show();
                 } else {
@@ -98,7 +88,6 @@ public class ProfileActivity extends AppCompatActivity {
                         mProfileRatingBar.setRating(5);
                     Picasso.with(ProfileActivity.this).load(user.profilePhoto).into(mProfileAvatar);
                 }
-            }
         }
     }
 
@@ -116,8 +105,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            mPastPostList = JsonUtilities.getFeedItems(postActionResponse);
-            mPastPostAdapter.setNewData(mPastPostList);
+            if(postActionResponse!=null) {
+                mPastPostList = JsonUtilities.getFeedItems(postActionResponse);
+                mPastPostAdapter.setNewData(mPastPostList);
+            } else {
+                Toast.makeText(ProfileActivity.this, "Netowrk Error", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

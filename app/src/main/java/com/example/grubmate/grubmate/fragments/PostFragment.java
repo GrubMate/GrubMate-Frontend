@@ -156,8 +156,14 @@ public class PostFragment extends Fragment {
         if (context instanceof OnPostFragmentInteractionListener) {
             mListener = (OnPostFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnNotificationFragmentInteractionListener");
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnNotificationFragmentInteractionListener");
+            mListener = new OnPostFragmentInteractionListener() {
+                @Override
+                public void onPostFragmentInteraction(Uri uri) {
+
+                }
+            };
         }
     }
 

@@ -15,7 +15,7 @@ public class GrubMatePreference {
     public static final String subscriptionURL = "/subscription";
     public static final String imageUrl = "/image";
     public static final String confimUrl = "/post";
-    public static final String ratingUrl = "";
+    public static final String ratingUrl = "/user";
     public static String getSubscribeActionURL(int ID) {
         return domain + subscribeActionURL + "/" + ID;
     }
@@ -65,8 +65,8 @@ public class GrubMatePreference {
         return domain+confimUrl+"/" + ID + "/"+postID;
     }
 
-    public static String getRatingUrl(int ID) {
-        return ratingUrl;
+    public static String getRatingUrl(int fromID, int toID, int rating) {
+        return domain + ratingUrl + '/' + fromID + '/' + toID + '/' + rating;
     }
 
     public static String getRequestURL() {
