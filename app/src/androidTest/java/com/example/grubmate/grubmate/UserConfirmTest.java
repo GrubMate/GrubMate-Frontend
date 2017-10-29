@@ -10,11 +10,11 @@ import android.support.test.filters.LargeTest;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.RatingBar;
 
 import com.example.grubmate.grubmate.adapters.NotificationAdapter;
 import com.example.grubmate.grubmate.dataClass.Notification;
 import com.example.grubmate.grubmate.fragments.NotificationCenterFragment;
+import com.example.grubmate.grubmate.fragments.PostFragment;
 
 import org.hamcrest.Matcher;
 import org.junit.Before;
@@ -30,6 +30,7 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToHolder;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -45,9 +46,9 @@ import static org.hamcrest.Matchers.is;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class UserRatingTest {
+public class UserConfirmTest {
     @Rule
-    public FragmentTestRule<NotificationCenterFragment> mFragmentTestRule = new FragmentTestRule<>(NotificationCenterFragment.class);
+    public FragmentTestRule<PostFragment> mFragmentTestRule = new FragmentTestRule<>(PostFragment.class);
 
     @Before
     public void setUp() {
@@ -55,29 +56,18 @@ public class UserRatingTest {
     }
 
     @Test
-    public void has_rating_box() {
-        onView(ViewMatchers.withId(R.id.rv_notification_list))
-                .perform(RecyclerViewActions.scrollToPosition(3));
-        onView(ViewMatchers.withId(R.id.rv_notification_list)).check(matches(Utils.atPosition(3, hasDescendant(withId(R.id.rb_notification_rating)))));
-        onView(ViewMatchers.withId(R.id.rv_notification_list))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(3, Utils.clickChildViewWithId(R.id.rb_notification_rating)));
+    public void has_confirm_button() {
+        onView(ViewMatchers.withId(R.id.rv_post_list))
+                .perform(RecyclerViewActions.scrollToPosition(0));
+        onView(ViewMatchers.withId(R.id.rv_post_list))
+                .check(matches(Utils.atPosition(0, hasDescendant(withId(R.id.b_post_confirm)))));
     }
 
     @Test
-    public void has_review_box() {
-        onView(ViewMatchers.withId(R.id.rv_notification_list))
-                .perform(RecyclerViewActions.scrollToPosition(3));
-        onView(ViewMatchers.withId(R.id.rv_notification_list)).check(matches(Utils.atPosition(3, hasDescendant(withId(R.id.tv_notification_rating_review)))));
+    public void can_confitm() {
+        onView(ViewMatchers.withId(R.id.rv_post_list))
+                .perform(RecyclerViewActions.scrollToPosition(0));
+        onView(ViewMatchers.withId(R.id.rv_post_list))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, Utils.clickChildViewWithId(R.id.b_post_confirm)));
     }
-    @Test
-    public void has_submit_button() {
-        onView(ViewMatchers.withId(R.id.rv_notification_list))
-                .perform(RecyclerViewActions.scrollToPosition(3));
-        onView(ViewMatchers.withId(R.id.rv_notification_list)).check(matches(Utils.atPosition(3, hasDescendant(withId(R.id.b_notification_submit)))));
-        onView(ViewMatchers.withId(R.id.rv_notification_list))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(3, Utils.clickChildViewWithId(R.id.b_notification_submit)));
-    }
-
-
-    }
-
+}

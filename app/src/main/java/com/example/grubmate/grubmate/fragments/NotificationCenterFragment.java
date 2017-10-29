@@ -81,6 +81,7 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
     public final static String BROADCAST_ACTION = "com.example.grubmate.grubmate.notification";
     private double Lat;
     private double Lng;
+    private Context context;
 
     private OnNotificationFragmentInteractionListener mListener;
 
@@ -187,7 +188,8 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
     @Override
     public void onStart() {
         super.onStart();
-        if(mGoogleApiClient==null)mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+        context = getContext();
+        if(mGoogleApiClient==null)mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .enableAutoManage(getActivity(),1024, this)
@@ -283,9 +285,9 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
                 notificationData.remove(pos);
                 mNotificationAdapter.setNewData(notificationData);
                 PersistantDataManager.setNotificationCache(notificationData);
-                Toast.makeText(getContext(), "You successfully accept a request", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "You successfully accept a request", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Error: Network Error", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -311,9 +313,9 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
                 notificationData.remove(pos);
                 mNotificationAdapter.setNewData(notificationData);
                 PersistantDataManager.setNotificationCache(notificationData);
-                Toast.makeText(getContext(), "You successfully denied a request", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "You successfully denied a request", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Error: Network Error", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -351,9 +353,9 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
                 notificationData.remove(pos);
                 mNotificationAdapter.setNewData(notificationData);
                 PersistantDataManager.setNotificationCache(notificationData);
-                Toast.makeText(getContext(), "You successfully request a post", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "You successfully request a post", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Error: Network Error", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -391,9 +393,9 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
                 notificationData.remove(pos);
                 mNotificationAdapter.setNewData(notificationData);
                 PersistantDataManager.setNotificationCache(notificationData);
-                Toast.makeText(getContext(), "You successfully submit a rating", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "You successfully submit a rating", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Error: Network Error", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -418,13 +420,13 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
         Log.d("Feed", "returned from google");
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(getContext(), data);
+                Place place = PlaceAutocomplete.getPlace(context, data);
 
                 Lat = place.getLatLng().latitude;
                 Lng = place.getLatLng().longitude;
                 new NotificationCenterFragment.RequestTask().execute(targetPostID, targetPostPos);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(getContext(), data);
+                Status status = PlaceAutocomplete.getStatus(context, data);
                 // TODO: Handle the error.
                 Log.i("test", status.getStatusMessage());
 
