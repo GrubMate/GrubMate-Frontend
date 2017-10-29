@@ -12,6 +12,7 @@ import com.example.grubmate.grubmate.fragments.SubscriptionFragment;
 
 import org.junit.*;
 
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static org.junit.Assert.*;
 import static android.support.test.espresso.Espresso.*;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
@@ -30,12 +31,18 @@ public class SubscriptionDetailActivityTest {
     @Test
     public void unsubscribeNormally() throws UiObjectNotFoundException
     {
+
+
         mFragmentTestRule.launchActivity(null);
+
+        onView(withId(R.id.rv_subscription_subscriptionFeed)).check(matches(isDisplayed()));
         UiDevice mDevice;
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
         UiObject google = mDevice.findObject(new UiSelector().text("UNSUBSCRIBE"));
         google.click();
+
+        mDevice.pressHome();
     }
 
     @Test
