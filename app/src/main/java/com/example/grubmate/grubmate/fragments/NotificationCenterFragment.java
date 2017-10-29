@@ -278,7 +278,6 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            Log.d("Post Detail", postActionResponse);
             if (postActionResponse != null) {
                 notificationData.remove(pos);
                 mNotificationAdapter.setNewData(notificationData);
@@ -306,7 +305,7 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            Log.d("Post Detail", postActionResponse);
+
             if (postActionResponse != null) {
                 notificationData.remove(pos);
                 mNotificationAdapter.setNewData(notificationData);
