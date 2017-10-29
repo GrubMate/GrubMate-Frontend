@@ -14,19 +14,23 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.fragments.FeedFragment;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
+import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener,FeedFragment.OnFragmentInteractionListener{
     private EditText searchItemNameText;
@@ -38,6 +42,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private String category;
     private String timePeriod;
     private Boolean[] allergyInfo;
+    private LinearLayout advanceLayout;
+    private TextView mAdvanceTextView;
     private Gson gson;
 
     @Override
@@ -64,9 +70,21 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 R.array.food_category, android.R.layout.simple_spinner_item);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         searchItemCategorySpinner.setAdapter(categoryAdapter);
+        advanceLayout = (LinearLayout) findViewById(R.id.ll_search_advance);
 
 
         searchItemTimeSpinner = (Spinner) findViewById(R.id.search_spinner_time);
+        mAdvanceTextView = (TextView) findViewById(R.id.tv_search_advance_label);
+        mAdvanceTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(advanceLayout.getVisibility() == View.GONE) {
+                    advanceLayout.setVisibility(View.VISIBLE);
+                } else {
+                    advanceLayout.setVisibility(View.GONE);
+                }
+            }
+        });
 // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(this,
                 R.array.time_period, android.R.layout.simple_spinner_item);
@@ -107,58 +125,53 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    public class SearchTask extends AsyncTask<String, Integer, ArrayList<Post>> {
+    public class SearchTask extends AsyncTask<String, Integer, String> {
 
         @Override
-        protected ArrayList<Post> doInBackground(String... params) {
+        protected String doInBackground(String... params) {
             if (params.length == 0) {
                 return null;
             }
-//            if(params[0] == "get") {
-//                try {
-//                    String baseUrl = GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID());
-//                    String response = NetworkUtilities.get(baseUrl);
-//                    Log.d("Search",response);
-//                    return response;
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            } else if (params[0] == "post") {
-//                SearchFields searchFields = new SearchFields();
-//                searchFields.title = title;
-//                searchFields.category = category;
-//                searchFields.tags = tags;
-//                searchFields.timePeriod = timePeriod;
-//                searchFields.allergyInfo = allergyInfo;
-//
-//                String response = null;
-//                try {
-//                    response = NetworkUtilities.post(GrubMatePreference.getSearchURL(PersistantDataManager.getUserID()), gson.toJson(searchFields));
-//                    return response;
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-            return MockData.getSearchList(3);
+            if(Objects.equals(params[0], "get")) {
+                try {
+                    String baseUrl = GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID());
+                    String response = NetworkUtilities.get(baseUrl);
+                    Log.d("Search",response);
+                    return response;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else if (Objects.equals(params[0], "post")) {
+                SearchFields searchFields = new SearchFields();
+                searchFields.title = title;
+                searchFields.category = category;
+                searchFields.tags = tags;
+                searchFields.timePeriod = timePeriod;
+                searchFields.allergyInfo = allergyInfo;
+
+                String response = null;
+                try {
+                    response = NetworkUtilities.post(GrubMatePreference.getSearchURL(PersistantDataManager.getUserID()), gson.toJson(searchFields));
+                    return response;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Post> searchResponse) {
-            if (searchResponse != null) {
+        protected void onPostExecute(String searchResponse) {
+            if (searchResponse != null && searchResponse.contains("itemList")) {
                 showShortToast("Succeed");
-
-                Fragment destinationFragment = FeedFragment.newInstance(null, "search",null);
+                ArrayList<Post> pastPostList = JsonUtilities.getFeedItems(searchResponse);
+                Fragment destinationFragment = FeedFragment.newInstance(null, "search",pastPostList);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                //transaction.add(1, destinationFragment).commit();
                 transaction.replace(R.id.fragment_search, destinationFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
-                getIntent().putExtra("searchResult", searchResponse);
-//                Intent intent = new Intent();
-//                Log.d("SearchActivity",searchResponse);
-//                intent.putExtra("data_return", searchResponse);
-//                setResult(RESULT_OK, intent);
-//                finish();
+            } else {
+                Toast.makeText(SearchActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
             }
         }
     }

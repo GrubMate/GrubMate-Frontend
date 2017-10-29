@@ -65,6 +65,7 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
     private ArrayList<Post> mPastPostList;
     private LinearLayout mContentLayout;
     private ProgressBar mProgressBar;
+    private Context context;
     private final static boolean TEST = true;
 
     public ProfileFragment() {
@@ -121,6 +122,7 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
     @Override
     public void onStart() {
         super.onStart();
+        context = getContext();
         new ProfileTask().execute();
     }
 
@@ -199,7 +201,7 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
         protected void onPostExecute(String postActionResponse) {
                 Log.d("profile", postActionResponse==null?"null":postActionResponse);
                 if (postActionResponse == null || postActionResponse.length() == 0) {
-                    Toast.makeText(getContext(), "Error occurs during fetching user data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Error occurs during fetching user data", Toast.LENGTH_SHORT).show();
                 } else {
                     User user = gson.fromJson(postActionResponse, User.class);
                     mProfileName.setText(user.userName);
@@ -208,17 +210,12 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                     } else {
                         mProfileRatingBar.setRating(5);
                     }
-                    Picasso.with(getContext()).load(user.profilePhoto).into(mProfileAvatar);
+                    Picasso.with(context).load(user.profilePhoto).into(mProfileAvatar);
                 }
             mProgressBar.getLayoutParams().height = 0;
             mProgressBar.setVisibility(View.INVISIBLE);
             mContentLayout.setVisibility(View.VISIBLE);
-
-            ArrayList<Post> obj = MockData.getPastPostList(3);
-            Fragment childFragment = FeedFragment.newInstance(null, "profile",obj);
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.replace(R.id.rv_profile_orders, childFragment).commit();
-
+            new PastPostTask().execute();
         }
     }
 
@@ -237,8 +234,14 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            mPastPostList = JsonUtilities.getFeedItems(postActionResponse);
-            mPastPostAdapter.setNewData(mPastPostList);
+            if(postActionResponse!=null && postActionResponse.contains("title")) {
+                mPastPostList = JsonUtilities.getFeedItems(postActionResponse);
+                Fragment childFragment = FeedFragment.newInstance(null, "profile",mPastPostList);
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.replace(R.id.rv_profile_orders, childFragment).commit();
+            } else {
+                Toast.makeText(context, "Network Error: Please Retry", Toast.LENGTH_SHORT);
+            }
         }
     }
 }

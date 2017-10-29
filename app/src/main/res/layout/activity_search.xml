@@ -14,18 +14,25 @@
         android:hint="@string/serach_item_name_hint"
         android:inputType="text"/>
     <TextView
+        android:id="@+id/tv_search_advance_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/search_advance_search_hint"/>
-
-    <Spinner
-        android:id="@+id/search_spinner_category"
+    <LinearLayout
+        android:id="@+id/ll_search_advance"
+        android:visibility="gone"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <Spinner
-        android:id="@+id/search_spinner_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <Spinner
+            android:id="@+id/search_spinner_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Spinner
+            android:id="@+id/search_spinner_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
     <Button
         android:id="@+id/b_search_button"
         android:text="@string/search_button_text"

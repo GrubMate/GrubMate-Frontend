@@ -16,6 +16,7 @@ public class MockData {
             Post localPost = new Post();
             localPost.leftQuantity = i;
             localPost.totalQuantity = i;
+            localPost.posterName="Jieji";
             localPost.postID = i;
             localPost.posterID = i;
             localPost.isHomeMade = i%2 == 0;
@@ -34,6 +35,7 @@ public class MockData {
             localPost.totalQuantity = i;
             localPost.postID = i;
             localPost.posterID = i;
+            localPost.posterName="Jieji";
             localPost.isHomeMade = i%2 == 0;
             localPost.title = "search";
             localPost.isActive = true;
