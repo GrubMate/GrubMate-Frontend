@@ -71,19 +71,13 @@ public class GroupSettingsActivity extends AppCompatActivity {
 
         @Override
         protected ArrayList<Friend> doInBackground(String... params) {
-            if (params.length == 0) {
-                return null;
+            try {
+                String response = NetworkUtilities.get(GrubMatePreference.getFriendlistURL(PersistantDataManager.getUserID()));
+                Log.d("friendURL",response==null?"null":response);
+                return JsonUtilities.getfriendsList(response);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-//            String baseUrl = params[0];
-//
-//            try {
-//                String response = NetworkUtilities.get(baseUrl);
-//                Log.d("friendURL",response);
-//                return JsonUtilities.getfriendsList(response);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
 
             return MockData.geFriendList(10);
         }
@@ -91,7 +85,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<Friend> friendsList) {
-            Log.d("friendlist 2222",friendsList.toString());
+            Log.d("friendlist 2222",friendsList==null?"null":friendsList.toString());
 
             allFriendsList = friendsList;
             friendsNum = friendsList.size();
@@ -154,7 +148,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
 
 
                     if(!isAdd) {
-                        groupsList.set(groupID,currentGroup);
+                        groupsList.set(localID,currentGroup);
                     }else{
 
                         groupsList.add(currentGroup);
@@ -169,7 +163,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
                     if(currentGroup.memberIDs.size() == 0 || currentGroup.groupName.length() == 0){
                         showShortToast("please add at least one friend and fill out the group name");
                     }else {
-                        new SetGroupsTask().execute("");
+                        new SetGroupsTask().execute();
                     }
                 }
             });
@@ -180,25 +174,19 @@ public class GroupSettingsActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            if (params.length == 0) {
-                return null;
+            try {
+                String response;
+                Gson gson = new Gson();
+                String groupJson = gson.toJson(currentGroup);
+                if(!isAdd){
+                    response = NetworkUtilities.put(GrubMatePreference.getGroupURL(PersistantDataManager.getUserID()),groupJson);
+                }else {
+                    response = NetworkUtilities.post(GrubMatePreference.getGroupURL(PersistantDataManager.getUserID()),groupJson);
+                }
+                return response;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            String baseUrl = params[0];
-
-//            try {
-//                String response;
-//                Gson gson = new Gson();
-//                String groupJson = gson.toJson(currentGroup);
-//                if(!isAdd){
-//                    response = NetworkUtilities.put(baseUrl,groupJson);
-//                }else {
-//                    response = NetworkUtilities.post(baseUrl,groupJson);
-//                }
-//                return response;
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
 
             return null;
         }

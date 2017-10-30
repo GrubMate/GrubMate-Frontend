@@ -9,99 +9,113 @@ import java.util.ArrayList;
  */
 
 public class MockData {
-    public final static boolean TESTING = true;
+    public final static boolean TESTING = false;
     public static ArrayList<Post> getPostList(int num) {
         ArrayList<Post> result = new ArrayList<Post>();
-        for(int i = 0; i<num; i++) {
-            Post localPost = new Post();
-            localPost.leftQuantity = i;
-            localPost.totalQuantity = i;
-            localPost.postID = i;
-            localPost.posterID = i;
-            localPost.isHomeMade = i%2 == 0;
-            localPost.title = "Pengxiang";
-            localPost.isActive = true;
-            result.add(localPost);
+        if(TESTING) {
+            for(int i = 0; i<num; i++) {
+                Post localPost = new Post();
+                localPost.leftQuantity = i;
+                localPost.totalQuantity = i;
+                localPost.posterName="Jieji";
+                localPost.postID = i;
+                localPost.posterID = i;
+                localPost.isHomeMade = i%2 == 0;
+                localPost.title = "Pengxiang";
+                localPost.isActive = true;
+                result.add(localPost);
+            }
         }
         return result;
     }
 
     public static ArrayList<Post> getSearchList(int num) {
         ArrayList<Post> result = new ArrayList<Post>();
-        for(int i = 0; i<num; i++) {
-            Post localPost = new Post();
-            localPost.leftQuantity = i;
-            localPost.totalQuantity = i;
-            localPost.postID = i;
-            localPost.posterID = i;
-            localPost.isHomeMade = i%2 == 0;
-            localPost.title = "search";
-            localPost.isActive = true;
-            result.add(localPost);
+        if(TESTING) {
+            for(int i = 0; i<num; i++) {
+                Post localPost = new Post();
+                localPost.leftQuantity = i;
+                localPost.totalQuantity = i;
+                localPost.postID = i;
+                localPost.posterID = i;
+                localPost.posterName="Jieji";
+                localPost.isHomeMade = i%2 == 0;
+                localPost.title = "search";
+                localPost.isActive = true;
+                result.add(localPost);
+            }
         }
         return result;
     }
 
     public static ArrayList<Post> getPastPostList(int num) {
         ArrayList<Post> result = new ArrayList<Post>();
-        for(int i = 0; i<num; i++) {
-            Post localPost = new Post();
-            localPost.leftQuantity = i;
-            localPost.totalQuantity = i;
-            localPost.postID = i;
-            localPost.posterID = i;
-            localPost.isHomeMade = i%2 == 0;
-            localPost.title = "Past Post";
-            localPost.isActive = false;
-            result.add(localPost);
+        if(TESTING) {
+            for(int i = 0; i<num; i++) {
+                Post localPost = new Post();
+                localPost.leftQuantity = i;
+                localPost.totalQuantity = i;
+                localPost.postID = i;
+                localPost.posterID = i;
+                localPost.isHomeMade = i%2 == 0;
+                localPost.title = "Past Post";
+                localPost.isActive = false;
+                result.add(localPost);
+            }
+
         }
         return result;
     }
     public static User getUser(int id) {
         User result = new User();
-        result.userName = "Jie Ji";
-        result.rating = 4.5;
-        result.profilePhoto = "https://scontent-lax3-2.xx.fbcdn.net/v/t1.0-1/p320x320/18157207_1865865683653472_4594581227614755828_n.jpg?oh=f4dd57613f14e50610f16ba17043bce7&oe=5A643985";
-        result.facebookID = "100006901752615";
+        if(TESTING) {
+            result.userName = "Jie Ji";
+            result.rating = 4.5;
+            result.profilePhoto = "https://scontent-lax3-2.xx.fbcdn.net/v/t1.0-1/p320x320/18157207_1865865683653472_4594581227614755828_n.jpg?oh=f4dd57613f14e50610f16ba17043bce7&oe=5A643985";
+            result.facebookID = "100006901752615";
+        }
         return result;
     }
 
     public static ArrayList<Subscription> getSubscriptionList(int num) {
         ArrayList<Subscription> result = new ArrayList<Subscription>();
-        for(int i = 0; i<num; i++) {
-            Subscription localSubscription = new Subscription();
-            localSubscription.subscriptionID = i;
-            localSubscription.subscriberID = i*2;
-            localSubscription.query = "Subscription title";
-            localSubscription.isActive = true;
-            result.add(localSubscription);
+        if(TESTING) {
+            for(int i = 0; i<num; i++) {
+                Subscription localSubscription = new Subscription();
+                localSubscription.subscriptionID = i;
+                localSubscription.subscriberID = i*2;
+                localSubscription.query = "Subscription title";
+                localSubscription.isActive = true;
+                result.add(localSubscription);
+            }
         }
-
         return result;
     }
 
     public static ArrayList<Group> getGroupList(int num) {
         ArrayList<Group> result = new ArrayList<Group>();
-        for(int i = 0; i<num; i++) {
-            Group localGroup = new Group();
-            localGroup.memberIDs = new ArrayList<Integer>();
-            localGroup.groupID = i;
-            localGroup.groupName = "group number " + i;
-            result.add(localGroup);
+        if(TESTING) {
+            for(int i = 0; i<num; i++) {
+                Group localGroup = new Group();
+                localGroup.memberIDs = new ArrayList<Integer>();
+                localGroup.groupID = i;
+                localGroup.groupName = "group number " + i;
+                result.add(localGroup);
+            }
         }
-
         return result;
     }
 
     public static ArrayList<Friend> geFriendList(int num) {
         ArrayList<Friend> result = new ArrayList<Friend>();
-        for(int i = 0; i<num; i++) {
-            Friend localFriend = new Friend();
-            localFriend.id = i;
-            localFriend.name = "friend number " + i;
-            result.add(localFriend);
+        if(TESTING) {
+            for(int i = 0; i<num; i++) {
+                Friend localFriend = new Friend();
+                localFriend.id = i;
+                localFriend.name = "friend number " + i;
+                result.add(localFriend);
+            }
         }
-
         return result;
     }
 

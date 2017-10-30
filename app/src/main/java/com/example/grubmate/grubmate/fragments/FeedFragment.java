@@ -168,8 +168,8 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         }else if(Objects.equals(mParam2, "search")){
             Intent i = getActivity().getIntent();
 
-            ArrayList<Post> searchResult= (ArrayList<Post>) i.getSerializableExtra("searchResult");
-            feedData = searchResult;
+            ArrayList<Post> searchResult= (ArrayList<Post>) i.getSerializableExtra("pastPost");
+            feedData = mPastPostList;
             mFeedAdapter.setNewData(feedData);
             mFeedProgressBar.setVisibility(View.INVISIBLE);
             mFeedProgressBar.getLayoutParams().height = 0;

@@ -9,7 +9,9 @@
         android:id="@+id/pb_profile_progress"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_gravity="center"/>
+        android:layout_marginTop="32dp"
+        android:layout_gravity="center_horizontal"
+        />
     <LinearLayout
         android:id="@+id/ll_profile_content"
         android:visibility="invisible"
