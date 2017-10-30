@@ -113,9 +113,6 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
         postItemCategorySpinner = (Spinner) findViewById(R.id.spinner_category);
         ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this,
                 R.array.food_category, android.R.layout.simple_spinner_item);
-        for(int i = 0; i<PersistantDataManager.getGroupIDs().size(); i++) {
-            categoryAdapter.add(String.valueOf(PersistantDataManager.getGroupIDs().get(i)));
-        }
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         postItemCategorySpinner.setAdapter(categoryAdapter);
         postItemLocationText = (TextView) findViewById(R.id.et_location_text) ;
@@ -153,7 +150,12 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
         postItemTimeSpinner.setAdapter(timeAdapter);
 
         postGroupSpinner = (Spinner) findViewById(R.id.spinner_group);
-        ArrayAdapter<CharSequence> groupAdapter = ArrayAdapter.createFromResource(this,R.array.group, android.R.layout.simple_spinner_item);
+        ArrayList<String> groups = new ArrayList<>();
+        groups.add("All");
+        for(int i = 0; i<PersistantDataManager.getGroupIDs().size(); i++) {
+            groups.add(PersistantDataManager.getGroupIDs().get(i).toString());
+        }
+        ArrayAdapter<String> groupAdapter = new ArrayAdapter<String> (this,android.R.layout.simple_spinner_dropdown_item,groups);
         groupAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         postGroupSpinner.setAdapter(groupAdapter);
 

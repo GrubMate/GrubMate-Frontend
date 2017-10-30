@@ -105,8 +105,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     public boolean validateForm() {
         if(title != null) return true;
-        if(category != "Category") return true;
-        if(timePeriod != "Time Period") return true;
+        if(!Objects.equals(category, "Category")) return true;
+        if(!Objects.equals(timePeriod, "Time Period")) return true;
         return false;
     };
 
@@ -116,6 +116,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         tags = null;
         category = searchItemCategorySpinner.getSelectedItem().toString();
         timePeriod = searchItemTimeSpinner.getSelectedItem().toString();
+        Log.d(SearchActivity.class.toString(), timePeriod);
         allergyInfo = new Boolean[3];
 
         if(validateForm()) {
@@ -144,9 +145,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             } else if (Objects.equals(params[0], "post")) {
                 SearchFields searchFields = new SearchFields();
                 searchFields.title = title;
-                searchFields.category = category;
+                searchFields.category = Objects.equals(category, "Category")?null:category;
                 searchFields.tags = tags;
-                searchFields.timePeriod = timePeriod;
+                searchFields.timePeriod = Objects.equals(timePeriod, "Time Period")?null:timePeriod;
                 searchFields.allergyInfo = allergyInfo;
 
                 String response = null;
