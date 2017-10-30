@@ -49,7 +49,7 @@ public class GrubMatePreference {
     public static String getSearchURL(int ID) {
         return domain + searchURL + "/" + ID;
     }
-    public static String getUserURL(){return domain+userURL;}
+    //public static String getUserURL(){return domain+userURL;}
     public static String getUserUrl() {
         return domain + userURL;
     }

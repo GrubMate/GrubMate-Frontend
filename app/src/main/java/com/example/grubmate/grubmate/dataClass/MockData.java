@@ -126,6 +126,7 @@ public class MockData {
             requestNotification.type = Notification.REQUEST;
             requestNotification.title = "Jie JI";
             requestNotification.requesterName = "Pengxiang Zhu";
+            requestNotification.requestID = 0;
             result.add(requestNotification);
 
             Notification matchNotification = new Notification();

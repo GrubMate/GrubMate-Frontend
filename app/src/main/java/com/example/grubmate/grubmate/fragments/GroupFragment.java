@@ -129,8 +129,14 @@ public class GroupFragment extends Fragment {
         if (context instanceof OnGroupFragmentInteractionListener) {
             mListener = (OnGroupFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+            mListener = new OnGroupFragmentInteractionListener() {
+                @Override
+                public void onFragmentInteraction(Uri uri) {
+
+                }
+            };
         }
         feedData = new ArrayList<Group>();
     }
