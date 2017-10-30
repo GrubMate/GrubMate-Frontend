@@ -18,8 +18,10 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -40,20 +42,9 @@ public class LoginActionTest {
     @Test
     public void LoginAction() throws UiObjectNotFoundException {
 
+      // onView(withText(R.id.login_button)).check(matches(isDisplayed()));
        onView(withId(R.id.login_button)).perform(click());
-//        onView(withId(R.id.et_post_item_tags)).perform(typeText("pi pi tag"));
-//        onView(withId(R.id.cb_post_home)).check(matches(isNotChecked())).perform(scrollTo(), click());
-
-
-        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 //
-        UiObject input = mDevice.findObject(new UiSelector()
-                .className(EditText.class));
-        input.setText("text");
-//        UiDevice device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-//        device.findObject(new UiSelector().resourceId("com.facebook.katana:id/username")).setText("x@y.z");
-//        device.findObject(new UiSelector().resourceId("com.facebook.katana:id/login")).clickAndWaitForNewWindow();
 
-//        onView(withId(R.id.fab_post)).perform(click());
     }
 }

@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         FacebookSdk.sdkInitialize(getApplicationContext());
-        profileImage = (ImageView) findViewById(R.id.profile_image);
+       // profileImage = (ImageView) findViewById(R.id.profile_image);
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton)findViewById(R.id.login_button);
         loginButton.setReadPermissions("user_friends");
