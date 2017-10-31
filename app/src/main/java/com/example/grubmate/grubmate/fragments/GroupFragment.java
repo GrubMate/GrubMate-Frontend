@@ -185,13 +185,15 @@ public class GroupFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return  gson.toJson(MockData.getGroupList(2));
+            return  null;
         }
           //  return MockData.getGroupList(2);
           protected void onPostExecute(String feedItems) {
               if (feedItems != null) {
                   feedData = JsonUtilities.getGroupList(feedItems);
-                  if(feedData==null) feedData = new ArrayList<Group>();
+              }else {
+                  feedData = MockData.getGroupList(2);
+              }
                   mFeedAdapter.setNewData(feedData);
                   mFeedView.setVisibility(View.VISIBLE);
                   ArrayList<Integer> groupIDs = new ArrayList<Integer>();
@@ -227,7 +229,7 @@ public class GroupFragment extends Fragment {
                           startActivity(intent);
                       }
                   });
-              }
+
           }
 
     }

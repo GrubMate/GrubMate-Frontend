@@ -241,6 +241,10 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                 transaction.replace(R.id.rv_profile_orders, childFragment).commit();
             } else {
                 Toast.makeText(context, "Network Error: Please Retry", Toast.LENGTH_SHORT);
+                mPastPostList = MockData.getPastPostList(2);
+                Fragment childFragment = FeedFragment.newInstance(null, "profile",mPastPostList);
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.replace(R.id.rv_profile_orders, childFragment).commit();
             }
         }
     }

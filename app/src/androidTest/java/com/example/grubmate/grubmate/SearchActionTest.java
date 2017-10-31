@@ -51,6 +51,7 @@ public class SearchActionTest {
         public void normalSearch() throws UiObjectNotFoundException {
 
             onView(withId(R.id.et_search_item_name)).perform(typeText("pi pi name"));
+            onView(withId(R.id.tv_search_advance_label)).perform(click());
             onView(withId(R.id.search_spinner_category))
                     .perform(click());
 
@@ -79,13 +80,29 @@ public class SearchActionTest {
     }
 
     @Test
-    public void searchWithoutName() throws UiObjectNotFoundException {
+    public void searchWithName() throws UiObjectNotFoundException {
+        onView(withId(R.id.et_search_item_name)).perform(typeText("pi pi name"));
+        onView(withId(R.id.b_search_button)).perform(click());
 
+        closeSoftKeyboard();
+
+    }
+
+    @Test
+    public void searchWithCategory() throws UiObjectNotFoundException {
+        onView(withId(R.id.tv_search_advance_label)).perform(click());
         onView(withId(R.id.search_spinner_category))
                 .perform(click());
 
         onData(allOf(is(instanceOf(String.class)), is("Asian"))).perform(click());
+        onView(withId(R.id.b_search_button)).perform(click());
 
+        closeSoftKeyboard();
+    }
+
+    @Test
+    public void searchWithTime() throws UiObjectNotFoundException {
+        onView(withId(R.id.tv_search_advance_label)).perform(click());
         onView(withId(R.id.search_spinner_time))
                 .perform(click());
 
@@ -95,72 +112,7 @@ public class SearchActionTest {
 
         closeSoftKeyboard();
 
-     //   SystemClock.sleep(2000);
-        onView(withId(R.id.rv_feed)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id. b_feed_item_request)));
 
-        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-
-        UiObject google = mDevice.findObject(new UiSelector().text("Search"));
-        google.setText("USC");
-        UiObject address = mDevice.findObject(new UiSelector().text("University of Southern California"));
-        address.click();
-        mDevice.pressHome();
-    }
-
-    @Test
-    public void searchWithoutCategory() throws UiObjectNotFoundException {
-
-        onView(withId(R.id.et_search_item_name)).perform(typeText("pi pi name"));
-
-
-        onView(withId(R.id.search_spinner_time))
-                .perform(click());
-
-        onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
-
-        onView(withId(R.id.b_search_button)).perform(click());
-
-        closeSoftKeyboard();
-
-     //   SystemClock.sleep(2000);
-        onView(withId(R.id.rv_feed)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id. b_feed_item_request)));
-
-        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-
-        UiObject google = mDevice.findObject(new UiSelector().text("Search"));
-        google.setText("USC");
-        UiObject address = mDevice.findObject(new UiSelector().text("University of Southern California"));
-        address.click();
-        mDevice.pressHome();
-    }
-
-    @Test
-    public void searchWithoutTime() throws UiObjectNotFoundException {
-
-        onView(withId(R.id.et_search_item_name)).perform(typeText("pi pi name"));
-        onView(withId(R.id.search_spinner_category))
-                .perform(click());
-
-        onData(allOf(is(instanceOf(String.class)), is("Asian"))).perform(click());
-
-
-        onView(withId(R.id.b_search_button)).perform(click());
-
-        closeSoftKeyboard();
-
-     //   SystemClock.sleep(2000);
-        onView(withId(R.id.rv_feed)).perform(
-                RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id. b_feed_item_request)));
-
-        mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-
-        UiObject google = mDevice.findObject(new UiSelector().text("Search"));
-        google.setText("USC");
-        UiObject address = mDevice.findObject(new UiSelector().text("University of Southern California"));
-        address.click();
-        mDevice.pressHome();
 
     }
 
