@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 
 public class MockData {
-    public final static boolean TESTING = false;
+    public final static boolean TESTING = true;
     public static ArrayList<Post> getPostList(int num) {
         ArrayList<Post> result = new ArrayList<Post>();
         if(TESTING) {
