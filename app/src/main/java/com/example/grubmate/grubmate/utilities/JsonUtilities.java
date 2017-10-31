@@ -37,44 +37,55 @@ public class JsonUtilities {
     }
 
     public static ArrayList<Post> getFeedItems(String jsonString) {
+
         if(jsonString==null)
         {
             return null;
         }
+
         FeedList feedList = gson.fromJson(jsonString, FeedList.class);
         return feedList==null?null:feedList.itemList;
+
     }
     public static ArrayList<UserRequest> getRequestItems(String jsonString) {
+
         if(jsonString==null)
         {
             return null;
         }
+
         RequestList userRequestList = gson.fromJson(jsonString, RequestList.class);
         return userRequestList==null?null:userRequestList.itemList;
     }
     public static ArrayList<Group> getGroupList(String jsonString){
+
         if(jsonString==null)
         {
             return null;
         }
         //System.out.println(jsonString);
+
         return gson.fromJson(jsonString,new ArrayList<Group>().getClass());
     }
 
     public static ArrayList<String> getfriendsList(String jsonString) {
+
         if(jsonString==null)
         {
             return null;
         }
+
         ArrayList<String> friendsList = new ArrayList<String>();
         return gson.fromJson(jsonString, friendsList.getClass());
     }
     public static ArrayList<Subscription> getSubscriptionItems(String jsonString) {
+
         if(jsonString ==null)
         {
             return null;
         }
+
         SubscriptionList subscriptionList = gson.fromJson(jsonString, SubscriptionList.class);
-        return subscriptionList==null?null:subscriptionList.itemList;
+       return subscriptionList==null?null:subscriptionList.itemList;
     }
 }
