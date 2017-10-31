@@ -71,15 +71,15 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
 
     public boolean validateForm() {
         if (subscribeItemNameText.getText().length() >0) {
-            return false;
+            return true;
         } else if (subscribeItemTagsText.getText().length() > 0) {
-            return false;
+            return true;
         } else if (subscribeItemCategorySpinner.getSelectedItem().toString() != "Category") {
-            return false;
+            return true;
         } else if (subscribeItemTimeSpinner.getSelectedItem().toString() != "Time Period") {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     };
 
     @Override
@@ -112,10 +112,10 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
             Subscription newSubscription = new Subscription();
 
             newSubscription.tags = tags;
-            newSubscription.category = category;
+            newSubscription.category = Objects.equals(category, "Category") ?null:category;
             newSubscription.allergyInfo = null;
             newSubscription.subscriberID = subscriberID;
-            newSubscription.timePeriod = timePeriod;
+            newSubscription.timePeriod = Objects.equals(timePeriod, "Time Period") ?null:timePeriod;
             newSubscription.query = query;
             newSubscription.isActive = true;
             newSubscription.matchedPostIDs = null;

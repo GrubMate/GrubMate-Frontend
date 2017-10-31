@@ -55,6 +55,7 @@ public class PostFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private BPostAdapter mPostAdapter;
     private Gson gson;
+    private Context context;
 
     private OnPostFragmentInteractionListener mListener;
 
@@ -133,6 +134,7 @@ public class PostFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        context = getContext();
         new FetchPostListTask().execute(1);
     }
 
@@ -173,7 +175,7 @@ public class PostFragment extends Fragment {
         mListener = null;
     }
     public void showShortToast(String msg) {
-        Toast.makeText(this.getContext(), msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
     /**

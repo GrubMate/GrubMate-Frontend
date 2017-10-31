@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +26,13 @@ import com.example.grubmate.grubmate.adapters.BGroupAdapter;
 import com.example.grubmate.grubmate.dataClass.Group;
 import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
+import com.example.grubmate.grubmate.utilities.GrubMatePreference;
+import com.example.grubmate.grubmate.utilities.JsonUtilities;
+import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -53,6 +59,7 @@ public class GroupFragment extends Fragment {
     private RecyclerView mFeedView;
     private BGroupAdapter mFeedAdapter;
     private FloatingActionButton mAddGroupButton;
+    private Gson gson;
     public GroupFragment() {
         // Required empty public constructor
     }
@@ -82,6 +89,7 @@ public class GroupFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        gson = new Gson();
     }
 
     @Override
@@ -121,8 +129,14 @@ public class GroupFragment extends Fragment {
         if (context instanceof OnGroupFragmentInteractionListener) {
             mListener = (OnGroupFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+            mListener = new OnGroupFragmentInteractionListener() {
+                @Override
+                public void onFragmentInteraction(Uri uri) {
+
+                }
+            };
         }
         feedData = new ArrayList<Group>();
     }
@@ -148,7 +162,7 @@ public class GroupFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public class FetchGroupListTask extends AsyncTask<Integer, Integer, ArrayList<Group>> {
+    public class FetchGroupListTask extends AsyncTask<Integer, Integer, String> {
         @Override
         protected void onPreExecute() {
             mFeedView.setVisibility(View.INVISIBLE);
@@ -156,63 +170,66 @@ public class GroupFragment extends Fragment {
         }
 
         @Override
-        protected ArrayList<Group> doInBackground(Integer... params) {
+        protected String doInBackground(Integer... params) {
             if (params.length == 0) {
                 return null;
             }
 
 
-//            try {
-//                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
-//                Log.d(TAG, response);
-//                if (response == null || response.length() == 0)
-//                    return null;
-//                return JsonUtilities.getFeedItems(response);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-
-            return MockData.getGroupList(2);
-        }
-        protected void onPostExecute(ArrayList<Group> feedItems) {
-            if (feedItems != null) {
-                feedData = feedItems;
-                mFeedAdapter.setNewData(feedData);
-                mFeedView.setVisibility(View.VISIBLE);
-                ArrayList<Integer> groupIDs = new ArrayList<Integer>();
-                for(int i=0;i<feedItems.size();i++){
-                    groupIDs.add(feedItems.get(i).groupID);
-                }
-                PersistantDataManager.setGroupIDs(groupIDs);
-                final ArrayList<Group> list = feedItems;
-                mFeedAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-                    @Override
-                    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                        switch (view.getId()) {
-                            case R.id.tv_group_item_name:
-
-                                break;
-                            case R.id.b_group_item_edit:
-                                Intent intent = new Intent(getContext(),GroupSettingsActivity.class);
-                                intent.putExtra("groupsList", list);
-                                intent.putExtra("groupID",list.get(position).groupID);
-                                intent.putExtra("index",position);
-                                startActivity(intent);
-                                break;
-                            default:
-                        }
-                    }
-                });
-
-                mAddGroupButton.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
-
-                        Intent intent = new Intent(getContext(),GroupSettingsActivity.class);
-                        intent.putExtra("groupsList", list);
-                        startActivity(intent);
-                }
-                });
+            try {
+                String response = NetworkUtilities.get(GrubMatePreference.getGroupURL(PersistantDataManager.getUserID()));
+                Log.d("group response", response==null?"null":response);
+                if (response == null || response.length() == 0)
+                    return null;
+                return response;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+            return  gson.toJson(MockData.getGroupList(2));
         }
+          //  return MockData.getGroupList(2);
+          protected void onPostExecute(String feedItems) {
+              if (feedItems != null) {
+                  feedData = JsonUtilities.getGroupList(feedItems);
+                  if(feedData==null) feedData = new ArrayList<Group>();
+                  mFeedAdapter.setNewData(feedData);
+                  mFeedView.setVisibility(View.VISIBLE);
+                  ArrayList<Integer> groupIDs = new ArrayList<Integer>();
+                  for(int i=0;i<feedData.size();i++){
+                      groupIDs.add(feedData.get(i).groupID);
+                  }
+                  PersistantDataManager.setGroupIDs(groupIDs);
+                  final ArrayList<Group> list = feedData;
+                  mFeedAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                      @Override
+                      public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                          switch (view.getId()) {
+                              case R.id.tv_group_item_name:
+
+                                  break;
+                              case R.id.b_group_item_edit:
+                                  Intent intent = new Intent(getContext(),GroupSettingsActivity.class);
+                                  intent.putExtra("groupsList", list);
+                                  intent.putExtra("groupID",list.get(position).groupID);
+                                  intent.putExtra("index",position);
+                                  startActivity(intent);
+                                  break;
+                              default:
+                          }
+                      }
+                  });
+
+                  mAddGroupButton.setOnClickListener(new View.OnClickListener() {
+                      public void onClick(View v) {
+
+                          Intent intent = new Intent(getContext(),GroupSettingsActivity.class);
+                          intent.putExtra("groupsList", list);
+                          startActivity(intent);
+                      }
+                  });
+              }
+          }
+
     }
+
 }
