@@ -32,7 +32,7 @@ public class SubscribeActionActivityTest {
                 .perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Asian"))).perform(click());
 
-        onView(withId(R.id.et_subscribe_item_tags)).perform(typeText("poison, poop"));
+        onView(withId(R.id.et_subscribe_item_tags)).perform(typeText("pipitag"));
 
         onView(withId(R.id.spinner_time))
                 .perform(scrollTo())
@@ -55,7 +55,7 @@ public class SubscribeActionActivityTest {
                 .perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Asian"))).perform(click());
 
-        onView(withId(R.id.et_subscribe_item_tags)).perform(typeText("poison, poop"));
+        onView(withId(R.id.et_subscribe_item_tags)).perform(typeText("pipitag"));
 
         onView(withId(R.id.spinner_time))
                 .perform(scrollTo())
@@ -77,7 +77,7 @@ public class SubscribeActionActivityTest {
 //                .perform(click());
 //        onData(allOf(is(instanceOf(String.class)), is("Asian"))).perform(click());
 
-        onView(withId(R.id.et_subscribe_item_tags)).perform(typeText("poison, poop"));
+        onView(withId(R.id.et_subscribe_item_tags)).perform(typeText("pipitag"));
 
         onView(withId(R.id.spinner_time))
                 .perform(scrollTo())
@@ -120,7 +120,7 @@ public class SubscribeActionActivityTest {
                 .perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Asian"))).perform(click());
 
-        onView(withId(R.id.et_subscribe_item_tags)).perform(typeText("poison, poop"));
+        onView(withId(R.id.et_subscribe_item_tags)).perform(typeText("pipitag"));
 
 //        onView(withId(R.id.spinner_time))
 //                .perform(scrollTo())

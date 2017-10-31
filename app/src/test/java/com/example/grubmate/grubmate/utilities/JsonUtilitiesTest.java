@@ -218,14 +218,14 @@ public class JsonUtilitiesTest {
     @Test
     public void getfriendListEmptyListTest() throws Exception
     {
-        ArrayList<String> list = new ArrayList<>();
+        ArrayList<Friend> list = new ArrayList<>();
         assertEquals(list,JsonUtilities.getfriendsList(gson.toJson(list)));
     }
     @Test
     public void getfriendsList() throws Exception {
 
         //empty list test
-        ArrayList<String>list = new ArrayList<>();
+        ArrayList<Friend>list = new ArrayList<>();
         assertEquals(list,JsonUtilities.getGroupList(gson.toJson(list)));
 
         //content test

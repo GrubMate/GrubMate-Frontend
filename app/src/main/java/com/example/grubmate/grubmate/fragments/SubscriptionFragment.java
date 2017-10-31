@@ -61,6 +61,7 @@ public class SubscriptionFragment extends Fragment {
     private ProgressBar mFeedProgressBar;
     private TextView mEmptyText;
     private Button mSubscribeButton;
+    private Context context;
 
     public SubscriptionFragment() {
         // Required empty public constructor
@@ -147,6 +148,7 @@ public class SubscriptionFragment extends Fragment {
     public void onStart() {
         super.onStart();
       // new FeedFragment.FetchFeedListTask().execute(2);
+        context = getContext();
         new FetchSubscriptionFeedListTask().execute(2);
     }
     @Override
@@ -249,10 +251,10 @@ public class SubscriptionFragment extends Fragment {
         @Override
         protected void onPostExecute(String postActionResponse) {
             if (postActionResponse != null) {
-                Toast.makeText(getContext(), "Unsubscribed Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Unsubscribed Successfully", Toast.LENGTH_SHORT).show();
                 new FetchSubscriptionFeedListTask().execute();
             } else {
-                Toast.makeText(getContext(), "Error: Network Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Error: Network Error", Toast.LENGTH_SHORT).show();
             }
         }
     }

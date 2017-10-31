@@ -57,7 +57,7 @@ public class PostAsRequesterTest {
         google.setText("USC");
         UiObject address = mDevice.findObject(new UiSelector().text("University of Southern California"));
         address.click();
-
+        mDevice.pressHome();
 
     }
 
