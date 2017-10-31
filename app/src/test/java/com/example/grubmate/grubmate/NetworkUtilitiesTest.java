@@ -1,5 +1,7 @@
 package com.example.grubmate.grubmate.utilities;
 
+import android.net.Network;
+
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.User;
 import com.example.grubmate.grubmate.dataClass.UserRequest;
@@ -29,45 +31,46 @@ import static org.junit.Assert.*;
  * Created by jieji on 27/10/2017.
  */
 public class NetworkUtilitiesTest {
+    String baseURL;
     @Before
     public void setUp() throws Exception
     {
-
+        baseURL = "https://4dc66e3c-3d29-434b-8a51-eb82dd0c9704.mock.pstmn.io";
     }
 
     @Test
-    public void nullUrlTest() throws Exception
+    public void getNullUrlTest() throws Exception
     {
         String url = null;
         assertNull( NetworkUtilities.get(url) );
     }
 
     @Test
-    public void emptyUrlTest() throws Exception
+    public void getEmptyUrlTest() throws Exception
     {
         String url = "";
         assertNull( NetworkUtilities.get(url) );
     }
 
     @Test
-    public void validUrlTest() throws Exception
+    public void getTest() throws Exception
     {
-        String url = "https://api.github.com/users/SeasonJi";
-        String expectResult = "{\"login\":\"SeasonJi\",\"id\":16678749,\"avatar_url\":\"https://avatars2.githubusercontent.com/u/16678749?v=4\",\"gravatar_id\":" +
-                "\"\",\"url\":\"https://api.github.com/users/SeasonJi\",\"html_url\":\"https://github.com/SeasonJi\",\"followers_url\":" +
-                "\"https://api.github.com/users/SeasonJi/followers\",\"following_url\":" +
-                "\"https://api.github.com/users/SeasonJi/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/SeasonJi/gists{/gist_id}\"," +
-                "\"starred_url\":\"https://api.github.com/users/SeasonJi/starred{/owner}{/repo}\",\"subscriptions_url\":" +
-                "\"https://api.github.com/users/SeasonJi/subscriptions\",\"organizations_url\":\"https://api.github.com/users/SeasonJi/orgs\"," +
-                "\"repos_url\":\"https://api.github.com/users/SeasonJi/repos\",\"events_url\":\"https://api.github.com/users/SeasonJi/events{/privacy}\"," +
-                "\"received_events_url\":\"https://api.github.com/users/SeasonJi/received_events\",\"type\":\"User\",\"site_admin\":false,\"name\":\"Jie Ji\"," +
-                "\"company\":null,\"blog\":\"https://seasonji.github.io/\",\"location\":\"Los Angeles, CA\",\"email\":null,\"hireable\":null,\"bio\":" +
-                "\"USC'19 Computer Science & Applied Analytics\",\"public_repos\":6,\"public_gists\":0,\"followers\":5,\"following\":7," +
-                "\"created_at\":\"2016-01-13T04:32:37Z\",\"updated_at\":\"2017-10-28T20:04:51Z\"}";
-
+        String expectResult = "get";
+        String url = baseURL+"/getTest";
 
         assertEquals(expectResult, NetworkUtilities.get(url));
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

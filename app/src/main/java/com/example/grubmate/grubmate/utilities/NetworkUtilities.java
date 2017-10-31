@@ -33,7 +33,7 @@ public class NetworkUtilities {
             Request request = new Request.Builder()
                     .url(url)
                     .build();
-            Log.d("Netowrk", "reaady to execute "+url);
+            //Log.d("Netowrk", "ready to execute "+url);
             Response response = client.newCall(request).execute();
             return response.body()==null?null:response.body().string();
         } catch (SocketException e) {
@@ -66,7 +66,7 @@ public class NetworkUtilities {
             return null;
         }
         try {
-            Log.d("Netowrk Post", url);
+            //Log.d("Netowrk Post", url);
             RequestBody body = jsonBody!=null?RequestBody.create(JSON, jsonBody):RequestBody.create(JSON, "");
             Request request = new Request.Builder()
                     .url(url)
