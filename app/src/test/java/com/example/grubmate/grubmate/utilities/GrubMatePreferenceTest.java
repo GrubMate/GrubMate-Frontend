@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
  * Created by Ryan on 2017/10/27.
  */
 public class GrubMatePreferenceTest {
-    private String domain = "http://10.120.74.149:8080";
+    private String domain = GrubMatePreference.domain;
     @Before
     public void setUp() throws Exception {
     }
@@ -103,6 +103,16 @@ public class GrubMatePreferenceTest {
     @Test
     public void getRequestListUrl() throws Exception {
         assertEquals(domain+"/request/42/123",GrubMatePreference.getRequestListUrl(42,123));
+    }
+
+    @Test
+    public void getFriendListUrl() throws  Exception {
+        assertEquals(domain + "/friend/123", GrubMatePreference.getFriendlistURL(123));
+    }
+
+    @Test
+    public void getGroupUrl() throws  Exception {
+        assertEquals(domain + "/group/123", GrubMatePreference.getGroupURL(123));
     }
 
 }

@@ -74,13 +74,13 @@ public class JsonUtilities {
         return userRequestList==null?null:userRequestList.itemList;
     }
     public static ArrayList<Group> getGroupList(String jsonString){
-        if(jsonString==null) return null;
+        if(jsonString==null||!jsonString.contains("itemList")) return null;
         ArrayList<Group> groupsList = new ArrayList<Group>();
         return gson.fromJson(jsonString,GroupFeed.class).itemList;
     }
 
     public static ArrayList<Friend> getfriendsList(String jsonString) {
-        if(jsonString==null) return null;
+        if(jsonString==null||!jsonString.contains("itemList")) return null;
         ArrayList<Friend> friendsList = new ArrayList<Friend>();
         return gson.fromJson(jsonString, FriendFeed.class).itemList;
     }

@@ -1,5 +1,6 @@
 package com.example.grubmate.grubmate.utilities;
 
+import com.example.grubmate.grubmate.dataClass.Friend;
 import com.example.grubmate.grubmate.dataClass.Group;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.Subscription;
@@ -33,6 +34,21 @@ public class JsonUtilitiesTest {
     private class RequestList {
         public int id;
         public ArrayList<UserRequest> itemList;
+    }
+
+    public class GroupFeed {
+        public Integer id;
+        public ArrayList<Group> itemList;
+        public GroupFeed () {
+            itemList = new ArrayList<Group>();
+        }
+    }
+    public class FriendFeed {
+        public int id;
+        public ArrayList<Friend> itemList;
+        public FriendFeed() {
+            itemList = new ArrayList<Friend>();
+        }
     }
     @Before
     public void setUp() throws Exception {
@@ -146,8 +162,10 @@ public class JsonUtilitiesTest {
         assertEquals(null,JsonUtilities.getGroupList(gson.toJson(list)));
 
         //empty list test
+        GroupFeed emptyGroupFeed = new GroupFeed();
         list = new ArrayList<Group>();
-        assertEquals(list,JsonUtilities.getGroupList(gson.toJson(list)));
+        emptyGroupFeed.itemList = list;
+        assertEquals(list,JsonUtilities.getGroupList(gson.toJson(emptyGroupFeed)));
 
         //content test
         for(int i = 0; i < 5; i++)
@@ -171,7 +189,10 @@ public class JsonUtilitiesTest {
             //System.out.println(gson.toJson(g));
         }
 
-        ArrayList<Group> result = JsonUtilities.getGroupList(gson.toJson(list));
+        GroupFeed groupFeed = new GroupFeed();
+        groupFeed.itemList = list;
+
+        ArrayList<Group> result = JsonUtilities.getGroupList(gson.toJson(groupFeed));
         assertEquals(list.size(),result.size());
         for(int i = 0; i < list.size(); i++)
         {
@@ -210,24 +231,25 @@ public class JsonUtilitiesTest {
         //content test
         for(int i =0; i < 5; i++)
         {
-            String s;
+            Friend friend = new Friend();
             switch(i){
-                case 0: s = null;
+                case 0: friend.name = null;
                     break;
-                case 1: s = "";
+                case 1: friend.name = "";
                     break;
                 default:
-                    s = Integer.toString(i);
+                    friend.name = String.valueOf(i);
             }
-            list.add(s);
+            list.add(friend);
         }
-
-        ArrayList<Group> result = JsonUtilities.getGroupList(gson.toJson(list));
+        FriendFeed friendFeed = new FriendFeed();
+        friendFeed.itemList=list;
+        ArrayList<Friend> result = JsonUtilities.getfriendsList(gson.toJson(friendFeed));
 
         assertEquals(list.size(),result.size());
         for(int i = 0; i < list.size(); i++)
         {
-            assertEquals(list.get(i),result.get(i));
+            assertEquals(list.get(i).name,result.get(i).name);
         }
 
     }
