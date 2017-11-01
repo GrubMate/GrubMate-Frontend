@@ -8,91 +8,108 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.grubmate.grubmate.PostActionActivity"
     tools:showIn="@layout/activity_post_action">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
-            android:showDividers="middle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:padding="16dp"
-            android:orientation="vertical">
+            android:showDividers="middle">
+
             <TextView
                 android:id="@+id/tv_post_action_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:textSize="32sp"
+                android:text="@string/post_action_title"
                 android:textAlignment="center"
-                android:text="@string/post_action_title"/>
+                android:textSize="32sp" />
+
             <EditText
                 android:id="@+id/et_post_item_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
                 android:hint="@string/post_action_item_name_hint"
-                android:inputType="text"/>
+                android:inputType="text"
+                android:singleLine="true" />
+
             <CheckBox
                 android:id="@+id/cb_post_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Homemade"/>
+                android:text="Homemade" />
 
             <Spinner
                 android:id="@+id/spinner_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
             <EditText
                 android:id="@+id/et_post_item_tags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
                 android:hint="@string/post_action_tags_hint"
                 android:inputType="text"
-                />
-            <Button android:id="@+id/b_post_action_photo"
+                android:singleLine="true" />
+
+            <Button
+                android:id="@+id/b_post_action_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Add Photos">
-            </Button>
+                android:text="Add Photos"></Button>
+
             <EditText
                 android:id="@+id/et_post_item_description"
-                android:lines="3"
-                android:maxLines="3"
-                android:maxLength="140"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/post_action_description_hint"/>
+                android:hint="@string/post_action_description_hint"
+                android:lines="3"
+                android:maxLength="140"
+                android:maxLines="3" />
+
             <EditText
                 android:id="@+id/et_post_item_quantity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/post_action_quantity_hint"
                 android:inputType="number"
-                android:lines="3"
-                />
+                android:lines="3" />
 
-            <Spinner
-                android:id="@+id/spinner_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/b_post_start_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Date"/>
+            <Button
+                android:id="@+id/b_post_end_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End Date"/>
+
             <EditText
                 android:id="@+id/et_post_item_allergy"
-                android:singleLine="true"
-                android:hint="@string/post_action_allergy_hint"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:hint="@string/post_action_allergy_hint"
+                android:singleLine="true" />
+
             <Spinner
                 android:id="@+id/spinner_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></Spinner>
+
             <Button
                 android:id="@+id/et_location"
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Location"/>
+                android:layout_gravity="center"
+                android:hint="Location" />
+
             <TextView
                 android:id="@+id/et_location_text"
                 android:layout_width="match_parent"

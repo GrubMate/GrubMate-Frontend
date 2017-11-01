@@ -1,5 +1,6 @@
 package com.example.grubmate.grubmate;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -24,6 +25,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -55,29 +57,32 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
+import java.time.Month;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class PostActionActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class PostActionActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, DatePickerDialog.OnDateSetListener {
     private EditText postItemNameText;
     private EditText postItemTagsText;
     private EditText postItemDescriptionText;
     private EditText postItemQuantityText;
     private EditText postItemAllergyText;
     private Spinner postItemCategorySpinner;
-    private Spinner postItemTimeSpinner;
     private Spinner postGroupSpinner;
     private CheckBox postHomeCheckBox;
     private Button postItemLocation;
     private TextView postItemLocationText;
     private Button mPhotoButton;
+    private Button mStartDateButton;
+    private Button mEndDateButton;
+    private DatePickerDialog datePickerDialog;
     private GoogleApiClient mGoogleApiClient;
     private int REQUEST_CODE_CHOOSE = 9191;
     private String postItemName, postItemDescription,postItemCategory,postItemTime;
     private String[] tags;
     private boolean[] postItemAllergy;
-    private String timePeriod;
     private String category;
     private Integer postItemQuantity;
     private Double[] postItemAddress;
@@ -140,14 +145,6 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
                 }
             }
         });
-        postItemTimeSpinner = (Spinner) findViewById(R.id.spinner_time);
-// Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(this,
-                R.array.time_period, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
-        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-        postItemTimeSpinner.setAdapter(timeAdapter);
 
         postGroupSpinner = (Spinner) findViewById(R.id.spinner_group);
         ArrayList<String> groups = new ArrayList<>();
@@ -163,6 +160,21 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
         mPhotoButton.setOnClickListener(new PhotoButtonClickListener());
 
         postHomeCheckBox = (CheckBox) findViewById(R.id.cb_post_home);
+        datePickerDialog = new DatePickerDialog(this, this, 2017, 8, 16);
+        mStartDateButton = (Button) findViewById(R.id.b_post_start_date);
+        mStartDateButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                datePickerDialog.show();
+            }
+        });
+        mEndDateButton = (Button) findViewById(R.id.b_post_end_date);
+        mEndDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                datePickerDialog.show();
+            }
+        });
 
         // end of oncreate
         Intent callIntent = getIntent();
@@ -221,8 +233,6 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             return false;
         } else if (postItemTagsText.getText().length() == 0) {
             return false;
-        } else if (Objects.equals(postItemTimeSpinner.getSelectedItem().toString(), "Time Period")) {
-            return false;
         } else if (Objects.equals(postItemCategorySpinner.getSelectedItem().toString(), "Category")) {
             return false;
         } else if (postItemDescriptionText.getText().length()==0) {
@@ -269,8 +279,6 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             postItemCategory = postItemCategorySpinner.getSelectedItem().toString();
             if(postItemCategory == "Category") postItemCategory = null;
             isHomeMade = postHomeCheckBox.isChecked();
-            timePeriod = postItemTimeSpinner.getSelectedItem().toString();
-            if(timePeriod == "Time Period") timePeriod = null;
             groupIDs = new Integer[1];
             groupIDs[0] = Objects.equals(postGroupSpinner.getSelectedItem().toString(), "All")?null:Integer.parseInt(postGroupSpinner.getSelectedItem().toString());
             // TODO: change this to reald user id in production
@@ -283,6 +291,11 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
 
     }
 
@@ -333,7 +346,6 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             // TODO: change to real groups ids
             newPost.groupIDs = groupIDs;
             newPost.isHomeMade = isHomeMade;
-             newPost.timePeriod = timePeriod;
 //            newPost.requestsIDs = null;
             Gson gson = new Gson();
             String postJson = gson.toJson(newPost);
