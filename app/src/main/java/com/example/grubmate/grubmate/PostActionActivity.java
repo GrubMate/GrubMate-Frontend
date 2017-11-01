@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -36,6 +37,7 @@ import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.github.florent37.singledateandtimepicker.dialog.DoubleDateAndTimePickerDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -60,10 +62,11 @@ import java.lang.reflect.Array;
 import java.time.Month;
 import java.time.Year;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class PostActionActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, DatePickerDialog.OnDateSetListener {
+public class PostActionActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener, DoubleDateAndTimePickerDialog.Listener {
     private EditText postItemNameText;
     private EditText postItemTagsText;
     private EditText postItemDescriptionText;
@@ -74,10 +77,9 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private CheckBox postHomeCheckBox;
     private Button postItemLocation;
     private TextView postItemLocationText;
+    private DoubleDateAndTimePickerDialog.Builder doubleDateAndTimePickerDialogBuilder;
     private Button mPhotoButton;
-    private Button mStartDateButton;
-    private Button mEndDateButton;
-    private DatePickerDialog datePickerDialog;
+    private Button mDateButton;
     private GoogleApiClient mGoogleApiClient;
     private int REQUEST_CODE_CHOOSE = 9191;
     private String postItemName, postItemDescription,postItemCategory,postItemTime;
@@ -160,22 +162,22 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
         mPhotoButton.setOnClickListener(new PhotoButtonClickListener());
 
         postHomeCheckBox = (CheckBox) findViewById(R.id.cb_post_home);
-        datePickerDialog = new DatePickerDialog(this, this, 2017, 8, 16);
-        mStartDateButton = (Button) findViewById(R.id.b_post_start_date);
-        mStartDateButton.setOnClickListener(new View.OnClickListener(){
+        doubleDateAndTimePickerDialogBuilder = new DoubleDateAndTimePickerDialog
+                .Builder(this)
+                .backgroundColor(Color.WHITE)
+                .mainColor(Color.argb(255, 63,81,181))
+                .title("Time Period")
+                .minutesStep(30)
+                .tab0Text("Start")
+                .tab1Text("End")
+                .listener(this);
+        mDateButton = (Button) findViewById(R.id.b_post_time_period);
+        mDateButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                datePickerDialog.show();
+                doubleDateAndTimePickerDialogBuilder.display();
             }
         });
-        mEndDateButton = (Button) findViewById(R.id.b_post_end_date);
-        mEndDateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                datePickerDialog.show();
-            }
-        });
-
         // end of oncreate
         Intent callIntent = getIntent();
         gson = new Gson();
@@ -295,7 +297,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+    public void onDateSelected(List<Date> dates) {
 
     }
 
