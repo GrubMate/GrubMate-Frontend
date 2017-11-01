@@ -1,5 +1,6 @@
 package com.example.grubmate.grubmate;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -14,20 +16,23 @@ import android.widget.Toast;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.github.florent37.singledateandtimepicker.dialog.DoubleDateAndTimePickerDialog;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import com.example.grubmate.grubmate.dataClass.Subscription;
 
-public class SubscribeActionActivity extends AppCompatActivity implements View.OnClickListener{
+public class SubscribeActionActivity extends AppCompatActivity implements View.OnClickListener, DoubleDateAndTimePickerDialog.Listener{
     private EditText subscribeItemNameText;
     private EditText subscribeItemTagsText;
     private EditText subscribeItemAllergyText;
     private Spinner subscribeItemCategorySpinner;
-    private Spinner subscribeItemTimeSpinner;
+    private Button timeButton;
     private Integer subscriberID;
     public String[] tags;
     public String category;
@@ -35,6 +40,7 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
     public String timePeriod;
     public Integer[] matchedPostIDs;
     public Boolean[] allergyInfo;
+    public DoubleDateAndTimePickerDialog.Builder doubleDateAndTimePickerDialogBuilder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,15 +60,26 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         subscribeItemCategorySpinner.setAdapter(categoryAdapter);
 
+        doubleDateAndTimePickerDialogBuilder = new DoubleDateAndTimePickerDialog
+                .Builder(this)
+                .backgroundColor(Color.WHITE)
+                .mainColor(Color.argb(255, 63,81,181))
+                .title("Time Period")
+                .minutesStep(30)
+                .tab0Text("Start")
+                .tab1Text("End")
+                .listener(this);
+        timeButton = (Button) findViewById(R.id.b_subscription_item_unsubscribe);
+        timeButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                doubleDateAndTimePickerDialogBuilder.display();
+            }
+        });
 
-        subscribeItemTimeSpinner = (Spinner) findViewById(R.id.spinner_time);
-// Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(this,
-                R.array.time_period, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
-        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-        subscribeItemTimeSpinner.setAdapter(timeAdapter);
+
+
+
     }
 
     public void showShortToast(String msg) {
@@ -76,8 +93,6 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
             return true;
         } else if (subscribeItemCategorySpinner.getSelectedItem().toString() != "Category") {
             return true;
-        } else if (subscribeItemTimeSpinner.getSelectedItem().toString() != "Time Period") {
-            return true;
         }
         return false;
     };
@@ -89,7 +104,6 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
             allergyInfo = new Boolean[3];
             category = subscribeItemCategorySpinner.getSelectedItem().toString();
             if(Objects.equals(category, "Category")) category = null;
-            timePeriod = subscribeItemTimeSpinner.getSelectedItem().toString();
             if(Objects.equals(timePeriod, "Time Period")) timePeriod = null;
             // TODO: modify this into users' real id in production
             String tagString = subscribeItemTagsText.getText().toString();
@@ -99,6 +113,11 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
         } else {
             showShortToast("Please fill out all necessary fields before subscribeing");
         }
+    }
+
+    @Override
+    public void onDateSelected(List<Date> dates) {
+
     }
 
     public class subscribeActionTask extends AsyncTask<String, Integer, String> {
