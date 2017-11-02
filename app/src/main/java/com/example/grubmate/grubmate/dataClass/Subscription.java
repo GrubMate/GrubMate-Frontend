@@ -6,7 +6,8 @@ public class Subscription {
     public String[] tags;
     public String category;
     public String query;
-    public String timePeriod;
+    // pos 0 start time, pos 1 end time
+    public String[] timePeriod;
     public Integer[] matchedPostIDs;
     public Boolean[] allergyInfo;
     public Boolean isActive;

@@ -94,6 +94,8 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 100;
     private double Lat;
     private double Lng;
+    private String startTime;
+    private String endTime;
     private Boolean isHomeMade;
     private Post mPostData;
     private Gson gson;
@@ -162,6 +164,8 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
         mPhotoButton.setOnClickListener(new PhotoButtonClickListener());
 
         postHomeCheckBox = (CheckBox) findViewById(R.id.cb_post_home);
+        startTime = null;
+        endTime = null;
         doubleDateAndTimePickerDialogBuilder = new DoubleDateAndTimePickerDialog
                 .Builder(this)
                 .backgroundColor(Color.WHITE)
@@ -241,6 +245,8 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             return false;
         } else if (postItemQuantityText.getText().length()==0) {
             return false;
+        } else if (startTime==null||endTime==null) {
+            return false;
         }
         return true;
     };
@@ -298,7 +304,10 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onDateSelected(List<Date> dates) {
-
+        Date start = dates.get(0);
+        Date end = dates.get(1);
+        startTime = start.toString();
+        endTime = end.toString();
     }
 
     public class PostActionTask extends AsyncTask<String, Integer, String> {
@@ -349,6 +358,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             newPost.groupIDs = groupIDs;
             newPost.isHomeMade = isHomeMade;
 //            newPost.requestsIDs = null;
+            newPost.timePeriod = new String[]{startTime, endTime};
             Gson gson = new Gson();
             String postJson = gson.toJson(newPost);
             Post post = gson.fromJson(postJson, Post.class);

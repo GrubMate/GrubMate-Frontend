@@ -38,6 +38,8 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
     public String category;
     public String query;
     public String timePeriod;
+    private String startTime;
+    private String endTime;
     public Integer[] matchedPostIDs;
     public Boolean[] allergyInfo;
     public DoubleDateAndTimePickerDialog.Builder doubleDateAndTimePickerDialogBuilder;
@@ -59,7 +61,8 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
                 R.array.food_category, android.R.layout.simple_spinner_item);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         subscribeItemCategorySpinner.setAdapter(categoryAdapter);
-
+        startTime = null;
+        endTime = null;
         doubleDateAndTimePickerDialogBuilder = new DoubleDateAndTimePickerDialog
                 .Builder(this)
                 .backgroundColor(Color.WHITE)
@@ -93,6 +96,8 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
             return true;
         } else if (subscribeItemCategorySpinner.getSelectedItem().toString() != "Category") {
             return true;
+        } else if (startTime!=null&&endTime!=null) {
+            return true;
         }
         return false;
     };
@@ -117,7 +122,10 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onDateSelected(List<Date> dates) {
-
+        Date start = dates.get(0);
+        Date end = dates.get(1);
+        startTime = start.toString();
+        endTime = end.toString();
     }
 
     public class subscribeActionTask extends AsyncTask<String, Integer, String> {
@@ -134,7 +142,7 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
             newSubscription.category = Objects.equals(category, "Category") ?null:category;
             newSubscription.allergyInfo = null;
             newSubscription.subscriberID = subscriberID;
-            newSubscription.timePeriod = Objects.equals(timePeriod, "Time Period") ?null:timePeriod;
+            newSubscription.timePeriod = new String[]{startTime, endTime};
             newSubscription.query = query;
             newSubscription.isActive = true;
             newSubscription.matchedPostIDs = null;
