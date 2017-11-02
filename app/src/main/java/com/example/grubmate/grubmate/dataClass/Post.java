@@ -16,7 +16,8 @@ public class Post implements Serializable {
     public String[] postPhotos;
     public String[] tags;
     public String category;
-    public String timePeriod;
+    // pos 0 start time, pos 1 end time
+    public String[] timePeriod;
     public String description;
     public Double[] address;
     public Integer[] groupIDs;

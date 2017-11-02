@@ -42,9 +42,10 @@
                 android:hint="@string/post_action_tags_hint"
                 android:inputType="text"
                 />
-            <Spinner
-                android:id="@+id/spinner_time"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/b_subscription_time_period"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
