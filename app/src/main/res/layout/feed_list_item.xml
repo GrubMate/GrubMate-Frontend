@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
     android:id="@+id/cv_feed_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     card_view:cardCornerRadius="2dp"
-    card_view:cardElevation="2dp">
+    card_view:cardElevation="2dp"
+    app:ignore="NamespaceTypo">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/iv_feed_item_image"
+        <com.synnapps.carouselview.CarouselView
+            android:id="@+id/cv_feed_item_image"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:background="@color/cardview_dark_background" />
+            app:fillColor="#FFFFFFFF"
+            app:pageColor="#00000000"
+            app:radius="6dp"
+            card_view:autoPlay="false"
+            card_view:slideInterval="1000000"
+            app:strokeColor="#FF777777"
+            app:strokeWidth="1dp"/>
 
             <TextView
             android:id="@+id/tv_feed_item_name"
@@ -28,6 +36,14 @@
             android:textAlignment="center"
             android:textColor="@color/colorTextRegular"
             android:textSize="16dp" />
+        <TextView
+            android:padding="8dp"
+            android:textSize="16dp"
+            android:id="@+id/tv_feed_item_tag"
+            android:text="@string/default_text"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tv_feed_item_quantity"
@@ -35,14 +51,19 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textColor="@color/colorTextRegular"
+            android:padding="8dp"
             android:textSize="16dp"
             android:text="@string/default_text"/>
 
         <LinearLayout
             android:paddingHorizontal="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
+            android:layout_height="match_parent">
+            <TextView
+                android:text="Poster: "
+                android:textAlignment="textStart"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
             <TextView
                 android:id="@+id/tv_feed_item_poster"
                 android:layout_width="0dp"
