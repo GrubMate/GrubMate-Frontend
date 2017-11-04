@@ -37,6 +37,8 @@ public class BFeedAdapter extends BaseQuickAdapter<Post, BaseViewHolder> {
                     .setText(R.id.tv_feed_item_poster, item.posterName)
                     .setText(R.id.tv_feed_item_quantity,leftQuantity)
                     .setText(R.id.tv_feed_item_tag, ArrayUtilities.join(item.tags, ","))
+                    .setText(R.id.tv_feed_item_description, item.description==null?"No Description":item.description)
+                    .setText(R.id.tv_feed_item_date, item.timePeriod[0] + " - " + item.timePeriod[1])
                     .addOnClickListener(R.id.tv_feed_item_poster)
                     .addOnClickListener(R.id.b_feed_item_request);
         }else{

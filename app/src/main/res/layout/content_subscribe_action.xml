@@ -50,6 +50,7 @@
             <Button
                 android:id="@+id/b_subscription_time_period"
                 android:layout_gravity="center_horizontal"
+                android:text="Time Period"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
