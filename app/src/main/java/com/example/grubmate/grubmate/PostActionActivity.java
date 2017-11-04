@@ -77,6 +77,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private CheckBox postHomeCheckBox;
     private Button postItemLocation;
     private TextView postItemLocationText;
+    private CheckBox[] allergyCheckboxes;
     private DoubleDateAndTimePickerDialog.Builder doubleDateAndTimePickerDialogBuilder;
     private Button mPhotoButton;
     private Button mDateButton;
@@ -99,6 +100,7 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     private Boolean isHomeMade;
     private Post mPostData;
     private Gson gson;
+    private Boolean[] allergyInfo;
     private Integer mPostID;
     private List<Uri> mSelected;
     @Override
@@ -116,7 +118,6 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
         postItemNameText = (EditText) findViewById(R.id.et_post_item_name);
         postItemTagsText = (EditText) findViewById(R.id.et_post_item_tags);
         postItemDescriptionText = (EditText) findViewById(R.id.et_post_item_description);
-        postItemAllergyText = (EditText) findViewById(R.id.et_post_item_allergy);
         postItemQuantityText = (EditText) findViewById(R.id.et_post_item_quantity);
         postItemLocation = (Button) findViewById(R.id.et_location);
         postItemCategorySpinner = (Spinner) findViewById(R.id.spinner_category);
@@ -187,6 +188,11 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
         gson = new Gson();
         mPostData = null;
         mPostID = null;
+        allergyCheckboxes = new CheckBox[3];
+        allergyCheckboxes[0] = (CheckBox) findViewById(R.id.cb_post_allergy_one);
+        allergyCheckboxes[1] = (CheckBox) findViewById(R.id.cb_post_allergy_two);
+        allergyCheckboxes[2] = (CheckBox) findViewById(R.id.cb_post_allergy_three);
+        allergyInfo = new Boolean[3];
         if(callIntent.hasExtra("post_data")) {
             String extraText = callIntent.getStringExtra("post_data");
             mPostData = gson.fromJson(callIntent.getStringExtra("post_data"), Post.class);
@@ -291,6 +297,9 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             groupIDs[0] = Objects.equals(postGroupSpinner.getSelectedItem().toString(), "All")?null:Integer.parseInt(postGroupSpinner.getSelectedItem().toString());
             // TODO: change this to reald user id in production
             userID = 0;
+            allergyInfo[0] = allergyCheckboxes[0].isChecked();
+            allergyInfo[1] = allergyCheckboxes[1].isChecked();
+            allergyInfo[2] = allergyCheckboxes[2].isChecked();
             new PostActionTask().execute();
         } else {
             showShortToast("Please fill out all necessary fields before posting");
@@ -359,6 +368,8 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
             newPost.isHomeMade = isHomeMade;
 //            newPost.requestsIDs = null;
             newPost.timePeriod = new String[]{startTime, endTime};
+            newPost.allergyInfo = allergyInfo;
+            Log.d("time", startTime);
             Gson gson = new Gson();
             String postJson = gson.toJson(newPost);
             Post post = gson.fromJson(postJson, Post.class);

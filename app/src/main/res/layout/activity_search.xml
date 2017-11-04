@@ -20,18 +20,25 @@
         android:text="@string/search_advance_search_hint"/>
     <LinearLayout
         android:id="@+id/ll_search_advance"
-        android:visibility="gone"
         android:orientation="vertical"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Spinner
             android:id="@+id/search_spinner_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <Spinner
-            android:id="@+id/search_spinner_time"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/b_search_time"
+            android:text="Time Period"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <CheckBox
+            android:id="@+id/cb_search_allergy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Filter Allergy"/>
     </LinearLayout>
     <Button
         android:id="@+id/b_search_button"

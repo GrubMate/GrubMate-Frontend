@@ -11,9 +11,10 @@ import java.util.ArrayList;
  */
 
 public class PersistantDataManager {
-    public static int userID = 0;
-    public static ArrayList<Integer> groupIDs = new ArrayList<Integer>();
-    public static ArrayList<Notification> notificationCache = com.example.grubmate.grubmate.dataClass.MockData.getNotificationList();
+    private static int userID = 0;
+    private static ArrayList<Integer> groupIDs = new ArrayList<Integer>();
+    private static ArrayList<Notification> notificationCache = com.example.grubmate.grubmate.dataClass.MockData.getNotificationList();
+    private static Boolean[] allergyInfo = new Boolean[]{false, false, false};
 
 
     public static ArrayList<Notification> getNotificationCache() {
@@ -40,6 +41,14 @@ public class PersistantDataManager {
     }
     public static void setGroupIDs(ArrayList<Integer> groupIDs) {
         PersistantDataManager.groupIDs = groupIDs;
+    }
+
+    public static Boolean[] getAllergyInfo() {
+        return allergyInfo;
+    }
+
+    public static void setAllergyInfo(Boolean[] newAllergyInfo) {
+        allergyInfo = newAllergyInfo;
     }
 
 
