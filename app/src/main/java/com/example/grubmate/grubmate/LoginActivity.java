@@ -218,7 +218,7 @@ public class LoginActivity extends AppCompatActivity {
             newUser.userID = null;
             newUser.bio = null;
             newUser.rating = null;
-            newUser.allergy = null;
+            newUser.allergy = new Boolean[]{false, false, false};
             newUser.groupID = null;
             newUser.postsID = null;
             newUser.requestsID = null;
