@@ -30,6 +30,12 @@ import com.example.grubmate.grubmate.fragments.PostFragment;
 import com.example.grubmate.grubmate.fragments.ProfileFragment;
 import com.example.grubmate.grubmate.fragments.SubscriptionFragment;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.facebook.AccessToken;
+import com.facebook.FacebookRequestError;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -170,6 +176,29 @@ public class MainActivity extends AppCompatActivity
             destinationFragment = GroupFragment.newInstance(null,null);
         } else if (id == R.id.nav_allergy_settings) {
             destinationFragment = AllergySetting.newInstance(null,null);
+        }else if(id == R.id.nav_logout){
+
+            GraphRequest delPermRequest = new GraphRequest(AccessToken.getCurrentAccessToken(), "/{user-id}/permissions/", null, HttpMethod.DELETE, new GraphRequest.Callback() {
+                @Override
+                public void onCompleted(GraphResponse graphResponse) {
+                    if(graphResponse!=null){
+                        FacebookRequestError error =graphResponse.getError();
+                        if(error!=null){
+                            Log.e(TAG, error.toString());
+                        }else {
+                            finish();
+                        }
+                    }
+                }
+            });
+            Log.d(TAG,"Executing revoke permissions with graph path" + delPermRequest.getGraphPath());
+            delPermRequest.executeAsync();
+            LoginManager.getInstance().logOut();
+            Intent loginscreen=new Intent(this,LoginActivity.class);
+            loginscreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(loginscreen);
+            this.finish();
+           // android.os.Process.killProcess(android.os.Process.myPid());
         }
         // construct the intent
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
