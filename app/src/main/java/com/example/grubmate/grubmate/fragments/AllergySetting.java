@@ -179,21 +179,16 @@ public class AllergySetting extends Fragment {
             Gson gson = new Gson();
             if (allergyItems != null) {
                 allergies = gson.fromJson(allergyItems,allergies.getClass());
+                PersistantDataManager.setAllergyInfo(allergies);
+                allergy0Milk.setChecked(allergies[0]);
+                allergy1Egg.setChecked(allergies[1]);
+                allergy2Fish.setChecked(allergies[2]);
             }else {
                 for(int i=0;i<3;i++){
-                    allergies[i] = true;
+                    allergies[i] = false;
                 }
                 Toast.makeText(context, "Network Error: Please Retry", Toast.LENGTH_SHORT).show();
             }
-            allergy0Milk.setChecked(allergies[0]);
-            allergy1Egg.setChecked(allergies[1]);
-            allergy2Fish.setChecked(allergies[2]);
-    //        allergy3Peanut.setChecked(allergies[3]);
-//            allergy0Milk.setChecked(true);
-//            allergy1Egg.setChecked(true);
-//            allergy2Fish.setChecked(true);
-//            allergy3Peanut.setChecked(true);
-
         }
 
     }
@@ -213,7 +208,9 @@ public class AllergySetting extends Fragment {
             try {
                 Gson gson = new Gson();
                 String allergyJson = gson.toJson(allergies);
+                PersistantDataManager.setAllergyInfo(allergies);
                 String response = NetworkUtilities.post(GrubMatePreference.getAllergyURL(PersistantDataManager.getUserID()),allergyJson);
+
                 if (response == null || response.length() == 0)
                     return null;
                 return response;
@@ -226,6 +223,7 @@ public class AllergySetting extends Fragment {
         protected void onPostExecute(String allergyItems) {
             if (allergyItems != null) {
                 Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
+
             }else {
                 Toast.makeText(context, "Network Error: Please Retry", Toast.LENGTH_SHORT).show();
             }
