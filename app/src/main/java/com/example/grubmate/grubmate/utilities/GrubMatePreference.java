@@ -5,7 +5,7 @@ package com.example.grubmate.grubmate.utilities;
  */
 
 public class GrubMatePreference {
-    public static final String domain = "http://10.120.77.86:8080";
+    public static final String domain = "http://10.120.74.230:8080";
     public static final String subscribeActionURL = "/subscription";
     public static final String postURL = "/post";
     public static final String searchURL = "/search";

@@ -1,6 +1,7 @@
 package com.example.grubmate.grubmate;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -26,16 +28,18 @@ import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.github.florent37.singledateandtimepicker.dialog.DoubleDateAndTimePickerDialog;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
-public class SearchActivity extends AppCompatActivity implements View.OnClickListener,FeedFragment.OnFragmentInteractionListener{
+public class SearchActivity extends AppCompatActivity implements View.OnClickListener,FeedFragment.OnFragmentInteractionListener, DoubleDateAndTimePickerDialog.Listener{
     private EditText searchItemNameText;
     private Spinner searchItemCategorySpinner;
-    private Spinner searchItemTimeSpinner;
     private Button searchButton;
     private String title;
     private String[] tags;
@@ -44,6 +48,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     private Boolean[] allergyInfo;
     private LinearLayout advanceLayout;
     private TextView mAdvanceTextView;
+    private Button timeButton;
+    private CheckBox allergyCheckBox;
+    private DoubleDateAndTimePickerDialog.Builder doubleDateAndTimePickerDialogBuilder;
+    private String startTime;
+    private String endTime;
+    private Boolean isChecked;
     private Gson gson;
 
     @Override
@@ -51,13 +61,20 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    @Override
+    public void onDateSelected(List<Date> dates) {
+        Date start = dates.get(0);
+        Date end = dates.get(1);
+        startTime = start.toString();
+        endTime = end.toString();
+    }
+
     class SearchFields{
         public String title;
         public String[] tags;
         public String category;
-        public String timePeriod;
+        public String[] timePeriod;
         public Boolean[] allergyInfo;
-
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +88,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         searchItemCategorySpinner.setAdapter(categoryAdapter);
         advanceLayout = (LinearLayout) findViewById(R.id.ll_search_advance);
-
-
-        searchItemTimeSpinner = (Spinner) findViewById(R.id.search_spinner_time);
         mAdvanceTextView = (TextView) findViewById(R.id.tv_search_advance_label);
         mAdvanceTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,18 +99,31 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
         });
-// Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> timeAdapter = ArrayAdapter.createFromResource(this,
-                R.array.time_period, android.R.layout.simple_spinner_item);
-// Specify the layout to use when the list of choices appears
-        timeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-        searchItemTimeSpinner.setAdapter(timeAdapter);
+
         searchButton = (Button) findViewById(R.id.b_search_button);
         searchButton.setOnClickListener(this);
         gson = new Gson();
-
-
+        startTime = null;
+        endTime = null;
+        timeButton = (Button) findViewById(R.id.b_search_time);
+        doubleDateAndTimePickerDialogBuilder = new DoubleDateAndTimePickerDialog
+                .Builder(this)
+                .backgroundColor(Color.WHITE)
+                .mainColor(Color.argb(255, 63,81,181))
+                .title("Time Period")
+                .minutesStep(30)
+                .tab0Text("Start")
+                .tab1Text("End")
+                .listener(this);
+        timeButton = (Button) findViewById(R.id.b_search_time);
+        timeButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                doubleDateAndTimePickerDialogBuilder.display();
+            }
+        });
+        allergyCheckBox = (CheckBox) findViewById(R.id.cb_search_allergy);
+        isChecked = false;
     }
 
     public void showShortToast(String msg) {
@@ -106,7 +133,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     public boolean validateForm() {
         if(title != null) return true;
         if(!Objects.equals(category, "Category")) return true;
-        if(!Objects.equals(timePeriod, "Time Period")) return true;
+        if (startTime!=null) return true;
         return false;
     };
 
@@ -115,10 +142,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         title = searchItemNameText.getText().toString();
         tags = null;
         category = searchItemCategorySpinner.getSelectedItem().toString();
-        timePeriod = searchItemTimeSpinner.getSelectedItem().toString();
-        Log.d(SearchActivity.class.toString(), timePeriod);
-        allergyInfo = new Boolean[3];
-
+        allergyInfo = allergyCheckBox.isChecked()?PersistantDataManager.getAllergyInfo():null;
         if(validateForm()) {
             new SearchActivity.SearchTask().execute("post");
         } else {
@@ -147,7 +171,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 searchFields.title = title;
                 searchFields.category = Objects.equals(category, "Category")?null:category;
                 searchFields.tags = tags;
-                searchFields.timePeriod = Objects.equals(timePeriod, "Time Period")?null:timePeriod;
+                searchFields.timePeriod = startTime!=null?new String[]{startTime,endTime}:null;
                 searchFields.allergyInfo = allergyInfo;
 
                 String response = null;

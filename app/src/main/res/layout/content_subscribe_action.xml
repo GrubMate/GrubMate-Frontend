@@ -42,6 +42,11 @@
                 android:hint="@string/post_action_tags_hint"
                 android:inputType="text"
                 />
+            <CheckBox
+                android:id="@+id/cb_subscribe_allergy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Filter Allergy"/>
             <Button
                 android:id="@+id/b_subscription_time_period"
                 android:layout_gravity="center_horizontal"

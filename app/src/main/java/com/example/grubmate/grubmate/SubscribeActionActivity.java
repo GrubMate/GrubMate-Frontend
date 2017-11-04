@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -34,14 +35,14 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
     private Spinner subscribeItemCategorySpinner;
     private Button timeButton;
     private Integer subscriberID;
+    private CheckBox allergyCheckbox;
     public String[] tags;
     public String category;
     public String query;
-    public String timePeriod;
     private String startTime;
     private String endTime;
+    private Boolean isChecked;
     public Integer[] matchedPostIDs;
-    public Boolean[] allergyInfo;
     public DoubleDateAndTimePickerDialog.Builder doubleDateAndTimePickerDialogBuilder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +51,13 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_subscribe);
         fab.setOnClickListener(this);
 
         subscribeItemNameText = (EditText) findViewById(R.id.et_subscribe_item_name);
         subscribeItemTagsText = (EditText) findViewById(R.id.et_subscribe_item_tags);
+        allergyCheckbox = (CheckBox) findViewById(R.id.cb_subscribe_allergy);
 
         subscribeItemCategorySpinner = (Spinner) findViewById(R.id.spinner_category);
         ArrayAdapter<CharSequence> categoryAdapter = ArrayAdapter.createFromResource(this,
@@ -106,12 +109,10 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
     public void onClick(View view) {
         if(validateForm()) {
             query = subscribeItemNameText.getText().toString();
-            allergyInfo = new Boolean[3];
             category = subscribeItemCategorySpinner.getSelectedItem().toString();
             if(Objects.equals(category, "Category")) category = null;
-            if(Objects.equals(timePeriod, "Time Period")) timePeriod = null;
-            // TODO: modify this into users' real id in production
             String tagString = subscribeItemTagsText.getText().toString();
+            this.isChecked=allergyCheckbox.isChecked();
             tags = tagString.split(",");
             subscriberID = 0;
             new subscribeActionTask().execute(GrubMatePreference.getSubscribeActionURL(subscriberID));
@@ -140,9 +141,9 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
 
             newSubscription.tags = tags;
             newSubscription.category = Objects.equals(category, "Category") ?null:category;
-            newSubscription.allergyInfo = null;
+            newSubscription.allergyInfo = isChecked?PersistantDataManager.getAllergyInfo():null;
             newSubscription.subscriberID = subscriberID;
-            newSubscription.timePeriod = new String[]{startTime, endTime};
+            newSubscription.timePeriod = startTime!=null?new String[]{startTime, endTime}:null;
             newSubscription.query = query;
             newSubscription.isActive = true;
             newSubscription.matchedPostIDs = null;

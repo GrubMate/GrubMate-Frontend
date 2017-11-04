@@ -86,13 +86,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Time Period"/>
-            <EditText
-                android:id="@+id/et_post_item_allergy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/post_action_allergy_hint"
-                android:singleLine="true" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <CheckBox
+                    android:id="@+id/cb_post_allergy_one"
+                    android:text="Allergy1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <CheckBox
+                    android:id="@+id/cb_post_allergy_two"
+                    android:text="Allergy2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+                <CheckBox
+                    android:id="@+id/cb_post_allergy_three"
+                    android:text="Allergy3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+            </LinearLayout>
             <Spinner
                 android:id="@+id/spinner_group"
                 android:layout_width="match_parent"
