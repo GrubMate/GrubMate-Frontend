@@ -1,0 +1,55 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context="com.example.grubmate.grubmate.fragments.AllergySetting">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="40dp"
+            android:textAlignment="center"
+            android:padding="32px"
+            android:text="Allergy"/>
+
+        <CheckBox
+            android:id="@+id/cb_Allergy0_milk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16px"
+            android:textSize="25dp"
+            android:text="Milk Allergy"/>
+        <CheckBox
+            android:id="@+id/cb_Allergy1_egg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Egg Allergy"
+            android:padding="16px"
+            android:textSize="25dp"/>
+        <CheckBox
+            android:id="@+id/cb_Allergy2_fish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fish Allergy"
+            android:padding="16px"
+            android:textSize="25dp"/>
+
+
+    </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_allergy_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_menu_save" />
+
+</android.support.design.widget.CoordinatorLayout>

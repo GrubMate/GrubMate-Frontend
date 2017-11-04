@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.example.grubmate.grubmate.fragments.AllergySetting;
 import com.example.grubmate.grubmate.fragments.FeedFragment;
 import com.example.grubmate.grubmate.fragments.GroupFragment;
 import com.example.grubmate.grubmate.fragments.NotificationCenterFragment;
@@ -37,7 +38,8 @@ public class MainActivity extends AppCompatActivity
         SubscriptionFragment.OnSubcriptionFragmentInteractionListener,
         PostFragment.OnPostFragmentInteractionListener,
         NotificationCenterFragment.OnNotificationFragmentInteractionListener
-        , GroupFragment.OnGroupFragmentInteractionListener {
+        , GroupFragment.OnGroupFragmentInteractionListener,
+        AllergySetting.OnAllergyFragmentInteractionListener{
     public static final String TAG = "MainActivity";
     private Context context;
     public static final int SEARCH_IDENTIFICATION_CODE = 91;
@@ -166,8 +168,8 @@ public class MainActivity extends AppCompatActivity
             destinationFragment = ProfileFragment.newInstance(PersistantDataManager.getUserID(),null);
         } else if (id == R.id.nav_group_settings) {
             destinationFragment = GroupFragment.newInstance(null,null);
-        } else if (id == R.id.nav_application_settings) {
-
+        } else if (id == R.id.nav_allergy_settings) {
+            destinationFragment = AllergySetting.newInstance(null,null);
         }
         // construct the intent
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

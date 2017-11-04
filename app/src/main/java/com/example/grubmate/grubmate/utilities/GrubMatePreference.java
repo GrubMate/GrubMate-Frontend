@@ -18,6 +18,7 @@ public class GrubMatePreference {
     public static final String ratingUrl = "/user";
     public static final String groupURL = "/group";
     public static final String friendListURL = "/friend";
+    public static final String AllergyURL = "/allergy";
     public static String getSubscribeActionURL(int ID) {
         return domain + subscribeActionURL + "/" + ID;
     }
@@ -88,6 +89,7 @@ public class GrubMatePreference {
     public static String getRequestListUrl(int ID, int postID) {
         return domain + requestURL + "/" + ID + "/" + postID;
     }
+    public static String getAllergyURL(int ID){return domain + AllergyURL+"/" + ID; }
     public static String getFriendlistURL(int ID){return domain+ friendListURL +"/" +ID;}
     public static String getGroupURL(int ID){return domain+ groupURL +"/" +ID;}
 }

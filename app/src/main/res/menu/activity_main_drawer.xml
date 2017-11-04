@@ -25,8 +25,8 @@
                 android:id="@+id/nav_group_settings"
                 android:title="Group Settings" />
             <item
-                android:id="@+id/nav_application_settings"
-                android:title="Application Settings" />
+                android:id="@+id/nav_allergy_settings"
+                android:title="Allergy Settings" />
         </menu>
     </item>
 
