@@ -75,7 +75,7 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
                 .tab0Text("Start")
                 .tab1Text("End")
                 .listener(this);
-        timeButton = (Button) findViewById(R.id.b_subscription_item_unsubscribe);
+        timeButton = (Button) findViewById(R.id.b_subscription_time_period);
         timeButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {

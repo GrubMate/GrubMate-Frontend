@@ -29,6 +29,7 @@ public class NetworkUtilities {
         if(url==null||url.length() == 0) {
             return null;
         }
+        Log.d("GET", url);
         try {
             Request request = new Request.Builder()
                     .url(url)

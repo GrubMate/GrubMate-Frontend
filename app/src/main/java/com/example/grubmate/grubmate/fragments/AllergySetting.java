@@ -19,6 +19,7 @@ import com.example.grubmate.grubmate.GroupSettingsActivity;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.dataClass.Group;
 import com.example.grubmate.grubmate.dataClass.MockData;
+import com.example.grubmate.grubmate.dataClass.User;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
@@ -159,12 +160,8 @@ public class AllergySetting extends Fragment {
 
         @Override
         protected String doInBackground(Integer... params) {
-            if (params.length == 0) {
-                return null;
-            }
-
             try {
-                String response = NetworkUtilities.get(GrubMatePreference.getAllergyURL(PersistantDataManager.getUserID()));
+                String response = NetworkUtilities.get(GrubMatePreference.getUserUrl(PersistantDataManager.getUserID()));
                 Log.d("allergy response", response==null?"null":response);
                 if (response == null || response.length() == 0)
                     return null;
@@ -178,7 +175,7 @@ public class AllergySetting extends Fragment {
         protected void onPostExecute(String allergyItems) {
             Gson gson = new Gson();
             if (allergyItems != null) {
-                allergies = gson.fromJson(allergyItems,allergies.getClass());
+                allergies = gson.fromJson(allergyItems, User.class).allergy;
                 PersistantDataManager.setAllergyInfo(allergies);
                 allergy0Milk.setChecked(allergies[0]);
                 allergy1Egg.setChecked(allergies[1]);
@@ -201,16 +198,13 @@ public class AllergySetting extends Fragment {
 
         @Override
         protected String doInBackground(Integer... params) {
-            if (params.length == 0) {
-                return null;
-            }
-
             try {
                 Gson gson = new Gson();
-                String allergyJson = gson.toJson(allergies);
+                User user = new User();
+                user.userID = PersistantDataManager.getUserID();
+                user.allergy = allergies;
                 PersistantDataManager.setAllergyInfo(allergies);
-                String response = NetworkUtilities.post(GrubMatePreference.getAllergyURL(PersistantDataManager.getUserID()),allergyJson);
-
+                String response = NetworkUtilities.put(GrubMatePreference.getAllergyURL(PersistantDataManager.getUserID()), gson.toJson(user));
                 if (response == null || response.length() == 0)
                     return null;
                 return response;
