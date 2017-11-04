@@ -193,7 +193,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 Fragment destinationFragment = FeedFragment.newInstance(null, "search",pastPostList);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_search, destinationFragment);
-                transaction.addToBackStack(null);
+
                 transaction.commit();
             } else {
                 Toast.makeText(SearchActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
@@ -201,7 +201,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 Fragment destinationFragment = FeedFragment.newInstance(null, "search",pastPostList);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_search, destinationFragment);
-                transaction.addToBackStack(null);
+
                 transaction.commit();
             }
         }

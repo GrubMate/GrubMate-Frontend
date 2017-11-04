@@ -207,7 +207,6 @@ public class MainActivity extends AppCompatActivity
         if(destinationFragment !=null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fl_main_fragment_container, destinationFragment);
-            transaction.addToBackStack(null);
             transaction.commit();
         }
 
