@@ -1,11 +1,15 @@
 # GrubMate-Frontend
-GrubMate Android Client
-
-## Notice
-Please pull!!! every time before you write your code to avoid merge conflits.
-
-Try place constants like title or image address into res folder to avoide slopy typing.
+Android client for Grubmate.
 
 ## Packages
 ### utilities
 Collections of commonly used methods and constant
+
+## External Libraries
+JUnit
+Espresso
+Matisse
+Carouselview
+BaseRecyclerViewAdapterHelper
+OkHTTP
+Picasso
