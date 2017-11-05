@@ -5,8 +5,14 @@ import android.util.Log;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -22,7 +28,27 @@ import okhttp3.Response;
 public class NetworkUtilities {
     public static final MediaType JSON
             = MediaType.parse("application/json; charset=utf-8");
-    public static OkHttpClient client = new OkHttpClient.Builder().connectTimeout(1, TimeUnit.SECONDS).build();
+    public static OkHttpClient client = new OkHttpClient
+            .Builder()
+            .cookieJar(new CookieJar() {
+                private final HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
+                private HttpUrl userUrl;
+                @Override
+                public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                    if(url.url().toString().contains("user")) userUrl = url;
+                    cookieStore.put(url, cookies);
+                    Log.d("Cookie", url.toString());
+                    Log.d("Cookie", cookies==null?"null":cookies.toString());
+                }
+
+                @Override
+                public List<Cookie> loadForRequest(HttpUrl url) {
+                    List<Cookie> cookies = cookieStore.get(userUrl);
+                    return cookies != null?cookies:new ArrayList<Cookie>();
+                }
+            })
+            .connectTimeout(1, TimeUnit.SECONDS)
+            .build();
 
     // Send a GET request to address specified by url, return raw response text
     public static String get(String url) throws IOException {
