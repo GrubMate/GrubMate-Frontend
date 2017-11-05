@@ -62,11 +62,17 @@
         <TextView
             android:id="@+id/tv_feed_item_date"
             android:paddingHorizontal="16dp"
-            android:layout_marginBottom="6dp"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Date"/>
-
+        <TextView
+            android:id="@+id/tv_feed_item_allergy"
+            android:paddingLeft="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="allergies"/>
         <LinearLayout
             android:paddingHorizontal="16dp"
             android:layout_width="match_parent"

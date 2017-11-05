@@ -26,4 +26,5 @@ public class Post implements Serializable {
     public ArrayList<Integer> requestsIDs;
     public Boolean isActive;
     public Boolean[] allergyInfo;
+    public static final String[] allergyNames = new String[]{"Milk", "Egg", "Fish"};
 }
