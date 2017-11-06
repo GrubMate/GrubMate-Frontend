@@ -1,6 +1,7 @@
 package com.example.grubmate.grubmate.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.example.grubmate.grubmate.PostActionActivity;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.PastPostAdapter;
 import com.example.grubmate.grubmate.dataClass.MockData;
@@ -58,8 +61,10 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
     private ImageView mProfileAvatar;
     private TextView mProfileName;
     private RatingBar mProfileRatingBar;
+    private Button mProfileMessengerButton;
     private Gson gson;
     private int userID;
+    private String facebookID;
     private RecyclerView mRecyclerView;
     private PastPostAdapter mPastPostAdapter;
     private ArrayList<Post> mPastPostList;
@@ -108,6 +113,21 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
         mProfileAvatar = (ImageView) rootView.findViewById(R.id.iv_profile_avatar);
         mProfileName = (TextView) rootView.findViewById(R.id.tv_profile_name);
         mProfileRatingBar = (RatingBar) rootView.findViewById(R.id.rb_profile_rating);
+
+        mProfileMessengerButton = (Button) rootView.findViewById(R.id.b_profile_messenger);
+        mProfileMessengerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb-messenger://user/" + facebookID)));
+                }
+                catch(android.content.ActivityNotFoundException anfe)
+                {
+                    return;
+                }
+            }
+        });
+
       //  mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_profile_orders);
         mPastPostList = new ArrayList<Post>();
         mPastPostAdapter = new PastPostAdapter(mPastPostList);
@@ -118,6 +138,8 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
         mProgressBar = rootView.findViewById(R.id.pb_profile_progress);
         return rootView;
     }
+
+
 
     @Override
     public void onStart() {
@@ -204,6 +226,10 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                     Toast.makeText(context, "Error occurs during fetching user data", Toast.LENGTH_SHORT).show();
                 } else {
                     User user = gson.fromJson(postActionResponse, User.class);
+
+                    facebookID = user.facebookID;
+                    System.out.println("Facebook ID is + " + facebookID);
+
                     mProfileName.setText(user.userName);
                     if (user.rating != null && user.rating >= 0) {
                         mProfileRatingBar.setRating(user.rating.intValue());

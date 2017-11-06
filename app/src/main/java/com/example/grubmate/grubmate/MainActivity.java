@@ -2,6 +2,7 @@ package com.example.grubmate.grubmate;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -168,6 +169,19 @@ public class MainActivity extends AppCompatActivity
             destinationFragment = GroupFragment.newInstance(null,null);
         } else if (id == R.id.nav_application_settings) {
 
+        }
+        else if( id == R.id.redirect_messenger_button)
+        {
+            final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+            try {
+                //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.messenger.com")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb-messenger://user/100006296499746")));
+                //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/100006901752615")));
+
+            } catch (android.content.ActivityNotFoundException anfe) {
+                //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
         }
         // construct the intent
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

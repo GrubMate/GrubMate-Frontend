@@ -30,4 +30,8 @@
         </menu>
     </item>
 
+    <item
+        android:id="@+id/redirect_messenger_button"
+        android:title="Discuss on Messenger" />
+
 </menu>
