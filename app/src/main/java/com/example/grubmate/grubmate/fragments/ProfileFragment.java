@@ -216,7 +216,7 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                 e.printStackTrace();
             }
 
-            return gson.toJson(MockData.getUser(PersistantDataManager.userID));
+            return gson.toJson(MockData.getUser(PersistantDataManager.getUserID()));
         }
 
         @Override

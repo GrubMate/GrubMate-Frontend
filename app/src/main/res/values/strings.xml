@@ -8,11 +8,10 @@
     <string name="default_text">This is default text, Hopefully it changes</string>
     <string name="title_activity_post_action">Post</string>
     <string name="post_action_title">Post</string>
-    <string name="post_action_item_name_hint">What is your item?</string>
+    <string name="post_action_item_name_hint">Item Name</string>
     <string name="post_action_tags_hint">Tags (Divide by ",")</string>
-    <string name="post_action_allergy_hint">What ingredients may cause allergy?</string>
     <string name="post_action_description_hint">Description:</string>
-    <string name="post_action_quantity_hint">How many portions do you have?</string>
+    <string name="post_action_quantity_hint">Quantity</string>
     <string name="action_search">Search</string>
     <string name="button_post">Post</string>
     <string name="button_subscribe">Subscribe</string>

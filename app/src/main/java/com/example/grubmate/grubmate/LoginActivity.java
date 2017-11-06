@@ -72,32 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onSuccess(final LoginResult login_result) {
                     getFriendList(login_result.getAccessToken());
 
-//                    new GraphRequest(
-//                            token,
-//                            "/me/friends",
-//                            null,
-//                            HttpMethod.GET,
-//                            new GraphRequest.Callback() {
-//                                public void onCompleted(GraphResponse response) {
-//                                    Log.i("friendlist 1", response.toString());
-//                                    try {
-//                                        JSONArray rawName = response.getJSONObject().getJSONArray("data");
-//                                        ArrayList<String> friends = new ArrayList<String>();
-//                                        String userID = token.getUserId();
-//                                        facebookID = userID;
-//                                        Log.i("userid",userID);
-//                                        for (int l = 0; l < rawName.length(); l++) {
-//                                            friends.add(rawName.getJSONObject(l).getString("id"));
-//                                        }
-//                                        friendList = friends;
-//                                        getProfileImage(token);
 //
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            }
-//                    ).executeAsync();
                 }
 
                 @Override
@@ -218,7 +193,7 @@ public class LoginActivity extends AppCompatActivity {
             newUser.userID = null;
             newUser.bio = null;
             newUser.rating = null;
-            newUser.allergy = null;
+            newUser.allergy = new Boolean[]{false, false, false};
             newUser.groupID = null;
             newUser.postsID = null;
             newUser.requestsID = null;
@@ -240,6 +215,7 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(String postActionResponse) {
             if(postActionResponse==null||postActionResponse.length() == 0 || postActionResponse.length()>20) return;
             PersistantDataManager.setUserID(Integer.parseInt(postActionResponse));
+//            PersistantDataManager.setUserID(0);
             Intent startMainActivity = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(startMainActivity);
         }

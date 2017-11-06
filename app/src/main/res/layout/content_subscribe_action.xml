@@ -25,16 +25,24 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:orientation="vertical">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
             <EditText
                 android:id="@+id/et_subscribe_item_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/post_action_item_name_hint"
                 android:inputType="text"/>
+            </android.support.design.widget.TextInputLayout>
             <Spinner
                 android:id="@+id/spinner_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <EditText
                 android:id="@+id/et_subscribe_item_tags"
                 android:layout_width="match_parent"
@@ -42,9 +50,16 @@
                 android:hint="@string/post_action_tags_hint"
                 android:inputType="text"
                 />
+            </android.support.design.widget.TextInputLayout>
+            <CheckBox
+                android:id="@+id/cb_subscribe_allergy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Filter Allergy"/>
             <Button
                 android:id="@+id/b_subscription_time_period"
                 android:layout_gravity="center_horizontal"
+                android:text="Time Period"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

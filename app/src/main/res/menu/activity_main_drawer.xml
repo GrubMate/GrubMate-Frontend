@@ -25,13 +25,13 @@
                 android:id="@+id/nav_group_settings"
                 android:title="Group Settings" />
             <item
-                android:id="@+id/nav_application_settings"
-                android:title="Application Settings" />
+                android:id="@+id/nav_allergy_settings"
+                android:title="Allergy Settings" />
         </menu>
     </item>
 
     <item
-        android:id="@+id/redirect_messenger_button"
-        android:title="Discuss on Messenger" />
+        android:id="@+id/nav_logout"
+        android:title="Log out" />
 
 </menu>

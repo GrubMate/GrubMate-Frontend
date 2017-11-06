@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.example.grubmate.grubmate.fragments.AllergySetting;
 import com.example.grubmate.grubmate.fragments.FeedFragment;
 import com.example.grubmate.grubmate.fragments.GroupFragment;
 import com.example.grubmate.grubmate.fragments.NotificationCenterFragment;
@@ -30,6 +31,12 @@ import com.example.grubmate.grubmate.fragments.PostFragment;
 import com.example.grubmate.grubmate.fragments.ProfileFragment;
 import com.example.grubmate.grubmate.fragments.SubscriptionFragment;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.facebook.AccessToken;
+import com.facebook.FacebookRequestError;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -38,7 +45,8 @@ public class MainActivity extends AppCompatActivity
         SubscriptionFragment.OnSubcriptionFragmentInteractionListener,
         PostFragment.OnPostFragmentInteractionListener,
         NotificationCenterFragment.OnNotificationFragmentInteractionListener
-        , GroupFragment.OnGroupFragmentInteractionListener {
+        , GroupFragment.OnGroupFragmentInteractionListener,
+        AllergySetting.OnAllergyFragmentInteractionListener{
     public static final String TAG = "MainActivity";
     private Context context;
     public static final int SEARCH_IDENTIFICATION_CODE = 91;
@@ -167,8 +175,33 @@ public class MainActivity extends AppCompatActivity
             destinationFragment = ProfileFragment.newInstance(PersistantDataManager.getUserID(),null);
         } else if (id == R.id.nav_group_settings) {
             destinationFragment = GroupFragment.newInstance(null,null);
-        } else if (id == R.id.nav_application_settings) {
+        } else if (id == R.id.nav_allergy_settings) {
+            destinationFragment = AllergySetting.newInstance(null,null);
+        }else if(id == R.id.nav_logout){
 
+            GraphRequest delPermRequest = new GraphRequest(AccessToken.getCurrentAccessToken(), "/{user-id}/permissions/", null, HttpMethod.DELETE, new GraphRequest.Callback() {
+                @Override
+                public void onCompleted(GraphResponse graphResponse) {
+                    if(graphResponse!=null){
+                        FacebookRequestError error =graphResponse.getError();
+                        if(error!=null){
+                            Log.e(TAG, error.toString());
+                        }else {
+                            stopService(new Intent(MainActivity.this, NotificationService.class));
+                            finish();
+                            return;
+                        }
+                    }
+                }
+            });
+            Log.d(TAG,"Executing revoke permissions with graph path" + delPermRequest.getGraphPath());
+            delPermRequest.executeAsync();
+            LoginManager.getInstance().logOut();
+            Intent loginscreen=new Intent(this,LoginActivity.class);
+            loginscreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(loginscreen);
+            this.finish();
+           // android.os.Process.killProcess(android.os.Process.myPid());
         }
         else if( id == R.id.redirect_messenger_button)
         {
@@ -190,7 +223,6 @@ public class MainActivity extends AppCompatActivity
         if(destinationFragment !=null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fl_main_fragment_container, destinationFragment);
-            transaction.addToBackStack(null);
             transaction.commit();
         }
 

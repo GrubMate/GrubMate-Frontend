@@ -63,8 +63,10 @@ public class PostActionTest {
         onData(allOf(is(instanceOf(String.class)), is("Asian"))).perform(click());
 
 
-        //onView(withId(R.id.spinner_time)) .perform(scrollTo())
-        //        .perform(click());
+
+//        onView(withId(R.id.spinner_time)) .perform(scrollTo())
+//                .perform(click());
+
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
         onView(withId(R.id.et_location)) .perform(scrollTo())
@@ -109,7 +111,8 @@ public class PostActionTest {
         onData(allOf(is(instanceOf(String.class)), is("Asian"))).perform(click());
 
 
-        //onView(withId(R.id.spinner_time)) .perform(scrollTo())
+
+       // onView(withId(R.id.spinner_time)) .perform(scrollTo())
         //        .perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
@@ -153,8 +156,8 @@ public class PostActionTest {
         onData(allOf(is(instanceOf(String.class)), is("Asian"))).perform(click());
 
 
-        //onView(withId(R.id.spinner_time)) .perform(scrollTo())
-        //        .perform(click());
+//        onView(withId(R.id.spinner_time)) .perform(scrollTo())
+//                .perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
         onView(withId(R.id.et_location)) .perform(scrollTo())
@@ -188,8 +191,9 @@ public class PostActionTest {
         onData(allOf(is(instanceOf(String.class)), is("Asian"))).perform(click());
 
 
-        //onView(withId(R.id.spinner_time)) .perform(scrollTo())
-        //        .perform(click());
+
+//        onView(withId(R.id.spinner_time)) .perform(scrollTo())
+//                .perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
         onView(withId(R.id.et_location)) .perform(scrollTo())
@@ -224,8 +228,9 @@ public class PostActionTest {
         onData(allOf(is(instanceOf(String.class)), is("Asian"))).perform(click());
 
 
-       // onView(withId(R.id.spinner_time)) .perform(scrollTo())
-       //         .perform(click());
+
+//        onView(withId(R.id.spinner_time)) .perform(scrollTo())
+//                .perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
         onView(withId(R.id.et_location)) .perform(scrollTo())
@@ -259,6 +264,7 @@ public class PostActionTest {
 
         //onView(withId(R.id.spinner_time)) .perform(scrollTo())
         //        .perform(click());
+
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
         onView(withId(R.id.et_location)) .perform(scrollTo())
@@ -295,6 +301,7 @@ public class PostActionTest {
 
         //onView(withId(R.id.spinner_time)) .perform(scrollTo())
         //        .perform(click());
+
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
         onView(withId(R.id.et_location)) .perform(scrollTo())
@@ -331,6 +338,7 @@ public class PostActionTest {
 
         //onView(withId(R.id.spinner_time)) .perform(scrollTo())
         //        .perform(click());
+
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
         onView(withId(R.id.et_location)) .perform(scrollTo())
@@ -401,6 +409,7 @@ public class PostActionTest {
 
         //onView(withId(R.id.spinner_time)) .perform(scrollTo())
         //        .perform(click());
+
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
         onView(withId(R.id.fab_post)).perform(click());

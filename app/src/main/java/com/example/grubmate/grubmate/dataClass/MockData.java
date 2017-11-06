@@ -24,6 +24,9 @@ public class MockData {
                 localPost.title = "Pengxiang";
                 localPost.isActive = true;
                 localPost.postPhotos = new String[]{"https://scontent-lax3-2.xx.fbcdn.net/v/t1.0-1/p320x320/18157207_1865865683653472_4594581227614755828_n.jpg?oh=f4dd57613f14e50610f16ba17043bce7&oe=5A643985","https://scontent-lax3-2.xx.fbcdn.net/v/t1.0-1/p320x320/18157207_1865865683653472_4594581227614755828_n.jpg?oh=f4dd57613f14e50610f16ba17043bce7&oe=5A643985"};
+                localPost.description = "test";
+                localPost.timePeriod = new String[]{"1", "2"};
+                localPost.allergyInfo = new Boolean[]{true, false, false};
                 result.add(localPost);
             }
         }

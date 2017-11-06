@@ -32,11 +32,20 @@ public class BFeedAdapter extends BaseQuickAdapter<Post, BaseViewHolder> {
     protected void convert(BaseViewHolder viewHolder, final Post item) {
         if(item.isActive){
             String leftQuantity = "Left Quantity: "+String.valueOf(item.leftQuantity)+"/"+String.valueOf(item.totalQuantity);
+            String allergies = "Allergies: ";
+            if(item.allergyInfo!=null) {
+                if(item.allergyInfo[0]) allergies +=(item.allergyNames[0]+" ");
+                if(item.allergyInfo[1]) allergies +=(item.allergyNames[1]+" ");
+                if(item.allergyInfo[2]) allergies += (item.allergyNames[2]+" ");
+            }
             viewHolder.setText(R.id.tv_feed_item_name, item.title)
                     // integers has to be wraped as string to avoid android treating them as resource
                     .setText(R.id.tv_feed_item_poster, item.posterName)
                     .setText(R.id.tv_feed_item_quantity,leftQuantity)
                     .setText(R.id.tv_feed_item_tag, ArrayUtilities.join(item.tags, ","))
+                    .setText(R.id.tv_feed_item_description, item.description==null?"No Description":item.description)
+                    .setText(R.id.tv_feed_item_date, item.timePeriod[0] + " - " + item.timePeriod[1])
+                    .setText(R.id.tv_feed_item_allergy, allergies)
                     .addOnClickListener(R.id.tv_feed_item_poster)
                     .addOnClickListener(R.id.b_feed_item_request);
         }else{
