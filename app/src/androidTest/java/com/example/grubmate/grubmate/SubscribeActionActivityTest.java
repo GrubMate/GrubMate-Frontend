@@ -34,9 +34,9 @@ public class SubscribeActionActivityTest {
 
         onView(withId(R.id.et_subscribe_item_tags)).perform(typeText("pipitag"));
 
-        onView(withId(R.id.spinner_time))
-                .perform(scrollTo())
-                .perform(click());
+        //onView(withId(R.id.spinner_time))
+        //        .perform(scrollTo())
+        //        .perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
         ViewActions.closeSoftKeyboard();
@@ -57,9 +57,9 @@ public class SubscribeActionActivityTest {
 
         onView(withId(R.id.et_subscribe_item_tags)).perform(typeText("pipitag"));
 
-        onView(withId(R.id.spinner_time))
-                .perform(scrollTo())
-                .perform(click());
+        //onView(withId(R.id.spinner_time))
+        //        .perform(scrollTo())
+        //        .perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
         ViewActions.closeSoftKeyboard();
@@ -79,9 +79,9 @@ public class SubscribeActionActivityTest {
 
         onView(withId(R.id.et_subscribe_item_tags)).perform(typeText("pipitag"));
 
-        onView(withId(R.id.spinner_time))
-                .perform(scrollTo())
-                .perform(click());
+        //onView(withId(R.id.spinner_time))
+        //        .perform(scrollTo())
+        //        .perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
         ViewActions.closeSoftKeyboard();
@@ -99,9 +99,9 @@ public class SubscribeActionActivityTest {
 
         //onView(withId(R.id.et_subscribe_item_tags)).perform(typeText("poison, poop"));
 
-        onView(withId(R.id.spinner_time))
-                .perform(scrollTo())
-                .perform(click());
+        //onView(withId(R.id.spinner_time))
+        //        .perform(scrollTo())
+        //        .perform(click());
         onData(allOf(is(instanceOf(String.class)), is("Lunch"))).perform(click());
 
         ViewActions.closeSoftKeyboard();

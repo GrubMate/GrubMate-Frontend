@@ -76,7 +76,8 @@ public class MockData {
             result.userName = "Jie Ji";
             result.rating = 4.5;
             result.profilePhoto = "https://scontent-lax3-2.xx.fbcdn.net/v/t1.0-1/p320x320/18157207_1865865683653472_4594581227614755828_n.jpg?oh=f4dd57613f14e50610f16ba17043bce7&oe=5A643985";
-            result.facebookID = "100006901752615";
+            result.facebookID = "100006901752615";//Jie's fb id
+            //result.facebookID = "100006296499746";//Zhaoqi's fb id
         }
         return result;
     }

@@ -35,6 +35,13 @@
         android:isIndicator="true"
         android:stepSize="1" />
 
+    <Button
+        android:id="@+id/b_profile_messenger"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contact on messenger"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_past_orders"
         android:layout_width="match_parent"
