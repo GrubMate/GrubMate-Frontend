@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -251,9 +252,10 @@ public class PostFragment extends Fragment {
         }
     }
     public class DeletePostTask extends AsyncTask<Integer, Integer, String> {
+        Integer postID;
         @Override
         protected String doInBackground(Integer... integers) {
-            Integer postID = integers[0];
+            postID = integers[0];
             try {
                 return   NetworkUtilities.delete(GrubMatePreference.getPostDeleteURL(PersistantDataManager.getUserID(), postID), null);
             } catch (IOException e) {
@@ -268,15 +270,22 @@ public class PostFragment extends Fragment {
                 showShortToast("Your post was successfully deleted");
                 new FetchPostListTask().execute();
             } else {
-                showShortToast("Netowrk Error");
+                Snackbar.make(getView(),"Netowkr Error", Snackbar.LENGTH_SHORT)
+                        .setAction("Retry", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                new DeletePostTask().execute(postID);
+                            }
+                        }).show();
             }
             super.onPostExecute(s);
         }
     }
     public class ConfirmPostTask extends AsyncTask<Integer, Integer, String> {
+        private Integer postID;
         @Override
         protected String doInBackground(Integer... integers) {
-            Integer postID = integers[0];
+            postID = integers[0];
             try {
                 return   NetworkUtilities.post(GrubMatePreference.getConfimUrl(PersistantDataManager.getUserID(), postID), null);
             } catch (IOException e) {
@@ -291,7 +300,13 @@ public class PostFragment extends Fragment {
                 showShortToast("Your post was confirmed");
                 new FetchPostListTask().execute();
             } else {
-                showShortToast("Netowrk Error");
+                Snackbar.make(getView(),"Netowkr Error", Snackbar.LENGTH_SHORT)
+                        .setAction("Retry", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                new ConfirmPostTask().execute(postID);
+                            }
+                        }).show();
             }
             super.onPostExecute(s);
         }
