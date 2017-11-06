@@ -1,5 +1,6 @@
 package com.example.grubmate.grubmate;
 
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.LauncherApps;
@@ -7,6 +8,8 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,6 +36,8 @@ public class NotificationService extends Service {
     private NotificationBinder mBinder = new NotificationBinder();
     private Gson gson;
     private static OkHttpClient client;
+    private NotificationCompat.Builder builder;
+    private NotificationManagerCompat notificationManager;
     class NotificationBinder extends Binder {
         public void startPolling() {
             Log.d("NotificationService", "polling started");
@@ -53,6 +58,8 @@ public class NotificationService extends Service {
         super.onCreate();
         Log.d("NotificationService", "onCreateExecuted");
         gson = new Gson();
+        builder = new NotificationCompat.Builder(this);
+        notificationManager = NotificationManagerCompat.from(this);
         client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
     }
 
@@ -101,6 +108,8 @@ public class NotificationService extends Service {
                     PersistantDataManager.addNotification(gson.fromJson(postActionResponse, Notification.class));
                     local.putExtra("notification", postActionResponse);
                     sendBroadcast(local);
+                    Notification notification = gson.fromJson(postActionResponse, Notification.class);
+                    sendNotification(notification.title, "You have a new notification");
                 }
             }
             new NotificationTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "Notification");;
@@ -118,6 +127,13 @@ public class NotificationService extends Service {
                 semaphore.release();
             }
         }
+    }
+
+    private void sendNotification(String title, String text) {
+        notificationManager.notify(0x1234, builder.setContentTitle(title)
+                .setContentText(text)
+                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                .build());
     }
 
     public boolean isResponseValid(String response) {

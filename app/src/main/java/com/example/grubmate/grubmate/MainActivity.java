@@ -186,7 +186,9 @@ public class MainActivity extends AppCompatActivity
                         if(error!=null){
                             Log.e(TAG, error.toString());
                         }else {
+                            stopService(new Intent(MainActivity.this, NotificationService.class));
                             finish();
+                            return;
                         }
                     }
                 }
