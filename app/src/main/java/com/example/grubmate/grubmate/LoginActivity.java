@@ -109,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.i("friendlist 1", response.toString());
                         try {
                             JSONArray rawName = response.getJSONObject().getJSONArray("data");
+                            Log.d("login", response.toString());
                             ArrayList<String> friends = new ArrayList<String>();
                             String userID = token.getUserId();
                             facebookID = userID;

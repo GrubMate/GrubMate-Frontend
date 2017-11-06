@@ -1,12 +1,15 @@
 package com.example.grubmate.grubmate.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -37,6 +40,8 @@ public class ProfileActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private PastPostAdapter mPastPostAdapter;
     private ArrayList<Post> mPastPostList;
+    private String  facebookID;
+    private Button mProfileMessengerButton;
     private static final boolean test = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,19 @@ public class ProfileActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mPastPostAdapter);
+        mProfileMessengerButton = (Button) findViewById(R.id.b_profile_messenger);
+        mProfileMessengerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb-messenger://user/" + facebookID)));
+                }
+                catch(android.content.ActivityNotFoundException anfe)
+                {
+                    return;
+                }
+            }
+        });
 
         new FetchUserTask().execute();
         new PastPostTask().execute(userID);
@@ -84,6 +102,8 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(ProfileActivity.this, "Error occurs during fetching user data", Toast.LENGTH_SHORT).show();
                 } else {
                     User user = gson.fromJson(postActionResponse, User.class);
+                    facebookID = user.facebookID;
+                    System.out.println("Facebook ID is + " + facebookID);
                     mProfileName.setText(user.userName);
                         mProfileRatingBar.setRating(5);
                     Picasso.with(ProfileActivity.this).load(user.profilePhoto).into(mProfileAvatar);
