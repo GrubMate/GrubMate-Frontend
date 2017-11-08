@@ -69,7 +69,8 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try{
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb-messenger://user/" + facebookID)));
+                    //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb-messenger://user/" + facebookID)));
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb-messenger://user/")));
                 }
                 catch(android.content.ActivityNotFoundException anfe)
                 {
