@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.example.grubmate.grubmate.MapsActivity;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.activities.ProfileActivity;
 import com.example.grubmate.grubmate.adapters.BFeedAdapter;
@@ -142,6 +143,13 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
                     case R.id.b_feed_item_request:
                         view.setEnabled(false);
                         requestPost(position);
+                        break;
+
+                    case R.id.b_feed_item_map:
+                        Intent startMap = new Intent(getContext(),MapsActivity.class);
+                        startMap.putExtra("Lat",feedData.get(position).address[0]);
+                        startMap.putExtra("Lng",feedData.get(position).address[1]);
+                        startActivity(startMap);
                         break;
                     default:
                 }
