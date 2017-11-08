@@ -233,7 +233,7 @@ public class PostFragment extends Fragment {
 
             try {
                 String response = NetworkUtilities.get(GrubMatePreference.getUserPostUrl(PersistantDataManager.getUserID()));
-                Log.d(TAG, response);
+             //   Log.d(TAG, response);
                 if (response == null || response.length() == 0)
                     return null;
                 return JsonUtilities.getFeedItems(response);
