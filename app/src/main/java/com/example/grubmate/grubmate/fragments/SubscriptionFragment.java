@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,6 +63,7 @@ public class SubscriptionFragment extends Fragment {
     private TextView mEmptyText;
     private Button mSubscribeButton;
     private Context context;
+    private int position;
 
     public SubscriptionFragment() {
         // Required empty public constructor
@@ -116,6 +118,7 @@ public class SubscriptionFragment extends Fragment {
                 }
             }
         });
+        position = -1;
         mFeedView.setAdapter(mFeedAdapter);
         mSubscribeButton = rootView.findViewById(R.id.b_subscription_subscribe);
         mSubscribeButton.setOnClickListener(new View.OnClickListener() {
@@ -230,6 +233,13 @@ public class SubscriptionFragment extends Fragment {
                 mEmptyText.setVisibility(View.VISIBLE);
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
+                Snackbar.make(getView(),"Netowkr Error", Snackbar.LENGTH_LONG)
+                        .setAction("Retry", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                new FetchSubscriptionFeedListTask().execute();
+                            }
+                        }).show();
 
             }
         }
@@ -238,6 +248,7 @@ public class SubscriptionFragment extends Fragment {
         @Override
         protected String doInBackground(Integer... params) {
             int pos = params[0];
+            position = pos;
             try {
                 Log.d("Subscription", "Sent");
                 return NetworkUtilities.delete(GrubMatePreference.getSubscriptionDeleteURL(PersistantDataManager.getUserID(), feedData.get(pos).subscriptionID), null);
@@ -254,7 +265,13 @@ public class SubscriptionFragment extends Fragment {
                 Toast.makeText(context, "Unsubscribed Successfully", Toast.LENGTH_SHORT).show();
                 new FetchSubscriptionFeedListTask().execute();
             } else {
-                Toast.makeText(context, "Error: Network Error", Toast.LENGTH_SHORT).show();
+                Snackbar.make(getView(),"Netowkr Error", Snackbar.LENGTH_LONG)
+                        .setAction("Retry", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                new SubscriptionDeleteTask().execute(position);
+                            }
+                        }).show();
             }
         }
     }

@@ -275,7 +275,7 @@ public class PostFragment extends Fragment {
                 showShortToast("Your post was successfully deleted");
                 new FetchPostListTask().execute();
             } else {
-                Snackbar.make(getView(),"Netowkr Error", Snackbar.LENGTH_SHORT)
+                Snackbar.make(getView(),"Netowkr Error", Snackbar.LENGTH_LONG)
                         .setAction("Retry", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -305,7 +305,7 @@ public class PostFragment extends Fragment {
                 showShortToast("Your post was confirmed");
                 new FetchPostListTask().execute();
             } else {
-                Snackbar.make(getView(),"Netowkr Error", Snackbar.LENGTH_SHORT)
+                Snackbar.make(getView(),"Netowkr Error", Snackbar.LENGTH_LONG)
                         .setAction("Retry", new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
