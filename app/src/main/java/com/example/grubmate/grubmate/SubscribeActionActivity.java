@@ -69,7 +69,7 @@ public class SubscribeActionActivity extends AppCompatActivity implements View.O
         doubleDateAndTimePickerDialogBuilder = new DoubleDateAndTimePickerDialog
                 .Builder(this)
                 .backgroundColor(Color.WHITE)
-                .mainColor(Color.argb(255, 63,81,181))
+                .mainColor(Color.argb(255, 255,152,0))
                 .title("Time Period")
                 .minutesStep(30)
                 .tab0Text("Start")
