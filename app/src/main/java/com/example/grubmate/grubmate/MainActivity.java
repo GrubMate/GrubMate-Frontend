@@ -202,6 +202,18 @@ public class MainActivity extends AppCompatActivity
             startActivity(loginscreen);
             this.finish();
            // android.os.Process.killProcess(android.os.Process.myPid());
+        }else if( id == R.id.redirect_messenger_button)
+        {
+            final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+            try {
+                //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.messenger.com")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb-messenger://user/100006296499746")));
+                //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/100006901752615")));
+
+            } catch (android.content.ActivityNotFoundException anfe) {
+                //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+            }
         }
 
         // construct the intent
