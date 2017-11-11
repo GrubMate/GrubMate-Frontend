@@ -52,13 +52,6 @@ public class BFeedAdapter extends BaseQuickAdapter<Post, BaseViewHolder> {
             if(item.timePeriod!=null) {
                 viewHolder.setText(R.id.tv_feed_item_date, item.timePeriod[0] + " - " + item.timePeriod[1]);
             }
-        }else{
-            viewHolder.setText(R.id.tv_feed_item_name, item.title)
-                    // integers has to be wraped as string to avoid android treating them as resource
-                    .setText(R.id.tv_feed_item_poster, item.posterName)
-                    .addOnClickListener(R.id.tv_feed_item_poster)
-                    .setVisible(R.id.b_feed_item_request,false)
-                    .addOnClickListener(R.id.b_feed_item_map);
         }
         if(item.postPhotos==null||item.postPhotos.length<1) {
             item.postPhotos = new String[]{"empty"};

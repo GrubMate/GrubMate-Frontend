@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android" xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv_order_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/tools"
+    android:layout_marginBottom="8dp"
+    card_view:cardCornerRadius="2dp"
+    card_view:cardElevation="2dp"
+    card_view:contentPadding="16dp"
+    app:ignore="NamespaceTypo">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.synnapps.carouselview.CarouselView
+            android:id="@+id/cv_order_item_image"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            app:fillColor="#FFFFFFFF"
+            app:pageColor="#00000000"
+            app:radius="6dp"
+            card_view:autoPlay="false"
+            card_view:slideInterval="1000000"
+            app:strokeColor="#FF777777"
+            app:strokeWidth="1dp"/>
+
+        <TextView
+            android:id="@+id/tv_order_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Item Name"
+            android:textAlignment="center"
+            android:textColor="@color/colorTextRegular"
+            android:textSize="24dp" />
+        <TextView
+            android:id="@+id/tv_order_item_tag"
+            android:text="Tag1, Tag2"
+            android:textAlignment="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:paddingHorizontal="16dp"
+            android:id="@+id/tv_order_item_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"/>
+        <TextView
+            android:id="@+id/tv_order_item_date"
+            android:paddingHorizontal="16dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date"/>
+        <TextView
+            android:id="@+id/tv_order_item_allergy"
+            android:paddingLeft="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="allergies"/>
+        <Button
+            android:id="@+id/b_order_item_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Location" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>
