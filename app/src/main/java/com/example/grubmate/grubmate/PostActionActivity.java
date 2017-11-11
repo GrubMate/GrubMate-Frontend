@@ -33,10 +33,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.grubmate.grubmate.dataClass.Post;
+import com.example.grubmate.grubmate.utilities.ArrayUtilities;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.example.grubmate.grubmate.utilities.SpinnerUtilities;
 import com.github.florent37.singledateandtimepicker.dialog.DoubleDateAndTimePickerDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -195,18 +197,27 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
         allergyInfo = new Boolean[3];
         if(callIntent.hasExtra("post_data")) {
             String extraText = callIntent.getStringExtra("post_data");
-            mPostData = gson.fromJson(callIntent.getStringExtra("post_data"), Post.class);
-            postItemNameText.setText(mPostData.title);
-            postItemQuantityText.setText(String.valueOf(mPostData.leftQuantity));
-            if(mPostData.isHomeMade) {
-                postHomeCheckBox.setChecked(true);
-            } else {
-                postHomeCheckBox.setChecked(false);
-            }
-            postItemDescriptionText.setText(mPostData.description);
-            mPostID = mPostData.postID;
+            recoverForm(extraText);
         }
 
+    }
+
+    private void recoverForm(String data) {
+        mPostData = gson.fromJson(data, Post.class);
+        postItemNameText.setText(mPostData.title);
+        postItemQuantityText.setText(String.valueOf(mPostData.leftQuantity));
+        postHomeCheckBox.setChecked(mPostData.isHomeMade);
+        postItemDescriptionText.setText(mPostData.description);
+        postItemTagsText.setText(ArrayUtilities.join(mPostData.tags, ","));
+        postItemCategorySpinner.setSelection(SpinnerUtilities.getIndex(postItemCategorySpinner, mPostData.category));
+        if(mPostData.address!=null) {
+            this.Lat = mPostData.address[0];
+            this.Lng = mPostData.address[1];
+        }
+        for(int i = 0; i<mPostData.allergyInfo.length; i++) {
+            allergyCheckboxes[i].setSelected(mPostData.allergyInfo[i]);
+        }
+        mPostID = mPostData.postID;
     }
 
     //Store the location's Latitude to Lat and Logitude to Lng
