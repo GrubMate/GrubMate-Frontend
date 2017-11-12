@@ -35,36 +35,55 @@
             android:textAlignment="center"
             android:textColor="@color/colorTextRegular"
             android:textSize="24dp" />
-        <TextView
-            android:id="@+id/tv_order_item_tag"
-            android:text="Tag1, Tag2"
-            android:textAlignment="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:paddingHorizontal="16dp"
-            android:id="@+id/tv_order_item_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Description"/>
-        <TextView
-            android:id="@+id/tv_order_item_date"
-            android:paddingHorizontal="16dp"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Date"/>
-        <TextView
-            android:id="@+id/tv_order_item_allergy"
-            android:paddingLeft="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="allergies"/>
         <Button
-            android:id="@+id/b_order_item_map"
+            android:id="@+id/b_order_detail"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Details"
+            style="?android:attr/borderlessButtonStyle"
+            />
+        <LinearLayout
+            android:id="@+id/ll_order_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Location" />
+            android:visibility="gone"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_order_item_tag"
+                android:text="Tag1, Tag2"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:paddingHorizontal="16dp"
+                android:id="@+id/tv_order_item_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description"/>
+            <TextView
+                android:id="@+id/tv_order_item_date"
+                android:paddingHorizontal="16dp"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Date"/>
+            <TextView
+                android:id="@+id/tv_order_item_allergy"
+                android:paddingLeft="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="allergies"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Requesters"/>
+            <Button
+                android:id="@+id/b_order_item_map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Location" />
+        </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>

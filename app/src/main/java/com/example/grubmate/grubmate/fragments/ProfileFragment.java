@@ -141,6 +141,7 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
         mBOrderAdapter= new BOrderAdapter(mPastPostList);
         mBOrderAdapter.openLoadAnimation();
         mBOrderAdapter.setEmptyView(R.layout.list_loading_layout, (ViewGroup) mOrderView.getParent());
+        mOrderView.setAdapter(mBOrderAdapter);
         mBOrderAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -151,11 +152,17 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                         startMap.putExtra("Lng",mPastPostList.get(position).address[1]);
                         startActivity(startMap);
                         break;
+                    case R.id.b_order_detail:
+                        LinearLayout detailLayout = (LinearLayout) adapter.getViewByPosition(mOrderView, position, R.id.ll_order_detail);
+                        if(detailLayout.getVisibility()==View.VISIBLE) {
+                            detailLayout.setVisibility(View.GONE);
+                        } else {
+                            detailLayout.setVisibility(View.VISIBLE);;
+                        }
                     default:
                 }
             }
         });
-        mOrderView.setAdapter(mBOrderAdapter);
         mContentLayout = rootView.findViewById(R.id.ll_profile_content);
         mProgressBar = rootView.findViewById(R.id.pb_profile_progress);
         return rootView;
