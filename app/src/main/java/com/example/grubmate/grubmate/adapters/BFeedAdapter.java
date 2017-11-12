@@ -42,11 +42,12 @@ public class BFeedAdapter extends BaseQuickAdapter<Post, BaseViewHolder> {
                     // integers has to be wraped as string to avoid android treating them as resource
                     .setText(R.id.tv_feed_item_poster, item.posterName)
                     .setText(R.id.tv_feed_item_quantity,leftQuantity)
-                    .setText(R.id.tv_feed_item_tag, ArrayUtilities.join(item.tags, ","))
+                    .setText(R.id.tv_feed_item_tag, "Tags: "+ArrayUtilities.join(item.tags, ","))
                     .setText(R.id.tv_feed_item_description, item.description==null?"No Description":item.description)
                     .setText(R.id.tv_feed_item_allergy, allergies)
                     .addOnClickListener(R.id.tv_feed_item_poster)
                     .addOnClickListener(R.id.b_feed_item_request)
+                    .addOnClickListener(R.id.b_feed_toggle_detail)
               .addOnClickListener(R.id.b_feed_item_map);
               ;
             if(item.timePeriod!=null) {
