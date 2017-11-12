@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,11 +17,11 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.example.grubmate.grubmate.MapFeedActivity;
 import com.example.grubmate.grubmate.MapsActivity;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.activities.ProfileActivity;
 import com.example.grubmate.grubmate.adapters.BFeedAdapter;
-import com.example.grubmate.grubmate.adapters.FeedAdapter;
 import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.UserRequest;
@@ -44,7 +45,8 @@ import java.util.Objects;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
-import static com.example.grubmate.grubmate.adapters.FeedAdapter.FeedDetailActivity.PLACE_AUTOCOMPLETE_REQUEST_CODE;
+
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +63,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -81,7 +84,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     private double Lat;
     private double Lng;
     private ArrayList<Post> mPastPostList;
-
+    private FloatingActionButton mapListButton;
     public FeedFragment() {
         // Required empty public constructor
     }
@@ -124,7 +127,12 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         View rootView = inflater.inflate(R.layout.fragment_feed, container, false);
         // Setting up feed
         mFeedView = (RecyclerView) rootView.findViewById(R.id.rv_feed);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager;
+        if(mParam1 == "horizontal"){
+             layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        }else {
+             layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        }
         mFeedView.setLayoutManager(layoutManager);
 
         mFeedAdapter = new BFeedAdapter(feedData);
@@ -153,6 +161,15 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
                         break;
                     default:
                 }
+            }
+        });
+        mapListButton = (FloatingActionButton) rootView.findViewById(R.id.fab_feed_map);
+        mapListButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getContext(),MapFeedActivity.class);
+                intent.putExtra("postList", feedData);
+                startActivity(intent);
             }
         });
         mFeedView.setAdapter(mFeedAdapter);
