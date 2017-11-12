@@ -4,6 +4,7 @@ import android.os.NetworkOnMainThreadException;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 
+import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.grubmate.grubmate.R;
@@ -15,7 +16,7 @@ import java.util.List;
  * Created by tianhangliu on 10/20/17.
  */
 
-public class NotificationAdapter extends BaseQuickAdapter<Notification, BaseViewHolder> {
+public class NotificationAdapter extends BaseItemDraggableAdapter<Notification, BaseViewHolder> {
 
     public NotificationAdapter(List<Notification> notificationData) {
         super(R.layout.notification_list_item, notificationData);

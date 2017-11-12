@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,43 +8,9 @@
     android:padding="16dp"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/i_profile_avatar"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center_horizontal"
-        android:adjustViewBounds="true" />
-
-    <TextView
-        android:id="@+id/tv_profile_name"
+    <FrameLayout
+        android:id="@+id/fl_profile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="32sp"
-        android:text="@string/profile_name_default"
-        />
+        android:layout_height="match_parent" />
 
-    <RatingBar
-        android:id="@+id/rb_profile"
-        android:layout_gravity="center_horizontal"
-        style="@style/Widget.AppCompat.RatingBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:numStars="5"
-        android:rating="5"
-        android:isIndicator="true"
-        android:stepSize="1" />
-
-    <Button
-        android:id="@+id/b_profile_messenger"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Contact on messenger"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_past_orders"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-</LinearLayout>
+</FrameLayout>

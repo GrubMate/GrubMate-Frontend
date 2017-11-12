@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -137,7 +138,8 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
 
         mFeedAdapter = new BFeedAdapter(feedData);
         mFeedAdapter.openLoadAnimation();
-        mFeedAdapter.setEmptyView(R.layout.list_empty_layout, (ViewGroup) mFeedView.getParent());
+        mFeedAdapter.setEmptyView(R.layout.list_loading_layout, (ViewGroup) mFeedView.getParent());
+        mFeedView.setAdapter(mFeedAdapter);
         mFeedAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -152,17 +154,25 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
                         view.setEnabled(false);
                         requestPost(position);
                         break;
-
                     case R.id.b_feed_item_map:
                         Intent startMap = new Intent(getContext(),MapsActivity.class);
                         startMap.putExtra("Lat",feedData.get(position).address[0]);
                         startMap.putExtra("Lng",feedData.get(position).address[1]);
                         startActivity(startMap);
                         break;
+                    case R.id.b_feed_toggle_detail:
+                        LinearLayout detailLayout = (LinearLayout) adapter.getViewByPosition(mFeedView, position, R.id.ll_feed_detail);
+                        if(detailLayout.getVisibility()==View.VISIBLE) {
+                            detailLayout.setVisibility(View.GONE);
+                        } else {
+                            detailLayout.setVisibility(View.VISIBLE);
+                        }
+                        break;
                     default:
                 }
             }
         });
+
         mapListButton = (FloatingActionButton) rootView.findViewById(R.id.fab_feed_map);
         mapListButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -173,6 +183,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
             }
         });
         mFeedView.setAdapter(mFeedAdapter);
+
         mFeedProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_feed);
         //        mFeedAdapter.setFeedData(MockData.mockFeedData);
         return rootView;

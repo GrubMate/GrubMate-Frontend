@@ -22,8 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.example.grubmate.grubmate.MapsActivity;
 import com.example.grubmate.grubmate.PostActionActivity;
 import com.example.grubmate.grubmate.R;
+import com.example.grubmate.grubmate.activities.ProfileActivity;
+import com.example.grubmate.grubmate.adapters.BFeedAdapter;
+import com.example.grubmate.grubmate.adapters.BOrderAdapter;
 import com.example.grubmate.grubmate.adapters.PastPostAdapter;
 import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Post;
@@ -70,9 +74,10 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
     private ArrayList<Post> mPastPostList;
     private LinearLayout mContentLayout;
     private ProgressBar mProgressBar;
+    private RecyclerView mOrderView;
+    private BOrderAdapter mBOrderAdapter;
     private Context context;
     private final static boolean TEST = true;
-
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -129,11 +134,35 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
         });
 
       //  mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_profile_orders);
-        mPastPostList = new ArrayList<Post>();
-        mPastPostAdapter = new PastPostAdapter(mPastPostList);
-        mPastPostAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext(), LinearLayoutManager.VERTICAL, false);
-      //  mRecyclerView.setLayoutManager(layoutManager);
+        mOrderView = (RecyclerView) rootView.findViewById(R.id.rv_profile_orders);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
+        mOrderView.setLayoutManager(layoutManager);
+
+        mBOrderAdapter= new BOrderAdapter(mPastPostList);
+        mBOrderAdapter.openLoadAnimation();
+        mBOrderAdapter.setEmptyView(R.layout.list_loading_layout, (ViewGroup) mOrderView.getParent());
+        mOrderView.setAdapter(mBOrderAdapter);
+        mBOrderAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (view.getId()) {
+                    case R.id.b_feed_item_map:
+                        Intent startMap = new Intent(getContext(),MapsActivity.class);
+                        startMap.putExtra("Lat",mPastPostList.get(position).address[0]);
+                        startMap.putExtra("Lng",mPastPostList.get(position).address[1]);
+                        startActivity(startMap);
+                        break;
+                    case R.id.b_order_detail:
+                        LinearLayout detailLayout = (LinearLayout) adapter.getViewByPosition(mOrderView, position, R.id.ll_order_detail);
+                        if(detailLayout.getVisibility()==View.VISIBLE) {
+                            detailLayout.setVisibility(View.GONE);
+                        } else {
+                            detailLayout.setVisibility(View.VISIBLE);;
+                        }
+                    default:
+                }
+            }
+        });
         mContentLayout = rootView.findViewById(R.id.ll_profile_content);
         mProgressBar = rootView.findViewById(R.id.pb_profile_progress);
         return rootView;
@@ -253,6 +282,7 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                 return NetworkUtilities.get(GrubMatePreference.getPastPostURL(userID));
             } catch (IOException e) {
                 e.printStackTrace();
+
             }
 
             return null;
@@ -262,15 +292,11 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
         protected void onPostExecute(String postActionResponse) {
             if(postActionResponse!=null && postActionResponse.contains("title")) {
                 mPastPostList = JsonUtilities.getFeedItems(postActionResponse);
-                Fragment childFragment = FeedFragment.newInstance(null, "profile",mPastPostList);
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.replace(R.id.rv_profile_orders, childFragment).commit();
+                mBOrderAdapter.setNewData(mPastPostList);
             } else {
                 Toast.makeText(context, "Network Error: Please Retry", Toast.LENGTH_SHORT);
                 mPastPostList = MockData.getPastPostList(2);
-                Fragment childFragment = FeedFragment.newInstance(null, "profile",mPastPostList);
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.replace(R.id.rv_profile_orders, childFragment).commit();
+                mBOrderAdapter.setNewData(mPastPostList);
             }
         }
     }
