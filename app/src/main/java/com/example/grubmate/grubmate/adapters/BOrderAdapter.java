@@ -39,6 +39,8 @@ public class BOrderAdapter extends BaseQuickAdapter<Post, BaseViewHolder> {
                 .setText(R.id.tv_order_item_tag, ArrayUtilities.join(item.tags, ","))
                 .setText(R.id.tv_order_item_description, item.description==null?"No Description":item.description)
                 .setText(R.id.tv_order_item_allergy, allergies)
+                .setGone(R.id.ll_order_detail, false)
+                .addOnClickListener(R.id.b_order_detail)
                 .addOnClickListener(R.id.b_order_item_map);
         ;
         if(item.timePeriod!=null) {
