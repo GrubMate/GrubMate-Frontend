@@ -214,11 +214,12 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String postActionResponse) {
-            if(postActionResponse==null||postActionResponse.length() == 0 || postActionResponse.length()>20) return;
-            PersistantDataManager.setUserID(Integer.parseInt(postActionResponse));
-//            PersistantDataManager.setUserID(0);
+//            if(postActionResponse==null||postActionResponse.length() == 0 || postActionResponse.length()>20) return;
+//            PersistantDataManager.setUserID(Integer.parseInt(postActionResponse));
+            PersistantDataManager.setUserID(0);
             Intent startMainActivity = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(startMainActivity);
+            finish();
         }
     }
 

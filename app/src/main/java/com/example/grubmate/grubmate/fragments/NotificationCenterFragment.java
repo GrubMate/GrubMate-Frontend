@@ -51,7 +51,7 @@ import static android.app.Activity.RESULT_OK;
 import static com.example.grubmate.grubmate.R.id.poster_layout;
 import static com.example.grubmate.grubmate.R.id.radio;
 import static com.example.grubmate.grubmate.R.id.recyclerview;
-import static com.example.grubmate.grubmate.adapters.FeedAdapter.FeedDetailActivity.PLACE_AUTOCOMPLETE_REQUEST_CODE;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,6 +67,10 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 2;
+
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -85,7 +89,7 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
     private double Lat;
     private double Lng;
     private Context context;
-
+    private String isMap;
     private OnNotificationFragmentInteractionListener mListener;
 
     public NotificationCenterFragment() {

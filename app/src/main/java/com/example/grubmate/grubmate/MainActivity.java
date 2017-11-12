@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -22,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.grubmate.grubmate.fragments.AllergySetting;
 import com.example.grubmate.grubmate.fragments.FeedFragment;
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity
     public static final String TAG = "MainActivity";
     private Context context;
     public static final int SEARCH_IDENTIFICATION_CODE = 91;
+    boolean doubleBackToExitPressedOnce = false;
     // used for service
     private BroadcastReceiver mNotificationReceiver;
     private IntentFilter intentFilter;
@@ -117,9 +120,23 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
         }
+
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 
     @Override
@@ -266,4 +283,6 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
 
     }
+
+
 }

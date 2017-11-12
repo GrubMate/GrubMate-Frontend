@@ -2,6 +2,7 @@ package com.example.grubmate.grubmate.dataClass;
 
 import android.icu.util.Freezable;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -27,6 +28,10 @@ public class MockData {
                 localPost.description = "test";
                 localPost.timePeriod = new String[]{"1", "2"};
                 localPost.allergyInfo = new Boolean[]{true, false, false};
+                Double[] address = new Double[2];
+                address[0]=  34.0227552 + i;
+                address[1]= -118.2823193 + i;
+                localPost.address = address;
                 result.add(localPost);
             }
         }
