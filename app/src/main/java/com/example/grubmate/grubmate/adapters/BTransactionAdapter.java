@@ -20,6 +20,7 @@ public class BTransactionAdapter extends BaseQuickAdapter<Transaction, BaseViewH
 
     @Override
     protected void convert(BaseViewHolder helper, Transaction item) {
-
+            helper.addOnClickListener(R.id.b_transaction_rating_submit)
+                    .addOnClickListener(R.id.b_transaction_request_cancel);
     }
 }

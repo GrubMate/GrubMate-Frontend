@@ -9,7 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter.OnItemChildClickListener;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.BTransactionAdapter;
 import com.example.grubmate.grubmate.dataClass.Transaction;
@@ -67,13 +70,29 @@ public class TransactionFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            final RecyclerView recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             recyclerView.setAdapter(mTransactionAdapter);
+            mTransactionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                @Override
+                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                    switch (view.getId()) {
+                        case R.id.b_transaction_request_cancel:
+                            view.setEnabled(false);
+                            break;
+                        case R.id.b_transaction_rating_submit:
+                            view.setEnabled(false);
+                            RatingBar ratingBar = (RatingBar) adapter.getViewByPosition(recyclerView, position,R.id.rb_transaction_rating);
+                            int score = ratingBar.getNumStars();
+
+                            break;
+                    }
+                }
+            });
         }
         return view;
     }
