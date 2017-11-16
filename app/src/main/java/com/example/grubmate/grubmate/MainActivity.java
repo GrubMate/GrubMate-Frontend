@@ -32,6 +32,7 @@ import com.example.grubmate.grubmate.fragments.NotificationCenterFragment;
 import com.example.grubmate.grubmate.fragments.PostFragment;
 import com.example.grubmate.grubmate.fragments.ProfileFragment;
 import com.example.grubmate.grubmate.fragments.SubscriptionFragment;
+import com.example.grubmate.grubmate.fragments.TransactionFragment;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.facebook.AccessToken;
 import com.facebook.FacebookRequestError;
@@ -48,7 +49,8 @@ public class MainActivity extends AppCompatActivity
         PostFragment.OnPostFragmentInteractionListener,
         NotificationCenterFragment.OnNotificationFragmentInteractionListener
         , GroupFragment.OnGroupFragmentInteractionListener,
-        AllergySetting.OnAllergyFragmentInteractionListener{
+        AllergySetting.OnAllergyFragmentInteractionListener,
+        TransactionFragment.OnTransactionInteractionListener{
     public static final String TAG = "MainActivity";
     private Context context;
     public static final int SEARCH_IDENTIFICATION_CODE = 91;
@@ -190,6 +192,8 @@ public class MainActivity extends AppCompatActivity
             destinationFragment = NotificationCenterFragment.newInstance(null, null);
         } else if (id == R.id.nav_profile) {
             destinationFragment = ProfileFragment.newInstance(PersistantDataManager.getUserID(),null);
+        } else if (id == R.id.nav_transactions) {
+            destinationFragment = TransactionFragment.newInstance(1);
         } else if (id == R.id.nav_group_settings) {
             destinationFragment = GroupFragment.newInstance(null,null);
         } else if (id == R.id.nav_allergy_settings) {
@@ -285,4 +289,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public void onTransactionInteraction() {
+
+    }
 }
