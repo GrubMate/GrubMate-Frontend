@@ -24,6 +24,8 @@ import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -52,6 +54,8 @@ public class AllergySetting extends Fragment {
     private FloatingActionButton mEditAllergy;
     private Boolean[] allergies;
     private CheckBox allergy0Milk,allergy1Egg,allergy2Fish;
+
+    private AdView mAdView;
     public AllergySetting() {
         // Required empty public constructor
     }
@@ -104,6 +108,15 @@ public class AllergySetting extends Fragment {
             new SetAllergyListTask().execute();
             }
         });
+
+        mAdView = (AdView) rootView.findViewById(R.id.adView);
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
+                .build();
+
+        mAdView.loadAd(adRequest);
+
         return rootView;
     }
 
