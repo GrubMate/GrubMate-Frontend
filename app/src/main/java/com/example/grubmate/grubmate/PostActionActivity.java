@@ -130,16 +130,15 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
         postItemLocationText = (TextView) findViewById(R.id.et_location_text) ;
         //Auto_complete activity open when button clicked
         //Auto_complete activity open when button clicked
+        mGoogleApiClient = new GoogleApiClient
+                .Builder(PostActionActivity.this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(PostActionActivity.this, PostActionActivity.this)
+                .build();
         postItemLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mGoogleApiClient = new GoogleApiClient
-                .Builder(PostActionActivity.this)
-                        .addApi(Places.GEO_DATA_API)
-                        .addApi(Places.PLACE_DETECTION_API)
-                        .enableAutoManage(PostActionActivity.this, PostActionActivity.this)
-                        .build();
-
                 try {
                     Intent intent =
                             new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
@@ -272,10 +271,10 @@ public class PostActionActivity extends AppCompatActivity implements View.OnClic
     protected void onPause() {
         super.onPause();
 
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.stopAutoManage(this);
-            mGoogleApiClient.disconnect();
-        }
+//        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+//            mGoogleApiClient.stopAutoManage(this);
+//            mGoogleApiClient.disconnect();
+//        }
 
     }
 
