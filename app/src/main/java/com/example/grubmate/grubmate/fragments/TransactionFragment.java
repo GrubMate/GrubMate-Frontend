@@ -158,7 +158,7 @@ public class TransactionFragment extends Fragment {
         @Override
         protected ArrayList<Transaction> doInBackground(Integer... params) {
             try {
-                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+                String response = NetworkUtilities.get(GrubMatePreference.getTransactionURL(PersistantDataManager.getUserID()));
                 Log.d("Transaction", response);
                 if (response == null || response.length() == 0) {
                     MockData.getTransactionList();

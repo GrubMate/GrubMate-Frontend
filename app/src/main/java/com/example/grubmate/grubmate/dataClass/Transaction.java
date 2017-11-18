@@ -6,6 +6,8 @@ package com.example.grubmate.grubmate.dataClass;
 
 public class Transaction {
     public int transactionID;
+    public int requestID;
+    public int postID;
     public String postName;
     public String posterName;
     public int posterID;
