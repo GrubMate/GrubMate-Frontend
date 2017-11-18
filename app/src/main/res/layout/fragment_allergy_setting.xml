@@ -1,4 +1,4 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -6,53 +6,46 @@
     android:orientation="vertical"
     android:padding="16dp"
     tools:context="com.example.grubmate.grubmate.fragments.AllergySetting">
+
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        >
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="40dp"
-            android:textAlignment="center"
             android:padding="32px"
-            android:text="Allergy"/>
+            android:text="Allergy"
+            android:textAlignment="center"
+            android:textSize="40dp" />
 
         <CheckBox
             android:id="@+id/cb_Allergy0_milk"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16px"
-            android:textSize="25dp"
-            android:text="Milk Allergy"/>
+            android:text="Milk Allergy"
+            android:textSize="25dp" />
+
         <CheckBox
             android:id="@+id/cb_Allergy1_egg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Egg Allergy"
             android:padding="16px"
-            android:textSize="25dp"/>
+            android:text="Egg Allergy"
+            android:textSize="25dp" />
+
         <CheckBox
             android:id="@+id/cb_Allergy2_fish"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fish Allergy"
             android:padding="16px"
-            android:textSize="25dp"/>
-
-
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            app:adSize="BANNER"
-            app:adUnitId="ca-app-pub-3940256099942544/6300978111">
-            <!--ads:adUnitId="ca-app-pub-3940256099942544~3347511713">-->
-
-        </com.google.android.gms.ads.AdView>
+            android:text="Fish Allergy"
+            android:textSize="25dp" />
 
 
     </LinearLayout>
@@ -64,6 +57,37 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/adView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.892"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.997"
         app:srcCompat="@android:drawable/ic_menu_save" />
 
-</android.support.design.widget.CoordinatorLayout>
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-3940256099942544/6300978111"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.984">
+        <!--ads:adUnitId="ca-app-pub-3940256099942544~3347511713">-->
+
+    </com.google.android.gms.ads.AdView>
+
+</android.support.constraint.ConstraintLayout>
