@@ -18,9 +18,12 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter.OnItemChildClickListener;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.BTransactionAdapter;
+import com.example.grubmate.grubmate.dataClass.MockData;
 import com.example.grubmate.grubmate.dataClass.Notification;
+import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.Transaction;
 import com.example.grubmate.grubmate.utilities.GrubMatePreference;
+import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 import com.google.gson.Gson;
@@ -43,6 +46,7 @@ public class TransactionFragment extends Fragment {
     private OnTransactionInteractionListener mListener;
     private BTransactionAdapter mTransactionAdapter;
     private ArrayList<Transaction> transactionData;
+    private RecyclerView mRecyclerView;
     private int userID;
     private Gson gson;
     private Context context;
@@ -80,18 +84,17 @@ public class TransactionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_transaction_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_transaction, container, false);
         mTransactionAdapter = new BTransactionAdapter(transactionData);
         // Set the adapter
-        if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            final RecyclerView recyclerView = (RecyclerView) view;
+            mRecyclerView = view.findViewById(R.id.rv_transaction_list);
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(mTransactionAdapter);
+            mRecyclerView.setAdapter(mTransactionAdapter);
             mTransactionAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
                 @Override
                 public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -101,14 +104,14 @@ public class TransactionFragment extends Fragment {
                             break;
                         case R.id.b_transaction_rating_submit:
                             view.setEnabled(false);
-                            RatingBar ratingBar = (RatingBar) adapter.getViewByPosition(recyclerView, position,R.id.rb_transaction_rating);
+                            RatingBar ratingBar = (RatingBar) adapter.getViewByPosition(mRecyclerView, position,R.id.rb_transaction_rating);
                             int score = ratingBar.getNumStars();
                             new SubmitRatingTask().execute(position, score);
                             break;
                     }
                 }
             });
-        }
+        new FetchTransactionListTask().execute();
         return view;
     }
 
@@ -122,6 +125,7 @@ public class TransactionFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnTransactionInteractionListener");
         }
+
     }
 
     @Override
@@ -144,6 +148,38 @@ public class TransactionFragment extends Fragment {
         // TODO: Update argument type and name
         void onTransactionInteraction();
     }
+    public class FetchTransactionListTask extends AsyncTask<Integer, Integer, ArrayList<Transaction>> {
+        @Override
+        protected void onPreExecute() {
+            mTransactionAdapter.setEmptyView(R.layout.list_loading_layout, (ViewGroup) mRecyclerView.getParent() );
+            super.onPreExecute();
+        }
+
+        @Override
+        protected ArrayList<Transaction> doInBackground(Integer... params) {
+            try {
+                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+                Log.d("Transaction", response);
+                if (response == null || response.length() == 0) {
+                    MockData.getTransactionList();
+                }
+                return JsonUtilities.getTransactionList(response);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return MockData.getTransactionList();
+        }
+        protected void onPostExecute(ArrayList<Transaction> transactionItems) {
+            if (transactionItems != null) {
+                transactionData= transactionItems;
+                mTransactionAdapter.setNewData(transactionData);
+            } else {
+                mTransactionAdapter.setEmptyView(R.layout.list_empty_layout, mRecyclerView);
+            }
+        }
+    }
+
     public class SubmitRatingTask extends AsyncTask<Integer, Integer, String> {
         int pos;
 

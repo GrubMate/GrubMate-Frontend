@@ -1,9 +1,12 @@
 package com.example.grubmate.grubmate.utilities;
 
+import android.widget.ArrayAdapter;
+
 import com.example.grubmate.grubmate.dataClass.Friend;
 import com.example.grubmate.grubmate.dataClass.Group;
 import com.example.grubmate.grubmate.dataClass.Post;
 import com.example.grubmate.grubmate.dataClass.Subscription;
+import com.example.grubmate.grubmate.dataClass.Transaction;
 import com.example.grubmate.grubmate.dataClass.UserRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -52,6 +55,11 @@ public class JsonUtilities {
         }
     }
 
+    public class TransactionFeed {
+        public int id;
+        public ArrayList<Transaction> itemList;
+    }
+
     public static ArrayList<Post> getFeedItems(String jsonString) {
 
         if(jsonString==null)
@@ -84,6 +92,13 @@ public class JsonUtilities {
         ArrayList<Friend> friendsList = new ArrayList<Friend>();
         return gson.fromJson(jsonString, FriendFeed.class).itemList;
     }
+
+    public static ArrayList<Transaction> getTransactionList(String jsonString) {
+        if(jsonString==null||!jsonString.contains("itemList")) return null;
+        ArrayList<Transaction> friendsList = new ArrayList<Transaction>();
+        return gson.fromJson(jsonString, TransactionFeed.class).itemList;
+    }
+
     public static ArrayList<Subscription> getSubscriptionItems(String jsonString) {
 
         if(jsonString ==null)
