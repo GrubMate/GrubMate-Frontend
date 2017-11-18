@@ -174,14 +174,20 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         });
 
         mapListButton = (FloatingActionButton) rootView.findViewById(R.id.fab_feed_map);
-        mapListButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
 
-                Intent intent = new Intent(getContext(),MapFeedActivity.class);
-                intent.putExtra("postList", feedData);
-                startActivity(intent);
-            }
-        });
+        if(mParam1 == "horizontal"){
+            mapListButton.setVisibility(View.INVISIBLE);
+        }else {
+
+            mapListButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(getContext(),MapFeedActivity.class);
+                    intent.putExtra("postList", feedData);
+                    startActivity(intent);
+                }
+            });
+        }
         mFeedView.setAdapter(mFeedAdapter);
 
         mFeedProgressBar = (ProgressBar) rootView.findViewById(R.id.pb_feed);
@@ -397,5 +403,9 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
                 // The user canceled the operation.
             }
         }
+    }
+
+    public void scrollToPosition(int position){
+        mFeedView.getLayoutManager().scrollToPosition(position);
     }
 }

@@ -100,9 +100,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(int uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.positionFromMapFragment(uri);
         }
     }
 
@@ -150,7 +150,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         for(int i = 0; i<markers.size();i++){
             if (marker.equals(markers.get(i)))
             {
-                Toast.makeText(getContext(), "click success on item" + marker.getTitle(), Toast.LENGTH_SHORT).show();
+                mListener.positionFromMapFragment(i);
+                //Toast.makeText(getContext(), "click success on item" + marker.getTitle(), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -169,6 +170,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
      */
     public interface OnMapFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void positionFromMapFragment(int position);
     }
 }
