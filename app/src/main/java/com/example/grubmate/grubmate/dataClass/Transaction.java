@@ -14,5 +14,6 @@ public class Transaction {
     public String requesterName;
     public int requesterID;
     public boolean isActive;
-    public boolean rated;
+    public boolean posterRated;
+    public boolean requesterRated;
 }

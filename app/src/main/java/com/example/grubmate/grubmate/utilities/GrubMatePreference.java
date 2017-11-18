@@ -77,6 +77,9 @@ public class GrubMatePreference {
     public static String getRatingUrl(int fromID, int toID, int rating) {
         return domain + ratingUrl + '/' + fromID + '/' + toID + '/' + rating;
     }
+    public static String getRatingUrl(int postID, int requestID, int fromID, int toID, int rating) {
+        return domain + ratingUrl + '/' + fromID+ '/' + postID+ '/' + requestID + "/" + toID + "/" + rating;
+    }
 
     public static String getRequestURL() {
         return domain + requestURL;
