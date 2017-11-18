@@ -53,8 +53,8 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_allergy_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="43dp"
+        android:layout_height="52dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:layout_marginBottom="8dp"
@@ -63,10 +63,10 @@
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/adView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.892"
+        app:layout_constraintHorizontal_bias="0.872"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.997"
+        app:layout_constraintVertical_bias="0.94"
         app:srcCompat="@android:drawable/ic_menu_save" />
 
     <com.google.android.gms.ads.AdView
@@ -85,7 +85,7 @@
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.984">
+        app:layout_constraintVertical_bias="1.0">
         <!--ads:adUnitId="ca-app-pub-3940256099942544~3347511713">-->
 
     </com.google.android.gms.ads.AdView>
