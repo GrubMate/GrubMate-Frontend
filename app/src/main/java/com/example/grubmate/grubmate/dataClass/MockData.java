@@ -129,6 +129,31 @@ public class MockData {
         return result;
     }
 
+    public static ArrayList<Transaction> getTransactionList() {
+        ArrayList<Transaction> result = new ArrayList<>();
+        if(TESTING) {
+            Transaction transaction = new Transaction();
+            transaction.rated = false;
+            transaction.isActive = true;
+            transaction.posterID = 1;
+            transaction.requesterID = 1;
+            transaction.posterName = "PIPI poster";
+            transaction.postName = "PIPI item";
+            transaction.requesterName = "PIPI requester";
+            result.add(transaction);
+            Transaction transaction2 = new Transaction();
+            transaction2.rated = false;
+            transaction2.isActive = false;
+            transaction2.posterID = 1;
+            transaction2.requesterID = 1;
+            transaction2.posterName = "PIPI poster";
+            transaction2.postName = "PIPI item";
+            transaction2.requesterName = "PIPI requester";
+            result.add(transaction2);
+        }
+        return result;
+    }
+
     public static ArrayList<Notification> getNotificationList() {
         ArrayList<Notification> result = new ArrayList<Notification>();
         if(TESTING) {

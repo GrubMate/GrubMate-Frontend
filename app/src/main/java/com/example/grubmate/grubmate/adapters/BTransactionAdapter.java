@@ -20,7 +20,15 @@ public class BTransactionAdapter extends BaseQuickAdapter<Transaction, BaseViewH
 
     @Override
     protected void convert(BaseViewHolder helper, Transaction item) {
-            helper.addOnClickListener(R.id.b_transaction_rating_submit)
+            helper.setText(R.id.tv_transaction_post_name, item.postName)
+                    .setText(R.id.tv_transaction_poster_name, item.posterName)
+                    .setText(R.id.tv_transaction_requester_name, item.requesterName)
+                    .addOnClickListener(R.id.b_transaction_rating_submit)
                     .addOnClickListener(R.id.b_transaction_request_cancel);
+            if(!item.isActive&&!item.rated) {
+                helper.setVisible(R.id.ll_transaction_rating, true);
+            } else {
+                helper.setGone(R.id.ll_transaction_rating, false);
+            }
     }
 }
