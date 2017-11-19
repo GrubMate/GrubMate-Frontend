@@ -167,7 +167,8 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
-                    case R.id.b_feed_item_map:
+                    case R.id.b_order_item_map:
+
                         Intent startMap = new Intent(getContext(),MapsActivity.class);
                         startMap.putExtra("Lat",mPastPostList.get(position).address[0]);
                         startMap.putExtra("Lng",mPastPostList.get(position).address[1]);

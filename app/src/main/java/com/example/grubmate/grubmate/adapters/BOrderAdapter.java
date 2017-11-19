@@ -1,6 +1,7 @@
 package com.example.grubmate.grubmate.adapters;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -34,6 +35,7 @@ public class BOrderAdapter extends BaseQuickAdapter<Post, BaseViewHolder> {
             if(item.allergyInfo[1]) allergies +=(item.allergyNames[1]+" ");
             if(item.allergyInfo[2]) allergies += (item.allergyNames[2]+" ");
         }
+
         viewHolder.setText(R.id.tv_order_item_name, item.title)
                 // integers has to be wraped as string to avoid android treating them as resource
                 .setText(R.id.tv_order_item_tag, ArrayUtilities.join(item.tags, ","))

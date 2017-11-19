@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
 import com.chad.library.adapter.base.listener.OnItemSwipeListener;
+import com.example.grubmate.grubmate.MapsActivity;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.adapters.NotificationAdapter;
 import com.example.grubmate.grubmate.dataClass.MockData;
@@ -203,6 +204,18 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
                         RatingBar ratingBar = (RatingBar) adapter.getViewByPosition(mRecyclerView, position,R.id.rb_notification_rating);
                         int score = ratingBar.getNumStars();
                         new SubmitRatingTask().execute(position,score);
+                        break;
+                    case R.id.b_notification_request_location:
+                        Intent startMap = new Intent(getContext(),MapsActivity.class);
+                        startMap.putExtra("Lat",notificationData.get(position).address[0]);
+                        startMap.putExtra("Lng",notificationData.get(position).address[1]);
+                        startActivity(startMap);
+                        break;
+                    case R.id.b_notificatio_match_location:
+                        Intent startMap1 = new Intent(getContext(),MapsActivity.class);
+                        startMap1.putExtra("Lat",notificationData.get(position).address[0]);
+                        startMap1.putExtra("Lng",notificationData.get(position).address[1]);
+                        startActivity(startMap1);
                         break;
                 }
             }
