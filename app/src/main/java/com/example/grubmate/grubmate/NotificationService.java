@@ -39,6 +39,8 @@ public class NotificationService extends Service {
     private static OkHttpClient client;
     private NotificationCompat.Builder builder;
     private NotificationManagerCompat notificationManager;
+    private int count;
+    private final String[] types = new String[]{"Default","Request", "Match", "Accepted", "Rating", "Denied"};
     class NotificationBinder extends Binder {
         public void startPolling() {
             Log.d("NotificationService", "polling started");
@@ -57,6 +59,7 @@ public class NotificationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        count = 0;
         Log.d("NotificationService", "onCreateExecuted");
         gson = new Gson();
         Intent resultIntent = new Intent(this, NotificationService.class);
@@ -123,7 +126,8 @@ public class NotificationService extends Service {
                     PersistantDataManager.addNotification(gson.fromJson(postActionResponse, Notification.class));
                     local.putExtra("notification", postActionResponse);
                     Notification notification = gson.fromJson(postActionResponse, Notification.class);
-                    sendNotification(notification.title, "You have a new notification");
+                    sendNotification(types[notification.type], "You have a new notification");
+                    count++;
                     sendBroadcast(local);
                 }
             }
@@ -148,8 +152,9 @@ public class NotificationService extends Service {
 
 
         notificationManager
-                .notify(0x1024757, builder
-                .build());
+                .notify(0x1024 + count, builder
+                        .setContentTitle(title)
+                        .setContentText(text).build());
     }
 
     public boolean isResponseValid(String response) {
