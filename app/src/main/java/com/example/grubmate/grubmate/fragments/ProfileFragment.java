@@ -36,6 +36,7 @@ import com.example.grubmate.grubmate.utilities.GrubMatePreference;
 import com.example.grubmate.grubmate.utilities.JsonUtilities;
 import com.example.grubmate.grubmate.utilities.NetworkUtilities;
 import com.example.grubmate.grubmate.utilities.PersistantDataManager;
+import com.google.android.gms.appindexing.Action;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
@@ -66,6 +67,11 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
     private TextView mProfileName;
     private RatingBar mProfileRatingBar;
     private Button mProfileMessengerButton;
+
+    private Button mProfileVenmoButton;
+
+
+
     private Gson gson;
     private int userID;
     private String facebookID;
@@ -125,6 +131,21 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
             public void onClick(View v) {
                 try{
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb-messenger://user/" + facebookID)));
+                }
+                catch(android.content.ActivityNotFoundException anfe)
+                {
+                    return;
+                }
+            }
+        });
+
+        mProfileVenmoButton = (Button) rootView.findViewById(R.id.b_profile_venmo);
+        mProfileVenmoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("venmo://stories")));
+                    //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("venmo://paycharge?txn=pay&recipients=Alex-Beals&amount=10¬e=Note")));
                 }
                 catch(android.content.ActivityNotFoundException anfe)
                 {

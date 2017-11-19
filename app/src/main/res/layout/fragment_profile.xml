@@ -52,6 +52,13 @@
             android:layout_height="wrap_content"
             android:text="Contact on messenger"/>
 
+        <Button
+            android:id="@+id/b_profile_venmo"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contact on Venmo"/>
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
