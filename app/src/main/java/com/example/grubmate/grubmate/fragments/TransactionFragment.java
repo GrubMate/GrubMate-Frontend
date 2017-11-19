@@ -215,6 +215,7 @@ public class TransactionFragment extends Fragment {
             if (postActionResponse != null) {
                 PersistantDataManager.removeRatingNotification(transactionData.get(pos).requestID, transactionData.get(pos).postID);
                 Toast.makeText(context, "You successfully submit a rating", Toast.LENGTH_SHORT).show();
+                new FetchTransactionListTask().execute();
             } else {
                 Toast.makeText(context, "Error: Network Error", Toast.LENGTH_SHORT).show();
             }
