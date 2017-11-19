@@ -189,16 +189,16 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         protected void onPostExecute(String searchResponse) {
             if (searchResponse != null && searchResponse.contains("itemList")) {
                 showShortToast("Succeed");
-                ArrayList<Post> pastPostList = JsonUtilities.getFeedItems(searchResponse);
-                Fragment destinationFragment = FeedFragment.newInstance(null, "search",pastPostList);
+                ArrayList<Post> searchPostList = JsonUtilities.getFeedItems(searchResponse);
+                Fragment destinationFragment = FeedFragment.newInstance(null, "search",searchPostList);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_search, destinationFragment);
 
                 transaction.commit();
             } else {
                 Toast.makeText(SearchActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
-                ArrayList<Post> pastPostList = MockData.getSearchList(2);
-                Fragment destinationFragment = FeedFragment.newInstance(null, "search",pastPostList);
+                ArrayList<Post> searchPostList = MockData.getSearchList(2);
+                Fragment destinationFragment = FeedFragment.newInstance(null, "search",searchPostList);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_search, destinationFragment);
 

@@ -67,8 +67,13 @@ public class MockData {
                 localPost.postID = i;
                 localPost.posterID = i;
                 localPost.isHomeMade = i%2 == 0;
-                localPost.title = "Past Post";
+                localPost.title = "Past Post" + i;
                 localPost.isActive = false;
+                localPost.description = "PP description";
+                Double[] address = new Double[2];
+                address[0]=  34.0227552 + i;
+                address[1]= -118.2823193 + i;
+                localPost.address = address;
                 result.add(localPost);
             }
 
@@ -162,12 +167,17 @@ public class MockData {
             requestNotification.title = "Jie JI";
             requestNotification.requesterName = "Pengxiang Zhu";
             requestNotification.requestID = 0;
+            Double[] address = new Double[2];
+            address[0]=  34.0227552 ;
+            address[1]= -118.2823193 ;
+            requestNotification.address = address;
             result.add(requestNotification);
 
             Notification matchNotification = new Notification();
             matchNotification.type = Notification.MATCH;
             matchNotification.title = "Oreo";
             matchNotification.requesterName = "Pengxiang Zhu";
+            matchNotification.address = address;
             result.add(matchNotification);
 
             Notification accptedNotification = new Notification();

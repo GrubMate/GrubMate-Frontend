@@ -28,7 +28,9 @@ public class NotificationAdapter extends BaseItemDraggableAdapter<Notification, 
         helper.addOnClickListener(R.id.b_notification_accept)
                 .addOnClickListener(R.id.b_notification_deny)
                 .addOnClickListener(R.id.b_notification_request)
-                .addOnClickListener(R.id.b_notification_submit);
+                .addOnClickListener(R.id.b_notification_submit)
+                .addOnClickListener(R.id.b_notification_request_location)
+                .addOnClickListener(R.id.b_notificatio_match_location);
         switch (item.type) {
             case  Notification.REQUEST:
                 helper.setVisible(R.id.ll_notification_request, true)
