@@ -99,13 +99,10 @@ public class TransactionFragment extends Fragment {
                 @Override
                 public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                     switch (view.getId()) {
-                        case R.id.b_transaction_request_cancel:
-                            view.setEnabled(false);
-                            break;
                         case R.id.b_transaction_rating_submit:
                             view.setEnabled(false);
                             RatingBar ratingBar = (RatingBar) adapter.getViewByPosition(mRecyclerView, position,R.id.rb_transaction_rating);
-                            int score = ratingBar.getNumStars();
+                            int score = (int) ratingBar.getRating();
                             new SubmitRatingTask().execute(position, score);
                             break;
                     }
@@ -158,7 +155,7 @@ public class TransactionFragment extends Fragment {
         @Override
         protected ArrayList<Transaction> doInBackground(Integer... params) {
             try {
-                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+                String response = NetworkUtilities.get(GrubMatePreference.getTransactionURL(PersistantDataManager.getUserID()));
                 Log.d("Transaction", response);
                 if (response == null || response.length() == 0) {
                     MockData.getTransactionList();
@@ -199,9 +196,12 @@ public class TransactionFragment extends Fragment {
             notification.toUserID = posterID==userID?requesterID:posterID;
             notification.fromUserID = posterID==userID?posterID:requesterID;
             notification.rating = score;
+            notification.postID = transactionData.get(pos).postID;
+            notification.requestID = transactionData.get(pos).requestID;
             notification.type = Notification.RATING;
             try {
-                return NetworkUtilities.post(GrubMatePreference.getRatingUrl(notification.fromUserID, notification.toUserID, notification.rating), gson.toJson(notification));
+//                return NetworkUtilities.post(GrubMatePreference.getRatingUrl(notification.fromUserID, notification.toUserID, notification.rating), gson.toJson(notification));
+                return NetworkUtilities.post(GrubMatePreference.getRatingUrl( notification.postID, notification.requestID, notification.fromUserID, notification.toUserID, notification.rating), gson.toJson(notification));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -213,6 +213,7 @@ public class TransactionFragment extends Fragment {
         protected void onPostExecute(String postActionResponse) {
             Log.d("Rating Response", postActionResponse==null?"null":postActionResponse);
             if (postActionResponse != null) {
+                PersistantDataManager.removeRatingNotification(transactionData.get(pos).requestID, transactionData.get(pos).postID);
                 Toast.makeText(context, "You successfully submit a rating", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(context, "Error: Network Error", Toast.LENGTH_SHORT).show();

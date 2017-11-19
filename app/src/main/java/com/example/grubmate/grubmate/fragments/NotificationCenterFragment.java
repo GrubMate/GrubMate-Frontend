@@ -202,7 +202,7 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
                         break;
                     case R.id.b_notification_submit:
                         RatingBar ratingBar = (RatingBar) adapter.getViewByPosition(mRecyclerView, position,R.id.rb_notification_rating);
-                        int score = ratingBar.getNumStars();
+                        int score = (int) ratingBar.getRating();
                         new SubmitRatingTask().execute(position,score);
                         break;
                     case R.id.b_notification_request_location:
@@ -456,9 +456,12 @@ public class NotificationCenterFragment extends Fragment implements GoogleApiCli
             notification.toUserID = notificationData.get(pos).toUserID;
             notification.fromUserID = notificationData.get(pos).fromUserID;
             notification.rating = score;
+            notification.postID = notificationData.get(pos).postID;
+            notification.requestID = notificationData.get(pos).requestID;
             notification.type = Notification.RATING;
             try {
-                return NetworkUtilities.post(GrubMatePreference.getRatingUrl(notification.fromUserID, notification.toUserID, notification.rating), gson.toJson(notification));
+//                return NetworkUtilities.post(GrubMatePreference.getRatingUrl(notification.fromUserID, notification.toUserID, notification.rating), gson.toJson(notification));
+                return NetworkUtilities.post(GrubMatePreference.getRatingUrl( notification.postID, notification.requestID, notification.fromUserID, notification.toUserID, notification.rating), gson.toJson(notification));
             } catch (IOException e) {
                 e.printStackTrace();
             }

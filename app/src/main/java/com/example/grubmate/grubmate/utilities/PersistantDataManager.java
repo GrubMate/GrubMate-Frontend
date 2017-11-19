@@ -27,6 +27,18 @@ public class PersistantDataManager {
         notificationCache.add(0, notification);
     }
 
+    public static void removeRatingNotification(int requestID, int postID) {
+        for(int i = 0; i<notificationCache.size(); i++) {
+            if(notificationCache.get(i).postID!=null
+                    &&notificationCache.get(i).postID==postID
+                    &&notificationCache.get(i).requestID!=null
+                    &&notificationCache.get(i).requestID==requestID) {
+                notificationCache.remove(i);
+                break;
+            }
+        }
+    }
+
     public static int getUserID() {
         return userID;
     }

@@ -6,6 +6,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.grubmate.grubmate.R;
 import com.example.grubmate.grubmate.dataClass.Transaction;
+import com.example.grubmate.grubmate.utilities.PersistantDataManager;
 
 import java.util.List;
 
@@ -23,10 +24,13 @@ public class BTransactionAdapter extends BaseQuickAdapter<Transaction, BaseViewH
             helper.setText(R.id.tv_transaction_post_name, item.postName)
                     .setText(R.id.tv_transaction_poster_name, item.posterName)
                     .setText(R.id.tv_transaction_requester_name, item.requesterName)
-                    .addOnClickListener(R.id.b_transaction_rating_submit)
-                    .addOnClickListener(R.id.b_transaction_request_cancel);
-            if(!item.isActive&&!item.rated) {
-                helper.setVisible(R.id.ll_transaction_rating, true);
+                    .addOnClickListener(R.id.b_transaction_rating_submit);
+            if(!item.isActive) {
+                if(item.posterID == PersistantDataManager.getUserID() && !item.posterRated) {
+                    helper.setVisible(R.id.ll_transaction_rating, true);
+                } else if(item.requesterID == PersistantDataManager.getUserID() && !item.requesterRated) {
+                    helper.setVisible(R.id.ll_transaction_rating, true);
+                }
             } else {
                 helper.setGone(R.id.ll_transaction_rating, false);
             }

@@ -1,6 +1,7 @@
 package com.example.grubmate.grubmate;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.LauncherApps;
@@ -38,6 +39,8 @@ public class NotificationService extends Service {
     private static OkHttpClient client;
     private NotificationCompat.Builder builder;
     private NotificationManagerCompat notificationManager;
+    private int count;
+    private final String[] types = new String[]{"Default","Request", "Match", "Accepted", "Rating", "Denied"};
     class NotificationBinder extends Binder {
         public void startPolling() {
             Log.d("NotificationService", "polling started");
@@ -56,9 +59,24 @@ public class NotificationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        count = 0;
         Log.d("NotificationService", "onCreateExecuted");
         gson = new Gson();
-        builder = new NotificationCompat.Builder(this);
+        Intent resultIntent = new Intent(this, NotificationService.class);
+// Because clicking the notification opens a new ("special") activity, there's
+// no need to create an artificial back stack.
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.cast_ic_notification_small_icon)
+                .setContentTitle("Notification")
+                .setContentText("You have a new notification")
+                .setContentIntent(resultPendingIntent);
         notificationManager = NotificationManagerCompat.from(this);
         client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).build();
     }
@@ -107,9 +125,10 @@ public class NotificationService extends Service {
                 if(isResponseValid(postActionResponse)) {
                     PersistantDataManager.addNotification(gson.fromJson(postActionResponse, Notification.class));
                     local.putExtra("notification", postActionResponse);
-                    sendBroadcast(local);
                     Notification notification = gson.fromJson(postActionResponse, Notification.class);
-                    sendNotification(notification.title, "You have a new notification");
+                    sendNotification(types[notification.type], "You have a new notification");
+                    count++;
+                    sendBroadcast(local);
                 }
             }
             new NotificationTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "Notification");;
@@ -130,10 +149,12 @@ public class NotificationService extends Service {
     }
 
     private void sendNotification(String title, String text) {
-        notificationManager.notify(0x1234, builder.setContentTitle(title)
-                .setContentText(text)
-                .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-                .build());
+
+
+        notificationManager
+                .notify(0x1024 + count, builder
+                        .setContentTitle(title)
+                        .setContentText(text).build());
     }
 
     public boolean isResponseValid(String response) {

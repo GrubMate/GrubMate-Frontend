@@ -26,20 +26,24 @@
             android:layout_marginBottom="8dp"
             />
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Poster:"/>
+        <TextView
             android:id="@+id/tv_transaction_poster_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/sp_16"
             android:text="poster name"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Requester"/>
         <TextView
             android:id="@+id/tv_transaction_requester_name"
             android:text="requester name"
+            android:textSize="@dimen/sp_16"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/b_transaction_request_cancel"
-            android:text="Cancel"
-            android:layout_gravity="end"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <LinearLayout
             android:id="@+id/ll_transaction_rating"

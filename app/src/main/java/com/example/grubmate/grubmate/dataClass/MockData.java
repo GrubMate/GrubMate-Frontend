@@ -138,7 +138,8 @@ public class MockData {
         ArrayList<Transaction> result = new ArrayList<>();
         if(TESTING) {
             Transaction transaction = new Transaction();
-            transaction.rated = false;
+            transaction.posterRated = false;
+            transaction.requesterRated = false;
             transaction.isActive = true;
             transaction.posterID = 1;
             transaction.requesterID = 1;
@@ -147,7 +148,8 @@ public class MockData {
             transaction.requesterName = "PIPI requester";
             result.add(transaction);
             Transaction transaction2 = new Transaction();
-            transaction2.rated = false;
+            transaction.posterRated = false;
+            transaction.requesterRated = false;
             transaction2.isActive = false;
             transaction2.posterID = 1;
             transaction2.requesterID = 1;
