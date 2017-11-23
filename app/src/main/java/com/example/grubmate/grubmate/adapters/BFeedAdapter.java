@@ -48,6 +48,7 @@ public class BFeedAdapter extends BaseQuickAdapter<Post, BaseViewHolder> {
                     .addOnClickListener(R.id.tv_feed_item_poster)
                     .addOnClickListener(R.id.b_feed_item_request)
                     .addOnClickListener(R.id.b_feed_toggle_detail)
+                    .addOnClickListener(R.id.b_feed_item_spam)
               .addOnClickListener(R.id.b_feed_item_map);
               ;
             if(item.timePeriod!=null) {
