@@ -198,7 +198,9 @@ public class MainActivity extends AppCompatActivity
             destinationFragment = GroupFragment.newInstance(null,null);
         } else if (id == R.id.nav_allergy_settings) {
             destinationFragment = AllergySetting.newInstance(null,null);
-        }else if(id == R.id.nav_logout){
+        } else if (id==R.id.nav_recommendations) {
+            destinationFragment = FeedFragment.newInstance("recommendation", null, null);
+        } else if(id == R.id.nav_logout){
 
             GraphRequest delPermRequest = new GraphRequest(AccessToken.getCurrentAccessToken(), "/{user-id}/permissions/", null, HttpMethod.DELETE, new GraphRequest.Callback() {
                 @Override

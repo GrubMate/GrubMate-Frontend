@@ -86,6 +86,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
     private double Lng;
     private ArrayList<Post> mPastPostList;
     private FloatingActionButton mapListButton;
+    private Boolean isRecommendation;
     public FeedFragment() {
         // Required empty public constructor
     }
@@ -129,9 +130,12 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         // Setting up feed
         mFeedView = (RecyclerView) rootView.findViewById(R.id.rv_feed);
         LinearLayoutManager layoutManager;
-        if(mParam1 == "horizontal"){
+        if(Objects.equals(mParam1, "horizontal")){
              layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        }else {
+        } else if (Objects.equals(mParam1, "recommendation")) {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+            isRecommendation = true;
+        } else {
              layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         }
         mFeedView.setLayoutManager(layoutManager);
