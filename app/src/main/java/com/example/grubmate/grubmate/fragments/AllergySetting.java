@@ -54,6 +54,7 @@ public class AllergySetting extends Fragment {
     private FloatingActionButton mEditAllergy;
     private Boolean[] allergies;
     private CheckBox allergy0Milk,allergy1Egg,allergy2Fish;
+    private Boolean isVIP;
 
     private AdView mAdView;
     public AllergySetting() {
@@ -109,15 +110,37 @@ public class AllergySetting extends Fragment {
             }
         });
 
-        mAdView = (AdView) rootView.findViewById(R.id.adView);
 
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
-                .build();
+        Gson gson = new Gson();
 
-        mAdView.loadAd(adRequest);
+        if(isVIP == null || isVIP == false)
+        {
+            //non-VIP users have to read ads
+            mAdView = (AdView) rootView.findViewById(R.id.adView);
+
+            AdRequest adRequest = new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
+                    .build();
+
+            mAdView.loadAd(adRequest);
+        }
+        else if(isVIP == true)
+        {
+            //no ads VIP users
+        }
 
         return rootView;
+
+
+
+//        mAdView = (AdView) rootView.findViewById(R.id.adView);
+//
+//        AdRequest adRequest = new AdRequest.Builder()
+//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
+//                .build();
+//
+//        mAdView.loadAd(adRequest);
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -189,6 +212,7 @@ public class AllergySetting extends Fragment {
             Gson gson = new Gson();
             if (allergyItems != null) {
                 allergies = gson.fromJson(allergyItems, User.class).allergy;
+                isVIP = gson.fromJson(allergyItems, User.class).isVIP;
                 PersistantDataManager.setAllergyInfo(allergies);
                 allergy0Milk.setChecked(allergies[0]);
                 allergy1Egg.setChecked(allergies[1]);

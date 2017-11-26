@@ -17,4 +17,5 @@ public class User {
     public Integer[] requestsID;
     public Integer[] subscriptionID;
     public ArrayList<String> friendList;
+    public Boolean isVIP;
 }
