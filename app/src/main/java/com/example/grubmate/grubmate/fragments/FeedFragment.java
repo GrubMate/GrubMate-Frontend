@@ -173,6 +173,8 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
                             detailLayout.setVisibility(View.VISIBLE);
                         }
                         break;
+                    case R.id.b_feed_item_spam:
+                        break;
                     default:
                 }
             }
