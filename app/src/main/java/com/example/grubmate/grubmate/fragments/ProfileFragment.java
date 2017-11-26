@@ -69,8 +69,8 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
     private Button mProfileMessengerButton;
 
     private Button mProfileVenmoButton;
-
-
+    private Button mProfileBlockButton;
+    private int mProfileUserID;
 
     private Gson gson;
     private int userID;
@@ -153,7 +153,14 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                 }
             }
         });
-
+        mProfileBlockButton = rootView.findViewById(R.id.b_profile_block);
+        mProfileBlockButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PersistantDataManager.addBlockIDs(mProfileUserID);
+                Toast.makeText(getContext(), "success" , Toast.LENGTH_SHORT).show();
+            }
+        });
       //  mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_profile_orders);
         mOrderView = (RecyclerView) rootView.findViewById(R.id.rv_profile_orders);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
@@ -187,6 +194,7 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
         });
         mContentLayout = rootView.findViewById(R.id.ll_profile_content);
         mProgressBar = rootView.findViewById(R.id.pb_profile_progress);
+
         return rootView;
     }
 
@@ -280,7 +288,7 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
 
                     facebookID = user.facebookID;
                     System.out.println("Facebook ID is + " + facebookID);
-
+                    mProfileUserID = user.userID;
                     mProfileName.setText(user.userName);
                     if (user.rating != null && user.rating >= 0) {
                         mProfileRatingBar.setRating(user.rating.intValue());

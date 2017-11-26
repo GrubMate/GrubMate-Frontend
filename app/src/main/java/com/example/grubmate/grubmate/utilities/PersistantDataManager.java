@@ -15,7 +15,7 @@ public class PersistantDataManager {
     private static ArrayList<Integer> groupIDs = new ArrayList<Integer>();
     private static ArrayList<Notification> notificationCache = com.example.grubmate.grubmate.dataClass.MockData.getNotificationList();
     private static Boolean[] allergyInfo = new Boolean[]{false, false, false};
-
+    private static ArrayList<Integer> blockIDs = new ArrayList<Integer>();
 
     public static ArrayList<Notification> getNotificationCache() {
         return notificationCache;
@@ -51,10 +51,14 @@ public class PersistantDataManager {
     public static ArrayList<Integer> getGroupIDs() {
         return groupIDs;
     }
+
     public static void setGroupIDs(ArrayList<Integer> groupIDs) {
         PersistantDataManager.groupIDs = groupIDs;
     }
-
+    public static void addBlockIDs(int id){blockIDs.add(id);}
+    public static ArrayList<Integer> getBlockIDs(){
+        return blockIDs;
+    }
     public static Boolean[] getAllergyInfo() {
         return allergyInfo;
     }

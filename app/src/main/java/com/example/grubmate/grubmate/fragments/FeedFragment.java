@@ -335,6 +335,14 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         protected void onPostExecute(ArrayList<Post> feedItems) {
             if (feedItems != null) {
                 feedData = feedItems;
+
+                for(int i = 0; i< feedData.size();i++){
+                    for(int j=0;j<PersistantDataManager.getBlockIDs().size();j++){
+                        if(feedData.get(i).posterID.equals(PersistantDataManager.getBlockIDs().get(j))){
+                            feedData.remove(i);
+                        }
+                    }
+                }
                 mFeedAdapter.setNewData(feedData);
                 mFeedProgressBar.setVisibility(View.INVISIBLE);
                 mFeedProgressBar.getLayoutParams().height = 0;
