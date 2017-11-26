@@ -75,6 +75,7 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
     private Gson gson;
     private int userID;
     private String facebookID;
+    private Boolean isVIP;
     private RecyclerView mRecyclerView;
     private PastPostAdapter mPastPostAdapter;
     private ArrayList<Post> mPastPostList;
@@ -287,9 +288,19 @@ public class ProfileFragment extends Fragment implements FeedFragment.OnFragment
                     User user = gson.fromJson(postActionResponse, User.class);
 
                     facebookID = user.facebookID;
+                    isVIP = user.isVIP;
                     System.out.println("Facebook ID is + " + facebookID);
                     mProfileUserID = user.userID;
-                    mProfileName.setText(user.userName);
+
+                    if(isVIP)
+                    {
+                        mProfileName.setText(user.userName + "(VIP)");
+                    }
+                    else
+                    {
+                        mProfileName.setText(user.userName);
+                    }
+
                     if (user.rating != null && user.rating >= 0) {
                         mProfileRatingBar.setRating(user.rating.intValue());
                     } else {

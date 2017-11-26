@@ -109,25 +109,16 @@ public class AllergySetting extends Fragment {
             new SetAllergyListTask().execute();
             }
         });
+        mAdView = (AdView) rootView.findViewById(R.id.adView);
+
+
+
+
 
 
         Gson gson = new Gson();
+        new FetchAllergyListTask().execute();
 
-        if(isVIP == null || isVIP == false)
-        {
-            //non-VIP users have to read ads
-            mAdView = (AdView) rootView.findViewById(R.id.adView);
-
-            AdRequest adRequest = new AdRequest.Builder()
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
-                    .build();
-
-            mAdView.loadAd(adRequest);
-        }
-        else if(isVIP == true)
-        {
-            //no ads VIP users
-        }
 
         return rootView;
 
@@ -154,7 +145,8 @@ public class AllergySetting extends Fragment {
     public void onStart() {
         super.onStart();
         context = getContext();
-        new FetchAllergyListTask().execute();
+
+
     }
     @Override
     public void onAttach(Context context) {
@@ -223,6 +215,22 @@ public class AllergySetting extends Fragment {
                 }
                 Toast.makeText(context, "Network Error: Please Retry", Toast.LENGTH_SHORT).show();
             }
+
+            
+            if(isVIP == null || isVIP == false)
+            {
+                //non-VIP users have to read ads
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)        // All emulators
+                        .build();
+
+                mAdView.loadAd(adRequest);
+            }
+            else if(isVIP == true)
+            {
+                //no ads VIP users
+            }
+
         }
 
     }
@@ -242,6 +250,8 @@ public class AllergySetting extends Fragment {
                 user.allergy = allergies;
                 PersistantDataManager.setAllergyInfo(allergies);
                 String response = NetworkUtilities.put(GrubMatePreference.getAllergyURL(PersistantDataManager.getUserID()), gson.toJson(user));
+
+
                 if (response == null || response.length() == 0)
                     return null;
                 return response;
