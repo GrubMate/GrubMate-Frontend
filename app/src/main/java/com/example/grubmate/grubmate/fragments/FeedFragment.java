@@ -130,6 +130,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
         // Setting up feed
         mFeedView = (RecyclerView) rootView.findViewById(R.id.rv_feed);
         LinearLayoutManager layoutManager;
+        isRecommendation = false;
         if(Objects.equals(mParam1, "horizontal")){
              layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         } else if (Objects.equals(mParam1, "recommendation")) {
@@ -311,8 +312,15 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
 
         @Override
         protected ArrayList<Post> doInBackground(Integer... params) {
+
             try {
-                String response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+                String response = null;
+                if(isRecommendation) {
+                    response = NetworkUtilities.get(GrubMatePreference.getRecommendationURL(PersistantDataManager.getUserID()));
+                } else {
+                    response = NetworkUtilities.get(GrubMatePreference.getFeedUrl(PersistantDataManager.getUserID()));
+                }
+
                 Log.d(TAG, response);
                 if (response == null || response.length() == 0)
                     return MockData.getPostList(2);

@@ -7,6 +7,7 @@ public class Notification {
     public static final int ACCEPTED = 3;
     public static final int RATING = 4;
     public static final int DENIED = 5;
+    public static final int REPORT  = 6;
 
 
     public Integer requestID;
