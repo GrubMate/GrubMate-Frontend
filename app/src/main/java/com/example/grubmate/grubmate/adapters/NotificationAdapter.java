@@ -29,6 +29,7 @@ public class NotificationAdapter extends BaseItemDraggableAdapter<Notification, 
                 .addOnClickListener(R.id.b_notification_deny)
                 .addOnClickListener(R.id.b_notification_request)
                 .addOnClickListener(R.id.b_notification_submit)
+                .setVisible(R.id.ll_notification_reported,false)
                 .addOnClickListener(R.id.b_notification_request_location)
                 .addOnClickListener(R.id.b_notificatio_match_location);
         switch (item.type) {
@@ -37,6 +38,7 @@ public class NotificationAdapter extends BaseItemDraggableAdapter<Notification, 
                         .setVisible(R.id.ll_notification_match, false)
                         .setVisible(R.id.ll_notification_accepted, false)
                         .setVisible(R.id.ll_notification_rating, false)
+                        .setVisible(R.id.ll_notification_reported,false)
                         .setText(R.id.tv_notification_request_name, item.title)
                         .setText(R.id.tv_notification_request_requester_name, item.requesterName);
                 break;
@@ -45,6 +47,7 @@ public class NotificationAdapter extends BaseItemDraggableAdapter<Notification, 
                         .setVisible(R.id.ll_notification_match, true)
                         .setVisible(R.id.ll_notification_accepted, false)
                         .setVisible(R.id.ll_notification_rating, false)
+                        .setVisible(R.id.ll_notification_reported,false)
                         .setText(R.id.tv_notification_match_name, item.title)
                         .setText(R.id.tv_notification_match_poster_name, item.posterName);
                 break;
@@ -53,6 +56,7 @@ public class NotificationAdapter extends BaseItemDraggableAdapter<Notification, 
                         .setVisible(R.id.ll_notification_match, false)
                         .setVisible(R.id.ll_notification_accepted, true)
                         .setVisible(R.id.ll_notification_rating, false)
+                        .setVisible(R.id.ll_notification_reported,false)
                         .setText(R.id.tv_notification_accepted_name, item.title);
                 break;
             case Notification.RATING:
@@ -60,10 +64,18 @@ public class NotificationAdapter extends BaseItemDraggableAdapter<Notification, 
                         .setVisible(R.id.ll_notification_request, false)
                         .setVisible(R.id.ll_notification_match, false)
                         .setVisible(R.id.ll_notification_accepted, false)
+                        .setVisible(R.id.ll_notification_reported, false)
                         .setText(R.id.tv_notification_rating_title, item.title)
                         .setText(R.id.tv_notification_rating_from_user_name, item.fromUserName)
                         .setText(R.id.tv_notification_rating_to_user_name, item.toUserName);
                 break;
+            case Notification.REPORT:
+                helper.setVisible(R.id.ll_notification_rating, false)
+                        .setVisible(R.id.ll_notification_request, false)
+                        .setVisible(R.id.ll_notification_match, false)
+                        .setVisible(R.id.ll_notification_accepted, false)
+                        .setVisible(R.id.ll_notification_reported, true)
+                        .setText(R.id.tv_notification_report_title, item.title);
             default:
         }
     }

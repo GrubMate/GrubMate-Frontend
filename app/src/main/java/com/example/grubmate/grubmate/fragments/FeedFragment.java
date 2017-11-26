@@ -174,6 +174,7 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
                         }
                         break;
                     case R.id.b_feed_item_spam:
+                        new ReportTask().execute(feedData.get(position).postID);
                         break;
                     default:
                 }
@@ -383,6 +384,28 @@ public class FeedFragment extends Fragment implements GoogleApiClient.OnConnecti
 
             }
         }
+    public class ReportTask extends AsyncTask<Integer, Integer, String> {
+        @Override
+
+        protected String doInBackground(Integer ...params) {
+            Integer postID = params[0];
+            if (postID < 0) {
+                return null;
+            }
+            try {
+                return NetworkUtilities.get(GrubMatePreference.getReportURL(PersistantDataManager.getUserID(), postID));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+
+        }
+    }
 
     private void requestPost(int pos) {
         requesterID = PersistantDataManager.getUserID();

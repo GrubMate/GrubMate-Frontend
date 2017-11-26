@@ -40,7 +40,7 @@ public class NotificationService extends Service {
     private NotificationCompat.Builder builder;
     private NotificationManagerCompat notificationManager;
     private int count;
-    private final String[] types = new String[]{"Default","Request", "Match", "Accepted", "Rating", "Denied"};
+    private final String[] types = new String[]{"Default","Request", "Match", "Accepted", "Rating", "Denied", "Reported"};
     class NotificationBinder extends Binder {
         public void startPolling() {
             Log.d("NotificationService", "polling started");
