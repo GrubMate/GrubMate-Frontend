@@ -121,7 +121,7 @@
                 android:id="@+id/b_feed_item_spam"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Spam"/>
+                android:text="Report Spam"/>
         </LinearLayout>
     </LinearLayout>
 

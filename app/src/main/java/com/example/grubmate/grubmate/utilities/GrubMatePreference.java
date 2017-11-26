@@ -37,6 +37,10 @@ public class GrubMatePreference {
         return domain + searchURL + "/" + ID;
     }
 
+    public static String getReportURL(int ID, int postID) {
+        return domain + postURL+"/report" + "/"+ID + "/" + postID;
+    }
+
     public static String getPastPostURL(int ID) {
         return domain + postURL + "/" + ID+"/false";
     }
