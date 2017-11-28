@@ -216,7 +216,7 @@ public class AllergySetting extends Fragment {
                 Toast.makeText(context, "Network Error: Please Retry", Toast.LENGTH_SHORT).show();
             }
 
-            
+
             if(isVIP == null || isVIP == false)
             {
                 //non-VIP users have to read ads
